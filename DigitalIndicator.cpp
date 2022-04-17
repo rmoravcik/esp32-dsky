@@ -5,7 +5,7 @@
 
 #define DI_TFT_CS PIN_D8
 
-DigitalIndicator::DigitalIndicator(TFT_eSPI &tft) : m_tft(tft)
+DigitalIndicator::DigitalIndicator(TFT_eSPI &tft, TFT_eSprite &spr) : m_tft(tft), m_spr(spr)
 {
   m_programNumber = 0;
   m_verbCode = 0;
@@ -191,36 +191,29 @@ void DigitalIndicator::printUInt8Value(uint16_t x, uint16_t y, uint8_t value)
 }
 void DigitalIndicator::printInt32Value(uint16_t x, uint16_t y, int32_t value)
 {
+  char str[7];
   uint32_t raw = abs(value);
 
   digitalWrite(DI_TFT_CS, LOW);
   
-  m_tft.setFreeFont(&Zerlina26pt7b);
-  
-  // Clean previous values 
-  m_tft.fillRect(x, y -44 + 3, m_tft.textWidth("+88888"), 44, TFT_BLACK);
+  m_spr.setFreeFont(&Zerlina26pt7b);
+  m_spr.createSprite(184, 44);
+
+  m_spr.fillSprite(TFT_BLACK);
 
   if (value != DIGITAL_INDICATOR_REGISTER_VALUE_NAN) {
-    m_tft.setTextColor(TFT_GREEN, TFT_BLACK);
-    m_tft.setCursor(x, y);
+    m_spr.setTextColor(TFT_GREEN, TFT_BLACK);
 
-    if (value >= 0)
-      m_tft.print("+");
-    else
-      m_tft.print("-");
-
-    if (raw < 10) {
-      m_tft.print("0000");
-    } else if (raw < 100) {
-      m_tft.print("000");
-    } else if (raw < 1000) {
-      m_tft.print("00");
-    } else if (raw < 10000) {
-      m_tft.print("0");
+    if (value >= 0) {
+      snprintf(str, sizeof(str), "+%05u", raw);
+    } else {
+      snprintf(str, sizeof(str), "-%05u", raw);    
     }
-
-    m_tft.print(raw);
+    m_spr.drawString(str, 0, 0);
   }
+
+  m_spr.pushSprite(x, y - 44 + 3);
+  m_spr.deleteSprite();
 
   digitalWrite(DI_TFT_CS, HIGH);
 }

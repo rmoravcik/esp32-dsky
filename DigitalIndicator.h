@@ -9,7 +9,7 @@
 class DigitalIndicator
 {
 public:
-  DigitalIndicator(TFT_eSPI &tft);
+  DigitalIndicator(TFT_eSPI &tft, TFT_eSprite &spr);
   virtual ~DigitalIndicator();
 
   void setComputerActivityStatus(bool status);
@@ -34,6 +34,7 @@ public:
 
 private:
   TFT_eSPI m_tft;
+  TFT_eSprite m_spr;
 
   uint8_t m_programNumber;
   uint8_t m_verbCode;
