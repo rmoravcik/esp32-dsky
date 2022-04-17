@@ -25,6 +25,20 @@ public:
 
 private:
   TFT_eSPI m_tft;
+
+  bool m_uplinkActivityStatus;
+  bool m_noAttitudeStatus;
+  bool m_standbyStatus;
+  bool m_keyReleaseStatus;
+  bool m_operatorErrorStatus;
+
+  bool m_temperatureCaution;
+  bool m_gimbalLockStatus;
+  bool m_programCondition;
+  bool m_restartCondition;
+  bool m_trackerCondition;
+  bool m_altitudeDataCaution;
+  bool m_velocityDataCaution;
 };
 
 #endif
