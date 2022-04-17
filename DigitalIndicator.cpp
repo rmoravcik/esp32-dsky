@@ -7,9 +7,9 @@
 
 DigitalIndicator::DigitalIndicator(TFT_eSPI &tft, TFT_eSprite &spr) : m_tft(tft), m_spr(spr)
 {
-  m_programNumber = 0;
-  m_verbCode = 0;
-  m_nounCode = 0;
+  m_programNumber = DIGITAL_INDICATOR_VALUE_UINT8_NAN;
+  m_verbCode = DIGITAL_INDICATOR_VALUE_UINT8_NAN;
+  m_nounCode = DIGITAL_INDICATOR_VALUE_UINT8_NAN;
   memset(m_registerValue, 0, sizeof(m_registerValue));
 
   pinMode(DI_TFT_CS, OUTPUT);
@@ -66,25 +66,23 @@ DigitalIndicator::~DigitalIndicator()
 
 void DigitalIndicator::setComputerActivityStatus(bool status)
 {
+  uint32_t buttonColor = TFT_BLACK;
+  uint32_t textColor = TFT_DARKGREY;
+
   digitalWrite(DI_TFT_CS, LOW);
 
-  if (status == false) {
-    m_tft.fillRoundRect(25, 5, 70, 65, 3, TFT_BLACK);
-    m_tft.setFreeFont(&Gorton_Normal_1805pt7b);
-    m_tft.setTextColor(TFT_DARKGREY, TFT_BLACK);
-    m_tft.setCursor(42, 33);
-    m_tft.print("COMP");
-    m_tft.setCursor(42, 48);
-    m_tft.print("ACTY");    
-  } else {
-    m_tft.fillRoundRect(25, 5, 70, 65, 3, TFT_GREEN);
-    m_tft.setFreeFont(&Gorton_Normal_1805pt7b);
-    m_tft.setTextColor(TFT_BLACK, TFT_GREEN);
-    m_tft.setCursor(42, 33);
-    m_tft.print("COMP");
-    m_tft.setCursor(42, 48);
-    m_tft.print("ACTY");
+  if (status == true) {
+    buttonColor = TFT_GREEN;
+    textColor = TFT_BLACK;
   }
+
+  m_tft.fillRoundRect(25, 5, 70, 65, 3, buttonColor);
+  m_tft.setFreeFont(&Gorton_Normal_1805pt7b);
+  m_tft.setTextColor(textColor, buttonColor);
+  m_tft.setCursor(42, 33);
+  m_tft.print("COMP");
+  m_tft.setCursor(42, 48);
+  m_tft.print("ACTY");
 
   digitalWrite(DI_TFT_CS, HIGH);
 }
@@ -169,23 +167,30 @@ int32_t DigitalIndicator::getRegister3(void)
 
 void DigitalIndicator::printUInt8Value(uint16_t x, uint16_t y, uint8_t value)
 {  
+  char str[3];
+  int ret;
+
   digitalWrite(DI_TFT_CS, LOW);
 
-  m_tft.setFreeFont(&Zerlina26pt7b);
+  m_spr.setFreeFont(&Zerlina26pt7b);
+  m_spr.createSprite(69, 44);
 
-  // Clean previous values
-  m_tft.fillRect(x, y -44 + 3, m_tft.textWidth("88"), 44, TFT_BLACK);
-  
+  m_spr.fillSprite(TFT_BLACK);
+
   if (value != DIGITAL_INDICATOR_VALUE_UINT8_NAN) {
-    m_tft.setTextColor(TFT_GREEN, TFT_BLACK);
-    m_tft.setCursor(x, y);
+    m_spr.setTextColor(TFT_GREEN, TFT_BLACK);
+    ret = snprintf(str, sizeof(str), "%02u", value);
 
-    if (value < 10) {
-      m_tft.print("0");
+    if (ret < 0) {
+      Serial.print("DigitalIndicator::printInt32Value(): ERROR=");
+      Serial.println(ret);
     }
 
-    m_tft.print(value);
+    m_spr.drawString(str, 0, 0);
   }
+
+  m_spr.pushSprite(x, y - 44 + 3);
+  m_spr.deleteSprite();
 
   digitalWrite(DI_TFT_CS, HIGH);
 }
@@ -193,6 +198,7 @@ void DigitalIndicator::printInt32Value(uint16_t x, uint16_t y, int32_t value)
 {
   char str[7];
   uint32_t raw = abs(value);
+  int ret;
 
   digitalWrite(DI_TFT_CS, LOW);
   
@@ -205,10 +211,16 @@ void DigitalIndicator::printInt32Value(uint16_t x, uint16_t y, int32_t value)
     m_spr.setTextColor(TFT_GREEN, TFT_BLACK);
 
     if (value >= 0) {
-      snprintf(str, sizeof(str), "+%05u", raw);
+      ret = snprintf(str, sizeof(str), "+%05u", raw);
     } else {
-      snprintf(str, sizeof(str), "-%05u", raw);    
+      ret = snprintf(str, sizeof(str), "-%05u", raw);
     }
+
+    if (ret < 0) {
+      Serial.print("DigitalIndicator::printInt32Value(): ERROR=");
+      Serial.println(ret);
+    }
+
     m_spr.drawString(str, 0, 0);
   }
 
