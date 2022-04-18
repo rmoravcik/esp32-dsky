@@ -1,6 +1,6 @@
 #include "DigitalIndicator.h"
 
-#include "Gorton_Normal_180_5pt7b.h"
+#include "Gorton-Normal-18011.h"
 #include "Zerlina26pt7b.h"
 
 #define DI_TFT_CS PIN_D8
@@ -18,26 +18,27 @@ DigitalIndicator::DigitalIndicator(TFT_eSPI &tft, TFT_eSprite &spr) : m_tft(tft)
   // REMOVE ME
   m_tft.drawRect(0, 0, 240, 320, TFT_WHITE);
 
+  m_tft.loadFont(Gorton_Normal_180_11);
+
   // VERB
   m_tft.fillRoundRect(25, 81, 70, 20, 3, TFT_GREEN);
-  m_tft.setCursor(42, 94);
-  m_tft.setFreeFont(&Gorton_Normal_1805pt7b);
+  m_tft.setCursor(40, 86);
   m_tft.setTextColor(TFT_BLACK, TFT_GREEN);
   m_tft.print("VERB");
 
   // PROG
   m_tft.fillRoundRect(145, 5, 70, 20, 3, TFT_GREEN);
-  m_tft.setCursor(162, 18);
-  m_tft.setFreeFont(&Gorton_Normal_1805pt7b);
+  m_tft.setCursor(161, 10);
   m_tft.setTextColor(TFT_BLACK, TFT_GREEN);
   m_tft.print("PROG");
 
   // NOUN
   m_tft.fillRoundRect(145, 81, 70, 20, 3, TFT_GREEN);
-  m_tft.setCursor(162, 94);
-  m_tft.setFreeFont(&Gorton_Normal_1805pt7b);
+  m_tft.setCursor(160, 86);
   m_tft.setTextColor(TFT_BLACK, TFT_GREEN);
   m_tft.print("NOUN");
+
+  m_tft.unloadFont();
 
   // Dots
   m_tft.fillCircle(120, 15, 2, TFT_WHITE);
@@ -77,12 +78,13 @@ void DigitalIndicator::setComputerActivityStatus(bool status)
   }
 
   m_tft.fillRoundRect(25, 5, 70, 65, 3, buttonColor);
-  m_tft.setFreeFont(&Gorton_Normal_1805pt7b);
+  m_tft.loadFont(Gorton_Normal_180_11);
   m_tft.setTextColor(textColor, buttonColor);
-  m_tft.setCursor(42, 33);
+  m_tft.setCursor(41, 25);
   m_tft.print("COMP");
-  m_tft.setCursor(42, 48);
+  m_tft.setCursor(41, 40);
   m_tft.print("ACTY");
+  m_tft.unloadFont();
 
   digitalWrite(DI_TFT_CS, HIGH);
 }
