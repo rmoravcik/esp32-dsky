@@ -3,6 +3,8 @@
 
 #include <TFT_eSPI.h>
 
+#define ALARM_INDICATOR_CS PIN_D0
+
 class AlarmIndicator
 {
 public:

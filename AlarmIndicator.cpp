@@ -2,12 +2,12 @@
 
 #include "Gorton-Normal-12014.h"
 
-#define AI_TFT_CS PIN_D8
-
 AlarmIndicator::AlarmIndicator(TFT_eSPI &tft) : m_tft(tft)
 {
-  pinMode(AI_TFT_CS, OUTPUT);
-  digitalWrite(AI_TFT_CS, LOW);
+  digitalWrite(ALARM_INDICATOR_CS, LOW);
+
+  m_tft.fillScreen(TFT_BLACK);
+  m_tft.setRotation(0);
 
   // REMOVE ME
   m_tft.drawRect(0, 0, 240, 320, TFT_WHITE);
@@ -40,7 +40,7 @@ AlarmIndicator::AlarmIndicator(TFT_eSPI &tft) : m_tft(tft)
   setAltitudeDataCaution(false);
   setVelocityDataCaution(false);
 
-  digitalWrite(AI_TFT_CS, HIGH);
+  digitalWrite(ALARM_INDICATOR_CS, HIGH);
 }
 
 AlarmIndicator::~AlarmIndicator()
@@ -57,7 +57,7 @@ void AlarmIndicator::setUplinkActivityStatus(bool status)
   }
   m_uplinkActivityStatus = status;
 
-  digitalWrite(AI_TFT_CS, LOW);
+  digitalWrite(ALARM_INDICATOR_CS, LOW);
 
   if (status == true) {
     buttonColor = TFT_WHITE;
@@ -73,7 +73,7 @@ void AlarmIndicator::setUplinkActivityStatus(bool status)
   m_tft.print("ACTY");    
   m_tft.unloadFont();
 
-  digitalWrite(AI_TFT_CS, HIGH);
+  digitalWrite(ALARM_INDICATOR_CS, HIGH);
 }
 
 void AlarmIndicator::setNoAttitudeStatus(bool status)
@@ -86,7 +86,7 @@ void AlarmIndicator::setNoAttitudeStatus(bool status)
   }
   m_noAttitudeStatus = status;
 
-  digitalWrite(AI_TFT_CS, LOW);
+  digitalWrite(ALARM_INDICATOR_CS, LOW);
 
   if (status == true) {
     buttonColor = TFT_WHITE;
@@ -100,7 +100,7 @@ void AlarmIndicator::setNoAttitudeStatus(bool status)
   m_tft.print("NO ATT");
   m_tft.unloadFont();
 
-  digitalWrite(AI_TFT_CS, HIGH);
+  digitalWrite(ALARM_INDICATOR_CS, HIGH);
 }
 
 void AlarmIndicator::setStandbyStatus(bool status)
@@ -113,7 +113,7 @@ void AlarmIndicator::setStandbyStatus(bool status)
   }
   m_standbyStatus = status;
 
-  digitalWrite(AI_TFT_CS, LOW);
+  digitalWrite(ALARM_INDICATOR_CS, LOW);
 
   if (status == true) {
     buttonColor = TFT_WHITE;
@@ -127,7 +127,7 @@ void AlarmIndicator::setStandbyStatus(bool status)
   m_tft.print("STBY");
   m_tft.unloadFont();
 
-  digitalWrite(AI_TFT_CS, HIGH);
+  digitalWrite(ALARM_INDICATOR_CS, HIGH);
 }
 
 void AlarmIndicator::setKeyReleaseStatus(bool status)
@@ -140,7 +140,7 @@ void AlarmIndicator::setKeyReleaseStatus(bool status)
   }
   m_keyReleaseStatus = status;
 
-  digitalWrite(AI_TFT_CS, LOW);
+  digitalWrite(ALARM_INDICATOR_CS, LOW);
 
   if (status == true) {
     buttonColor = TFT_WHITE;
@@ -154,7 +154,7 @@ void AlarmIndicator::setKeyReleaseStatus(bool status)
   m_tft.print("KEY   REL");
   m_tft.unloadFont();
 
-  digitalWrite(AI_TFT_CS, HIGH);
+  digitalWrite(ALARM_INDICATOR_CS, HIGH);
 }
 
 void AlarmIndicator::setOperatorErrorStatus(bool status)
@@ -167,7 +167,7 @@ void AlarmIndicator::setOperatorErrorStatus(bool status)
   }
   m_operatorErrorStatus = status;
 
-  digitalWrite(AI_TFT_CS, LOW);
+  digitalWrite(ALARM_INDICATOR_CS, LOW);
 
   if (status == true) {
     buttonColor = TFT_WHITE;
@@ -181,7 +181,7 @@ void AlarmIndicator::setOperatorErrorStatus(bool status)
   m_tft.print("OPR   ERR");
   m_tft.unloadFont();
 
-  digitalWrite(AI_TFT_CS, HIGH);
+  digitalWrite(ALARM_INDICATOR_CS, HIGH);
 }
 
 void AlarmIndicator::setTemperatureCaution(bool status)
@@ -194,7 +194,7 @@ void AlarmIndicator::setTemperatureCaution(bool status)
   }
   m_temperatureCaution = status;
 
-  digitalWrite(AI_TFT_CS, LOW);
+  digitalWrite(ALARM_INDICATOR_CS, LOW);
 
   if (status == true) {
     buttonColor = TFT_YELLOW;
@@ -208,7 +208,7 @@ void AlarmIndicator::setTemperatureCaution(bool status)
   m_tft.print("TEMP");
   m_tft.unloadFont();
 
-  digitalWrite(AI_TFT_CS, HIGH);
+  digitalWrite(ALARM_INDICATOR_CS, HIGH);
 }
 
 void AlarmIndicator::setGimbalLockStatus(bool status)
@@ -221,7 +221,7 @@ void AlarmIndicator::setGimbalLockStatus(bool status)
   }
   m_gimbalLockStatus = status;
 
-  digitalWrite(AI_TFT_CS, LOW);
+  digitalWrite(ALARM_INDICATOR_CS, LOW);
 
   if (status == true) {
     buttonColor = TFT_YELLOW;
@@ -237,7 +237,7 @@ void AlarmIndicator::setGimbalLockStatus(bool status)
   m_tft.print("LOCK");
   m_tft.unloadFont();
 
-  digitalWrite(AI_TFT_CS, HIGH);
+  digitalWrite(ALARM_INDICATOR_CS, HIGH);
 }
 
 void AlarmIndicator::setProgramCondition(bool status)
@@ -250,7 +250,7 @@ void AlarmIndicator::setProgramCondition(bool status)
   }
   m_programCondition = status;
 
-  digitalWrite(AI_TFT_CS, LOW);
+  digitalWrite(ALARM_INDICATOR_CS, LOW);
 
   if (status == true) {
     buttonColor = TFT_YELLOW;
@@ -264,7 +264,7 @@ void AlarmIndicator::setProgramCondition(bool status)
   m_tft.print("PROG");
   m_tft.unloadFont();
 
-  digitalWrite(AI_TFT_CS, HIGH);
+  digitalWrite(ALARM_INDICATOR_CS, HIGH);
 }
 
 void AlarmIndicator::setRestartCondition(bool status)
@@ -277,7 +277,7 @@ void AlarmIndicator::setRestartCondition(bool status)
   }
   m_restartCondition = status;
 
-  digitalWrite(AI_TFT_CS, LOW);
+  digitalWrite(ALARM_INDICATOR_CS, LOW);
 
   if (status == true) {
     buttonColor = TFT_YELLOW;
@@ -291,7 +291,7 @@ void AlarmIndicator::setRestartCondition(bool status)
   m_tft.print("RESTART");
   m_tft.unloadFont();
 
-  digitalWrite(AI_TFT_CS, HIGH);
+  digitalWrite(ALARM_INDICATOR_CS, HIGH);
 }
 
 void AlarmIndicator::setTrackerCondition(bool status)
@@ -304,7 +304,7 @@ void AlarmIndicator::setTrackerCondition(bool status)
   }
   m_trackerCondition = status;
 
-  digitalWrite(AI_TFT_CS, LOW);
+  digitalWrite(ALARM_INDICATOR_CS, LOW);
 
   if (status == true) {
     buttonColor = TFT_YELLOW;
@@ -318,7 +318,7 @@ void AlarmIndicator::setTrackerCondition(bool status)
   m_tft.print("TRACKER");
   m_tft.unloadFont();
 
-  digitalWrite(AI_TFT_CS, HIGH);
+  digitalWrite(ALARM_INDICATOR_CS, HIGH);
 }
 
 void AlarmIndicator::setAltitudeDataCaution(bool status)
@@ -331,7 +331,7 @@ void AlarmIndicator::setAltitudeDataCaution(bool status)
   }
   m_altitudeDataCaution = status;
 
-  digitalWrite(AI_TFT_CS, LOW);
+  digitalWrite(ALARM_INDICATOR_CS, LOW);
 
   if (status == true) {
     buttonColor = TFT_YELLOW;
@@ -345,7 +345,7 @@ void AlarmIndicator::setAltitudeDataCaution(bool status)
   m_tft.print("ALT");
   m_tft.unloadFont();
 
-  digitalWrite(AI_TFT_CS, HIGH);
+  digitalWrite(ALARM_INDICATOR_CS, HIGH);
 }
 
 void AlarmIndicator::setVelocityDataCaution(bool status)
@@ -358,7 +358,7 @@ void AlarmIndicator::setVelocityDataCaution(bool status)
   }
   m_velocityDataCaution = status;
 
-  digitalWrite(AI_TFT_CS, LOW);
+  digitalWrite(ALARM_INDICATOR_CS, LOW);
 
   if (status == true) {
     buttonColor = TFT_YELLOW;
@@ -372,5 +372,5 @@ void AlarmIndicator::setVelocityDataCaution(bool status)
   m_tft.print("VEL");
   m_tft.unloadFont();
 
-  digitalWrite(AI_TFT_CS, HIGH);
+  digitalWrite(ALARM_INDICATOR_CS, HIGH);
 }

@@ -3,13 +3,15 @@
 
 #include <TFT_eSPI.h>
 
+#define DIGITAL_INDICATOR_CS PIN_D2
+
 #define DIGITAL_INDICATOR_VALUE_UINT8_NAN     0xFFU
 #define DIGITAL_INDICATOR_REGISTER_VALUE_NAN  INT32_MIN
 
 class DigitalIndicator
 {
 public:
-  DigitalIndicator(TFT_eSPI &tft, TFT_eSprite &spr);
+  DigitalIndicator(TFT_eSPI *tft, TFT_eSprite *spr);
   virtual ~DigitalIndicator();
 
   void setComputerActivityStatus(bool status);
@@ -33,8 +35,8 @@ public:
   int32_t getRegister3(void);
 
 private:
-  TFT_eSPI m_tft;
-  TFT_eSprite m_spr;
+  TFT_eSPI *m_tft;
+  TFT_eSprite *m_spr;
 
   uint8_t m_programNumber;
   uint8_t m_verbCode;
