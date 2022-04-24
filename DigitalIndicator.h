@@ -40,6 +40,7 @@ private:
   TFT_eSPI *m_tft;
   TFT_eSprite *m_spr;
 
+  bool m_compActyStatus;
   uint8_t m_programNumber;
   uint8_t m_verbCode;
   uint8_t m_nounCode;

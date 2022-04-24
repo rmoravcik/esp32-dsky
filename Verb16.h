@@ -13,7 +13,8 @@ public:
   AlarmIndicator *m_ai;
   DigitalIndicator *m_di;
 
-  unsigned long startMillis;
+  uint8_t m_prevSecond;
+  uint8_t m_actyCounter;
 };
 
 uint8_t verb16noun36_start(AlarmIndicator *ai, DigitalIndicator *di);

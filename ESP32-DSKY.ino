@@ -17,6 +17,7 @@
 #include "Verb36.h"
 #include "Verb69.h"
 #include "OTA.h"
+#include "RTC.h"
 
 #include "ESP32-DSKY.h"
 
@@ -25,6 +26,7 @@ DigitalIndicator *digitalInd;
 #ifdef ESP32
 OTA *ota;
 #endif
+RTC *rtc;
 
 TFT_eSPI tft = TFT_eSPI(320, 480);
 TFT_eSprite spr = TFT_eSprite(&tft);
@@ -58,6 +60,18 @@ String params = "["
   "'label':'WLAN Password',"
   "'type':"+String(INPUTPASSWORD)+","
   "'default':''"
+  "},"
+  "{"
+  "'name':'ntp_server',"
+  "'label':'NTP Server',"
+  "'type':"+String(INPUTTEXT)+","
+  "'default':'pool.ntp.org'"
+  "},"
+  "{"
+  "'name':'time_zone',"
+  "'label':'Time zone',"
+  "'type':"+String(INPUTTEXT)+","
+  "'default':'1'"
   "}"
 "]";
 
@@ -149,6 +163,8 @@ void setup() {
 
   server.on("/", handleRoot);
   server.begin();
+
+  rtc = new RTC(conf.getString("ntp_server"), conf.getInt("time_zone"));
 }
 
 bool acty = false;
@@ -183,6 +199,8 @@ cycleFn_t cycleFn = 0;
 uint32_t start_verb35 = 1000;
 uint32_t start_verb36 = 2000;
 uint32_t start_verb69 = 3000;
+uint32_t start_verb16verb36 = 4000;
+// REMOVE ME
 
 void loop() {
   uint8_t next_state = state;
@@ -237,10 +255,30 @@ void loop() {
           if (start_verb69 == 100) {
             digitalInd->setVerbCode(69);
           }
-          if (start_verb69 == 1) {
-            verbCode = 69;
-          }
+//          if (start_verb69 == 1) {
+//            verbCode = 69;
+//          }
           start_verb69--;
+        }
+        if (start_verb16verb36 > 0)
+        {
+          if (start_verb16verb36 == 400) {
+            digitalInd->setVerbCode(1);
+          }
+          if (start_verb16verb36 == 300) {
+            digitalInd->setVerbCode(16);
+          }
+          if (start_verb16verb36 == 200) {
+            digitalInd->setNounCode(3);
+          }
+          if (start_verb16verb36 == 100) {
+            digitalInd->setNounCode(36);
+          }
+          if (start_verb16verb36 == 1) {
+            verbCode = 16;
+            nounCode = 36;
+          }
+          start_verb16verb36--;
         }
         // REMOVE ME
 

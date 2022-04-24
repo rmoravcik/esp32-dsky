@@ -17,6 +17,7 @@ DigitalIndicator::~DigitalIndicator()
 
 void DigitalIndicator::resetIndicator(void)
 {
+  m_compActyStatus = true;
   m_programNumber = DIGITAL_INDICATOR_VALUE_UINT8_NAN;
   m_verbCode = DIGITAL_INDICATOR_VALUE_UINT8_NAN;
   m_nounCode = DIGITAL_INDICATOR_VALUE_UINT8_NAN;
@@ -78,23 +79,27 @@ void DigitalIndicator::setComputerActivityStatus(bool status)
   uint32_t buttonColor = TFT_BLACK;
   uint32_t textColor = TFT_DARKGREY;
 
-  digitalWrite(DIGITAL_INDICATOR_CS, LOW);
+  if (m_compActyStatus != status) {
+    digitalWrite(DIGITAL_INDICATOR_CS, LOW);
 
-  if (status == true) {
-    buttonColor = TFT_GREEN;
-    textColor = TFT_BLACK;
+    if (status == true) {
+      buttonColor = TFT_GREEN;
+      textColor = TFT_BLACK;
+    }
+
+    m_tft->fillRoundRect(25, 5, 70, 65, 3, buttonColor);
+    m_tft->loadFont(Gorton_Normal_180_11);
+    m_tft->setTextColor(textColor, buttonColor);
+    m_tft->setCursor(41, 25);
+    m_tft->print("COMP");
+    m_tft->setCursor(41, 40);
+    m_tft->print("ACTY");
+    m_tft->unloadFont();
+
+    digitalWrite(DIGITAL_INDICATOR_CS, HIGH);    
+
+    m_compActyStatus = status;
   }
-
-  m_tft->fillRoundRect(25, 5, 70, 65, 3, buttonColor);
-  m_tft->loadFont(Gorton_Normal_180_11);
-  m_tft->setTextColor(textColor, buttonColor);
-  m_tft->setCursor(41, 25);
-  m_tft->print("COMP");
-  m_tft->setCursor(41, 40);
-  m_tft->print("ACTY");
-  m_tft->unloadFont();
-
-  digitalWrite(DIGITAL_INDICATOR_CS, HIGH);
 }
 
 void DigitalIndicator::setProgramNumber(uint8_t number)
