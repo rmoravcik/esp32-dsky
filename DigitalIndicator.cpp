@@ -3,8 +3,11 @@
 #include "Gorton-Normal-18011.h"
 #include "Zerlina26pt7b.h"
 
-DigitalIndicator::DigitalIndicator(TFT_eSPI *tft, TFT_eSprite *spr) : m_tft(tft), m_spr(spr)
+DigitalIndicator::DigitalIndicator(TFT_eSPI *tft, TFT_eSprite *spr)
 {
+  m_tft = tft;
+  m_spr = spr;
+  
   m_programNumber = DIGITAL_INDICATOR_VALUE_UINT8_NAN;
   m_verbCode = DIGITAL_INDICATOR_VALUE_UINT8_NAN;
   m_nounCode = DIGITAL_INDICATOR_VALUE_UINT8_NAN;

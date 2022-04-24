@@ -12,7 +12,11 @@
 
 #include "AlarmIndicator.h"
 #include "DigitalIndicator.h"
+#include "Verb35.h"
+#include "Verb69.h"
 #include "OTA.h"
+
+#include "ESP32-DSKY.h"
 
 AlarmIndicator *alarmInd;
 DigitalIndicator *digitalInd;
@@ -25,6 +29,11 @@ TFT_eSprite spr = TFT_eSprite(&tft);
 
 AsyncWebServer server(80);
 AsyncWebConfig conf;
+
+struct verb verbs[VERB_COUNT] = {
+  { verb35_start, verb35_cycle },
+  { verb69_start, verb69_cycle }
+};
 
 String params = "["
   "{"
@@ -107,8 +116,8 @@ void setup() {
   digitalWrite(ALARM_INDICATOR_CS, HIGH);
   digitalWrite(DIGITAL_INDICATOR_CS, HIGH);
 
-//  alarmInd = new AlarmIndicator(&tft);
-//  alarmInd->setProgramCondition(true);
+  alarmInd = new AlarmIndicator(&tft);
+  alarmInd->setProgramCondition(true);
 
   digitalInd = new DigitalIndicator(&tft, &spr);
 
@@ -133,26 +142,75 @@ void setup() {
 bool acty = false;
 uint8_t actyCounter = 0;
 
-void loop() {
-
+uint8_t acty_cycle(void) {
   if (!acty) {
-    if (actyCounter > 7) {
+    if (actyCounter > ACTY_OFF_DELAY_MS) {
       acty = !acty;
       actyCounter = 0;
       digitalInd->setComputerActivityStatus(acty);
     }
   } else {
-    if (actyCounter > 3) {
+    if (actyCounter > ACTY_ON_DELAY_MS) {
       acty = !acty;
       actyCounter = 0;
       digitalInd->setComputerActivityStatus(acty);
     }    
+  }  
+  actyCounter++;
+  return FAGC_IDLE;
+}
+
+uint8_t state = FAGC_INIT;
+uint8_t actyVerb = VERB_UNSET;
+
+void loop() {
+  uint8_t next_state = state;
+
+  switch (state) {
+    case FAGC_INIT:
+      {
+        next_state = FAGC_IDLE;
+        break;
+      }
+    case FAGC_IDLE:
+      {
+        next_state = acty_cycle();
+
+        // REMOVE ME
+        // actyVerb = VERB35;
+
+        if (actyVerb != VERB_UNSET) {
+          next_state = verbs[actyVerb].startFn(alarmInd, digitalInd);
+        }
+        break;
+      }
+    case FAGC_BUSY:
+      {
+        if (actyVerb != VERB_UNSET) {
+          next_state = verbs[actyVerb].cycleFn();
+          if (next_state == FAGC_IDLE) {
+            actyVerb = VERB_COUNT;
+          }          
+        }
+        break;
+      }
+    default:
+      Serial.print("ERROR: Unknown state:");
+      Serial.println(state);
+      break;
+  }
+
+  if (next_state != state) {
+      Serial.print("Next state:");
+      Serial.print(next_state);
+      Serial.print(" previous state:");
+      Serial.println(state);
+      state = next_state;
   }
 
 #ifndef ESP32
   MDNS.update();
 #endif
 
-  delay(250);
-  actyCounter++;
+  delay(MAIN_LOOP_DELAY_MS);
 }

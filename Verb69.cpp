@@ -1,10 +1,15 @@
+#include "ESP32-DSKY.h"
 #include "Verb69.h"
 
-Verb69::Verb69(AlarmIndicator &ai, DigitalIndicator &di) : m_ai(ai), m_di(di)
+uint8_t verb69_start(AlarmIndicator *ai, DigitalIndicator *di)
 {
-  ESP.restart();
+  Serial.print("VERB69 started at ");
+  Serial.println(millis());
+  return FAGC_BUSY;
 }
 
-Verb69::~Verb69()
+uint8_t verb69_cycle(void)
 {
+  ESP.restart();
+  return FAGC_IDLE;
 }

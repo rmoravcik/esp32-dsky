@@ -8,7 +8,7 @@
 class AlarmIndicator
 {
 public:
-  AlarmIndicator(TFT_eSPI &tft);
+  AlarmIndicator(TFT_eSPI *tft);
   virtual ~AlarmIndicator();
 
   void setUplinkActivityStatus(bool status);
@@ -26,7 +26,7 @@ public:
   void setVelocityDataCaution(bool status);
 
 private:
-  TFT_eSPI m_tft;
+  TFT_eSPI *m_tft;
 
   bool m_uplinkActivityStatus;
   bool m_noAttitudeStatus;
@@ -43,4 +43,4 @@ private:
   bool m_velocityDataCaution;
 };
 
-#endif
+#endif /* ALARMINDICATOR_H */

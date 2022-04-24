@@ -15,6 +15,6 @@ private:
   AsyncWebServer m_server;
 };
 
-#endif
+#endif /* ESP32 */
 
-#endif
+#endif /* OTA_H */

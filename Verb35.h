@@ -7,12 +7,16 @@
 class Verb35
 {
 public:
-  Verb35(AlarmIndicator &ai, DigitalIndicator &di);
+  Verb35(AlarmIndicator *ai, DigitalIndicator *di);
   virtual ~Verb35();
 
-private:
-  AlarmIndicator m_ai;
-  DigitalIndicator m_di;
+  AlarmIndicator *m_ai;
+  DigitalIndicator *m_di;
+
+  unsigned long startMillis;
 };
 
-#endif
+uint8_t verb35_start(AlarmIndicator *ai, DigitalIndicator *di);
+uint8_t verb35_cycle(void);
+
+#endif /* VERB35_H */

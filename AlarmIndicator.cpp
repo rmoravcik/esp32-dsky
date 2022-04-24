@@ -2,15 +2,17 @@
 
 #include "Gorton-Normal-12014.h"
 
-AlarmIndicator::AlarmIndicator(TFT_eSPI &tft) : m_tft(tft)
+AlarmIndicator::AlarmIndicator(TFT_eSPI *tft)
 {
+  m_tft = tft;
+
   digitalWrite(ALARM_INDICATOR_CS, LOW);
 
-  m_tft.fillScreen(TFT_BLACK);
-  m_tft.setRotation(0);
+  m_tft->fillScreen(TFT_BLACK);
+  m_tft->setRotation(0);
 
   // REMOVE ME
-  m_tft.drawRect(0, 0, 240, 320, TFT_WHITE);
+  m_tft->drawRect(0, 0, 240, 320, TFT_WHITE);
 
   m_uplinkActivityStatus = true;
   m_noAttitudeStatus = true;
@@ -64,14 +66,14 @@ void AlarmIndicator::setUplinkActivityStatus(bool status)
     textColor = TFT_BLACK;
   }
 
-  m_tft.fillRoundRect(25, 7, 90, 35, 3, buttonColor);
-  m_tft.loadFont(Gorton_Normal_120_14);
-  m_tft.setTextColor(textColor, buttonColor);
-  m_tft.setCursor(48, 11);
-  m_tft.print("UPLINK");
-  m_tft.setCursor(52, 26);
-  m_tft.print("ACTY");    
-  m_tft.unloadFont();
+  m_tft->fillRoundRect(25, 7, 90, 35, 3, buttonColor);
+  m_tft->loadFont(Gorton_Normal_120_14);
+  m_tft->setTextColor(textColor, buttonColor);
+  m_tft->setCursor(48, 11);
+  m_tft->print("UPLINK");
+  m_tft->setCursor(52, 26);
+  m_tft->print("ACTY");    
+  m_tft->unloadFont();
 
   digitalWrite(ALARM_INDICATOR_CS, HIGH);
 }
@@ -93,12 +95,12 @@ void AlarmIndicator::setNoAttitudeStatus(bool status)
     textColor = TFT_BLACK;
   }
 
-  m_tft.fillRoundRect(25, 52, 90, 35, 3, buttonColor);
-  m_tft.loadFont(Gorton_Normal_120_14);
-  m_tft.setTextColor(textColor, buttonColor);
-  m_tft.setCursor(46, 63);
-  m_tft.print("NO ATT");
-  m_tft.unloadFont();
+  m_tft->fillRoundRect(25, 52, 90, 35, 3, buttonColor);
+  m_tft->loadFont(Gorton_Normal_120_14);
+  m_tft->setTextColor(textColor, buttonColor);
+  m_tft->setCursor(46, 63);
+  m_tft->print("NO ATT");
+  m_tft->unloadFont();
 
   digitalWrite(ALARM_INDICATOR_CS, HIGH);
 }
@@ -120,12 +122,12 @@ void AlarmIndicator::setStandbyStatus(bool status)
     textColor = TFT_BLACK;
   }
 
-  m_tft.fillRoundRect(25, 97, 90, 35, 3, buttonColor);
-  m_tft.loadFont(Gorton_Normal_120_14);
-  m_tft.setTextColor(textColor, buttonColor);
-  m_tft.setCursor(52, 108);
-  m_tft.print("STBY");
-  m_tft.unloadFont();
+  m_tft->fillRoundRect(25, 97, 90, 35, 3, buttonColor);
+  m_tft->loadFont(Gorton_Normal_120_14);
+  m_tft->setTextColor(textColor, buttonColor);
+  m_tft->setCursor(52, 108);
+  m_tft->print("STBY");
+  m_tft->unloadFont();
 
   digitalWrite(ALARM_INDICATOR_CS, HIGH);
 }
@@ -147,12 +149,12 @@ void AlarmIndicator::setKeyReleaseStatus(bool status)
     textColor = TFT_BLACK;
   }
 
-  m_tft.fillRoundRect(25, 142, 90, 35, 3, buttonColor);
-  m_tft.loadFont(Gorton_Normal_120_14);
-  m_tft.setTextColor(textColor, buttonColor);
-  m_tft.setCursor(40, 153);
-  m_tft.print("KEY   REL");
-  m_tft.unloadFont();
+  m_tft->fillRoundRect(25, 142, 90, 35, 3, buttonColor);
+  m_tft->loadFont(Gorton_Normal_120_14);
+  m_tft->setTextColor(textColor, buttonColor);
+  m_tft->setCursor(40, 153);
+  m_tft->print("KEY   REL");
+  m_tft->unloadFont();
 
   digitalWrite(ALARM_INDICATOR_CS, HIGH);
 }
@@ -174,12 +176,12 @@ void AlarmIndicator::setOperatorErrorStatus(bool status)
     textColor = TFT_BLACK;
   }
 
-  m_tft.fillRoundRect(25, 187, 90, 35, 3, buttonColor);
-  m_tft.loadFont(Gorton_Normal_120_14);
-  m_tft.setTextColor(textColor, buttonColor);
-  m_tft.setCursor(37, 198);
-  m_tft.print("OPR   ERR");
-  m_tft.unloadFont();
+  m_tft->fillRoundRect(25, 187, 90, 35, 3, buttonColor);
+  m_tft->loadFont(Gorton_Normal_120_14);
+  m_tft->setTextColor(textColor, buttonColor);
+  m_tft->setCursor(37, 198);
+  m_tft->print("OPR   ERR");
+  m_tft->unloadFont();
 
   digitalWrite(ALARM_INDICATOR_CS, HIGH);
 }
@@ -201,12 +203,12 @@ void AlarmIndicator::setTemperatureCaution(bool status)
     textColor = TFT_BLACK;
   }
 
-  m_tft.fillRoundRect(125, 7, 90, 35, 3, buttonColor);
-  m_tft.loadFont(Gorton_Normal_120_14);
-  m_tft.setTextColor(textColor, buttonColor);
-  m_tft.setCursor(150, 18);
-  m_tft.print("TEMP");
-  m_tft.unloadFont();
+  m_tft->fillRoundRect(125, 7, 90, 35, 3, buttonColor);
+  m_tft->loadFont(Gorton_Normal_120_14);
+  m_tft->setTextColor(textColor, buttonColor);
+  m_tft->setCursor(150, 18);
+  m_tft->print("TEMP");
+  m_tft->unloadFont();
 
   digitalWrite(ALARM_INDICATOR_CS, HIGH);
 }
@@ -228,14 +230,14 @@ void AlarmIndicator::setGimbalLockStatus(bool status)
     textColor = TFT_BLACK;
   }
 
-  m_tft.fillRoundRect(125, 52, 90, 35, 3, buttonColor);
-  m_tft.loadFont(Gorton_Normal_120_14);
-  m_tft.setTextColor(textColor, buttonColor);
-  m_tft.setCursor(145, 56);
-  m_tft.print("GIMBAL");
-  m_tft.setCursor(152, 71);
-  m_tft.print("LOCK");
-  m_tft.unloadFont();
+  m_tft->fillRoundRect(125, 52, 90, 35, 3, buttonColor);
+  m_tft->loadFont(Gorton_Normal_120_14);
+  m_tft->setTextColor(textColor, buttonColor);
+  m_tft->setCursor(145, 56);
+  m_tft->print("GIMBAL");
+  m_tft->setCursor(152, 71);
+  m_tft->print("LOCK");
+  m_tft->unloadFont();
 
   digitalWrite(ALARM_INDICATOR_CS, HIGH);
 }
@@ -257,12 +259,12 @@ void AlarmIndicator::setProgramCondition(bool status)
     textColor = TFT_BLACK;
   }
 
-  m_tft.fillRoundRect(125, 97, 90, 35, 3, buttonColor);
-  m_tft.loadFont(Gorton_Normal_120_14);
-  m_tft.setTextColor(textColor, buttonColor);
-  m_tft.setCursor(152, 108);
-  m_tft.print("PROG");
-  m_tft.unloadFont();
+  m_tft->fillRoundRect(125, 97, 90, 35, 3, buttonColor);
+  m_tft->loadFont(Gorton_Normal_120_14);
+  m_tft->setTextColor(textColor, buttonColor);
+  m_tft->setCursor(152, 108);
+  m_tft->print("PROG");
+  m_tft->unloadFont();
 
   digitalWrite(ALARM_INDICATOR_CS, HIGH);
 }
@@ -284,12 +286,12 @@ void AlarmIndicator::setRestartCondition(bool status)
     textColor = TFT_BLACK;
   }
 
-  m_tft.fillRoundRect(125, 142, 90, 35, 3, buttonColor);
-  m_tft.loadFont(Gorton_Normal_120_14);
-  m_tft.setTextColor(textColor, buttonColor);
-  m_tft.setCursor(138, 153);
-  m_tft.print("RESTART");
-  m_tft.unloadFont();
+  m_tft->fillRoundRect(125, 142, 90, 35, 3, buttonColor);
+  m_tft->loadFont(Gorton_Normal_120_14);
+  m_tft->setTextColor(textColor, buttonColor);
+  m_tft->setCursor(138, 153);
+  m_tft->print("RESTART");
+  m_tft->unloadFont();
 
   digitalWrite(ALARM_INDICATOR_CS, HIGH);
 }
@@ -311,12 +313,12 @@ void AlarmIndicator::setTrackerCondition(bool status)
     textColor = TFT_BLACK;
   }
 
-  m_tft.fillRoundRect(125, 187, 90, 35, 3, buttonColor);
-  m_tft.loadFont(Gorton_Normal_120_14);
-  m_tft.setTextColor(textColor, buttonColor);
-  m_tft.setCursor(136, 198);
-  m_tft.print("TRACKER");
-  m_tft.unloadFont();
+  m_tft->fillRoundRect(125, 187, 90, 35, 3, buttonColor);
+  m_tft->loadFont(Gorton_Normal_120_14);
+  m_tft->setTextColor(textColor, buttonColor);
+  m_tft->setCursor(136, 198);
+  m_tft->print("TRACKER");
+  m_tft->unloadFont();
 
   digitalWrite(ALARM_INDICATOR_CS, HIGH);
 }
@@ -338,12 +340,12 @@ void AlarmIndicator::setAltitudeDataCaution(bool status)
     textColor = TFT_BLACK;
   }
 
-  m_tft.fillRoundRect(125, 232, 90, 35, 3, buttonColor);
-  m_tft.loadFont(Gorton_Normal_120_14);
-  m_tft.setTextColor(textColor, buttonColor);
-  m_tft.setCursor(157, 243);
-  m_tft.print("ALT");
-  m_tft.unloadFont();
+  m_tft->fillRoundRect(125, 232, 90, 35, 3, buttonColor);
+  m_tft->loadFont(Gorton_Normal_120_14);
+  m_tft->setTextColor(textColor, buttonColor);
+  m_tft->setCursor(157, 243);
+  m_tft->print("ALT");
+  m_tft->unloadFont();
 
   digitalWrite(ALARM_INDICATOR_CS, HIGH);
 }
@@ -365,12 +367,12 @@ void AlarmIndicator::setVelocityDataCaution(bool status)
     textColor = TFT_BLACK;
   }
 
-  m_tft.fillRoundRect(125, 277, 90, 35, 3, buttonColor);
-  m_tft.loadFont(Gorton_Normal_120_14);
-  m_tft.setTextColor(textColor, buttonColor);
-  m_tft.setCursor(157, 288);
-  m_tft.print("VEL");
-  m_tft.unloadFont();
+  m_tft->fillRoundRect(125, 277, 90, 35, 3, buttonColor);
+  m_tft->loadFont(Gorton_Normal_120_14);
+  m_tft->setTextColor(textColor, buttonColor);
+  m_tft->setCursor(157, 288);
+  m_tft->print("VEL");
+  m_tft->unloadFont();
 
   digitalWrite(ALARM_INDICATOR_CS, HIGH);
 }

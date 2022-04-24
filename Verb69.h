@@ -4,15 +4,7 @@
 #include "AlarmIndicator.h"
 #include "DigitalIndicator.h"
 
-class Verb69
-{
-public:
-  Verb69(AlarmIndicator &ai, DigitalIndicator &di);
-  virtual ~Verb69();
+uint8_t verb69_start(AlarmIndicator *ai, DigitalIndicator *di);
+uint8_t verb69_cycle(void);
 
-private:
-  AlarmIndicator m_ai;
-  DigitalIndicator m_di;
-};
-
-#endif
+#endif /* VERB69 */
