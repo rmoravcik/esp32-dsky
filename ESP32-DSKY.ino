@@ -12,7 +12,9 @@
 
 #include "AlarmIndicator.h"
 #include "DigitalIndicator.h"
+#include "Verb16.h"
 #include "Verb35.h"
+#include "Verb36.h"
 #include "Verb69.h"
 #include "OTA.h"
 
@@ -30,9 +32,18 @@ TFT_eSprite spr = TFT_eSprite(&tft);
 AsyncWebServer server(80);
 AsyncWebConfig conf;
 
-struct verb verbs[VERB_COUNT] = {
-  { 35, verb35_start, verb35_cycle },
-  { 69, verb69_start, verb69_cycle }
+struct noun verb16nouns[] = {
+  { 36, verb16noun36_start, verb16noun36_cycle },
+  { -1,                  0,                  0 }
+};
+
+struct verb verbs[] = {
+  { 16,  true,            0,            0, verb16nouns },
+  { 35, false, verb35_start, verb35_cycle,           0 },
+  { 36, false, verb36_start, verb36_cycle,           0 },
+  // 37
+  { 69, false, verb69_start, verb69_cycle,           0 },
+  { -1, false,            0,            0,           0 }
 };
 
 String params = "["
@@ -120,7 +131,6 @@ void setup() {
   digitalWrite(DIGITAL_INDICATOR_CS, HIGH);
 
   alarmInd = new AlarmIndicator(&tft);
-
   digitalInd = new DigitalIndicator(&tft, &spr);
 
   conf.setDescription(params);
@@ -164,10 +174,15 @@ uint8_t acty_cycle(void) {
 
 uint8_t state = FAGC_INIT;
 int8_t verbCode = VERB_CODE_INVALID;
-uint8_t actyVerb = VERB_UNSET;
+int8_t nounCode = NOUN_CODE_INVALID;
+
+startFn_t startFn = 0;
+cycleFn_t cycleFn = 0;
 
 // REMOVE ME
 uint32_t start_verb35 = 1000;
+uint32_t start_verb36 = 2000;
+uint32_t start_verb69 = 3000;
 
 void loop() {
   uint8_t next_state = state;
@@ -176,6 +191,10 @@ void loop() {
     case FAGC_INIT:
       {
         alarmInd->setProgramCondition(true);
+        acty = false;
+        actyCounter = 0;
+        startFn = 0;
+        cycleFn = 0;
         next_state = FAGC_IDLE;
         break;
       }
@@ -197,32 +216,73 @@ void loop() {
           }
           start_verb35--;
         }
+        if (start_verb36 > 0)
+        {
+          if (start_verb36 == 200) {
+            digitalInd->setVerbCode(3);
+          }
+          if (start_verb36 == 100) {
+            digitalInd->setVerbCode(36);
+          }
+          if (start_verb36 == 1) {
+            verbCode = 36;
+          }
+          start_verb36--;
+        }
+        if (start_verb69 > 0)
+        {
+          if (start_verb69 == 200) {
+            digitalInd->setVerbCode(6);
+          }
+          if (start_verb69 == 100) {
+            digitalInd->setVerbCode(69);
+          }
+          if (start_verb69 == 1) {
+            verbCode = 69;
+          }
+          start_verb69--;
+        }
+        // REMOVE ME
 
-        for (uint8_t i = 0; i < VERB_COUNT; i ++) {
-          if (verbs[i].code == verbCode) {
-            actyVerb = i;
-            verbCode = VERB_CODE_INVALID;
-            break;
+        for (uint8_t verb = 0; verbs[verb].code != VERB_CODE_INVALID; verb++) {
+          if (verbs[verb].code == verbCode) {
+            if (verbs[verb].nounRequired) {
+              for (uint8_t noun = 0; verbs[verb].nouns[noun].code != NOUN_CODE_INVALID; noun++) {
+                if (verbs[verb].nouns[noun].code == nounCode) {
+                  startFn = verbs[verb].nouns[noun].startFn;
+                  cycleFn = verbs[verb].nouns[noun].cycleFn;
+                  break;
+                }
+              }
+            } else {
+              startFn = verbs[verb].startFn;
+              cycleFn = verbs[verb].cycleFn;
+              break;
+            }
           }
         }
 
-        if ((verbCode != VERB_CODE_INVALID) && (actyVerb == VERB_UNSET))
+        if ((verbCode != VERB_CODE_INVALID) && (startFn == 0))
         {
           alarmInd->setOperatorErrorStatus(true);
         }
 
-        if (actyVerb != VERB_UNSET) {
-          next_state = verbs[actyVerb].startFn(alarmInd, digitalInd);
+        if (startFn) {
+          next_state = startFn(alarmInd, digitalInd);
+          verbCode = VERB_CODE_INVALID;
+          nounCode = NOUN_CODE_INVALID;
+          startFn = 0;
         }
         break;
       }
     case FAGC_BUSY:
       {
-        if (actyVerb != VERB_UNSET) {
-          next_state = verbs[actyVerb].cycleFn();
+        if (cycleFn) {
+          next_state = cycleFn();
+
           if (next_state == FAGC_IDLE) {
-            actyVerb = VERB_UNSET;
-          }          
+            cycleFn = 0;
+          }
         }
         break;
       }

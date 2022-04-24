@@ -1,7 +1,7 @@
 #include "ESP32-DSKY.h"
 #include "Verb35.h"
 
-Verb35 *inst = NULL;
+static Verb35 *inst = NULL;
 
 Verb35::Verb35(AlarmIndicator *ai, DigitalIndicator *di)
 {

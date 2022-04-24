@@ -4,9 +4,18 @@
 
 AlarmIndicator::AlarmIndicator(TFT_eSPI *tft)
 {
-#ifdef ESP32
   m_tft = tft;
 
+  resetIndicator();
+}
+
+AlarmIndicator::~AlarmIndicator()
+{
+}
+
+void AlarmIndicator::resetIndicator(void)
+{
+#ifdef ESP32
   digitalWrite(ALARM_INDICATOR_CS, LOW);
 
   m_tft->fillScreen(TFT_BLACK);
@@ -44,11 +53,7 @@ AlarmIndicator::AlarmIndicator(TFT_eSPI *tft)
   setVelocityDataCaution(false);
 
   digitalWrite(ALARM_INDICATOR_CS, HIGH);
-#endif /* ESP32 */
-}
-
-AlarmIndicator::~AlarmIndicator()
-{
+#endif /* ESP32 */  
 }
 
 void AlarmIndicator::setUplinkActivityStatus(bool status)

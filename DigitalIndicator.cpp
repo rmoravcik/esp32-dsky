@@ -7,7 +7,16 @@ DigitalIndicator::DigitalIndicator(TFT_eSPI *tft, TFT_eSprite *spr)
 {
   m_tft = tft;
   m_spr = spr;
-  
+
+  resetIndicator();
+}
+
+DigitalIndicator::~DigitalIndicator()
+{
+}
+
+void DigitalIndicator::resetIndicator(void)
+{
   m_programNumber = DIGITAL_INDICATOR_VALUE_UINT8_NAN;
   m_verbCode = DIGITAL_INDICATOR_VALUE_UINT8_NAN;
   m_nounCode = DIGITAL_INDICATOR_VALUE_UINT8_NAN;
@@ -62,10 +71,6 @@ DigitalIndicator::DigitalIndicator(TFT_eSPI *tft, TFT_eSprite *spr)
   setComputerActivityStatus(false);
 
   digitalWrite(DIGITAL_INDICATOR_CS, HIGH);
-}
-
-DigitalIndicator::~DigitalIndicator()
-{
 }
 
 void DigitalIndicator::setComputerActivityStatus(bool status)

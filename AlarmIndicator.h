@@ -11,6 +11,8 @@ public:
   AlarmIndicator(TFT_eSPI *tft);
   virtual ~AlarmIndicator();
 
+  void resetIndicator(void);
+
   void setUplinkActivityStatus(bool status);
   void setNoAttitudeStatus(bool status);
   void setStandbyStatus(bool status);

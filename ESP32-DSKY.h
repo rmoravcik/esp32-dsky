@@ -13,18 +13,23 @@
 #define FAGC_BUSY           (2)
 
 #define VERB_CODE_INVALID   (-1)
+#define NOUN_CODE_INVALID   (-1)
 
-enum VERB_LIST {
-  VERB35 = 0,
-  VERB69,
-  VERB_COUNT,
-  VERB_UNSET
+typedef uint8_t (*startFn_t)(AlarmIndicator*, DigitalIndicator*);
+typedef uint8_t (*cycleFn_t)(void);
+
+struct noun {
+  int8_t code;
+  startFn_t startFn;
+  cycleFn_t cycleFn;
 };
 
 struct verb {
   int8_t code;
-  uint8_t (*startFn)(AlarmIndicator*, DigitalIndicator*);
-  uint8_t (*cycleFn)(void);
+  bool nounRequired;
+  startFn_t startFn;
+  cycleFn_t cycleFn;
+  struct noun* nouns;
 };
 
 #endif /* ESP32_DSKY_h */

@@ -14,6 +14,8 @@ public:
   DigitalIndicator(TFT_eSPI *tft, TFT_eSprite *spr);
   virtual ~DigitalIndicator();
 
+  void resetIndicator(void);
+
   void setComputerActivityStatus(bool status);
 
   void setProgramNumber(uint8_t number);
