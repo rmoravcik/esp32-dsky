@@ -50,7 +50,6 @@ uint8_t verb35_start(AlarmIndicator *ai, DigitalIndicator *di)
 uint8_t verb35_cycle(void)
 {
   unsigned long deltaMillis = millis() - inst->startMillis;
-  Serial.println(deltaMillis);
 
   if (deltaMillis > 5900) {
     return FAGC_IDLE;

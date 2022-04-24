@@ -12,6 +12,8 @@
 #define FAGC_IDLE           (1)
 #define FAGC_BUSY           (2)
 
+#define VERB_CODE_INVALID   (-1)
+
 enum VERB_LIST {
   VERB35 = 0,
   VERB69,
@@ -20,6 +22,7 @@ enum VERB_LIST {
 };
 
 struct verb {
+  int8_t code;
   uint8_t (*startFn)(AlarmIndicator*, DigitalIndicator*);
   uint8_t (*cycleFn)(void);
 };

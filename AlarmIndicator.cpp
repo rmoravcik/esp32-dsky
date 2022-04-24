@@ -4,6 +4,7 @@
 
 AlarmIndicator::AlarmIndicator(TFT_eSPI *tft)
 {
+#ifdef ESP32
   m_tft = tft;
 
   digitalWrite(ALARM_INDICATOR_CS, LOW);
@@ -43,6 +44,7 @@ AlarmIndicator::AlarmIndicator(TFT_eSPI *tft)
   setVelocityDataCaution(false);
 
   digitalWrite(ALARM_INDICATOR_CS, HIGH);
+#endif /* ESP32 */
 }
 
 AlarmIndicator::~AlarmIndicator()
@@ -51,6 +53,7 @@ AlarmIndicator::~AlarmIndicator()
 
 void AlarmIndicator::setUplinkActivityStatus(bool status)
 {
+#ifdef ESP32
   uint32_t buttonColor = TFT_LIGHTGREY;
   uint32_t textColor = TFT_DARKGREY;
 
@@ -76,10 +79,12 @@ void AlarmIndicator::setUplinkActivityStatus(bool status)
   m_tft->unloadFont();
 
   digitalWrite(ALARM_INDICATOR_CS, HIGH);
+#endif /* ESP32 */
 }
 
 void AlarmIndicator::setNoAttitudeStatus(bool status)
 {
+#ifdef ESP32
   uint32_t buttonColor = TFT_LIGHTGREY;
   uint32_t textColor = TFT_DARKGREY;
 
@@ -103,10 +108,12 @@ void AlarmIndicator::setNoAttitudeStatus(bool status)
   m_tft->unloadFont();
 
   digitalWrite(ALARM_INDICATOR_CS, HIGH);
+#endif /* ESP32 */
 }
 
 void AlarmIndicator::setStandbyStatus(bool status)
 {
+#ifdef ESP32
   uint32_t buttonColor = TFT_LIGHTGREY;
   uint32_t textColor = TFT_DARKGREY;
 
@@ -130,10 +137,12 @@ void AlarmIndicator::setStandbyStatus(bool status)
   m_tft->unloadFont();
 
   digitalWrite(ALARM_INDICATOR_CS, HIGH);
+#endif /* ESP32 */
 }
 
 void AlarmIndicator::setKeyReleaseStatus(bool status)
 {
+#ifdef ESP32
   uint32_t buttonColor = TFT_LIGHTGREY;
   uint32_t textColor = TFT_DARKGREY;
 
@@ -157,10 +166,12 @@ void AlarmIndicator::setKeyReleaseStatus(bool status)
   m_tft->unloadFont();
 
   digitalWrite(ALARM_INDICATOR_CS, HIGH);
+#endif /* ESP32 */
 }
 
 void AlarmIndicator::setOperatorErrorStatus(bool status)
 {
+#ifdef ESP32
   uint32_t buttonColor = TFT_LIGHTGREY;
   uint32_t textColor = TFT_DARKGREY;
 
@@ -184,10 +195,12 @@ void AlarmIndicator::setOperatorErrorStatus(bool status)
   m_tft->unloadFont();
 
   digitalWrite(ALARM_INDICATOR_CS, HIGH);
+#endif /* ESP32 */
 }
 
 void AlarmIndicator::setTemperatureCaution(bool status)
 {
+#ifdef ESP32
   uint32_t buttonColor = TFT_LIGHTGREY;
   uint32_t textColor = TFT_DARKGREY;
 
@@ -211,10 +224,12 @@ void AlarmIndicator::setTemperatureCaution(bool status)
   m_tft->unloadFont();
 
   digitalWrite(ALARM_INDICATOR_CS, HIGH);
+#endif /* ESP32 */
 }
 
 void AlarmIndicator::setGimbalLockStatus(bool status)
 {
+#ifdef ESP32
   uint32_t buttonColor = TFT_LIGHTGREY;
   uint32_t textColor = TFT_DARKGREY;
 
@@ -240,10 +255,12 @@ void AlarmIndicator::setGimbalLockStatus(bool status)
   m_tft->unloadFont();
 
   digitalWrite(ALARM_INDICATOR_CS, HIGH);
+#endif /* ESP32 */
 }
 
 void AlarmIndicator::setProgramCondition(bool status)
 {
+#ifdef ESP32
   uint32_t buttonColor = TFT_LIGHTGREY;
   uint32_t textColor = TFT_DARKGREY;
 
@@ -267,10 +284,12 @@ void AlarmIndicator::setProgramCondition(bool status)
   m_tft->unloadFont();
 
   digitalWrite(ALARM_INDICATOR_CS, HIGH);
+#endif /* ESP32 */
 }
 
 void AlarmIndicator::setRestartCondition(bool status)
 {
+#ifdef ESP32
   uint32_t buttonColor = TFT_LIGHTGREY;
   uint32_t textColor = TFT_DARKGREY;
 
@@ -294,10 +313,12 @@ void AlarmIndicator::setRestartCondition(bool status)
   m_tft->unloadFont();
 
   digitalWrite(ALARM_INDICATOR_CS, HIGH);
+#endif /* ESP32 */
 }
 
 void AlarmIndicator::setTrackerCondition(bool status)
 {
+#ifdef ESP32
   uint32_t buttonColor = TFT_LIGHTGREY;
   uint32_t textColor = TFT_DARKGREY;
 
@@ -321,10 +342,12 @@ void AlarmIndicator::setTrackerCondition(bool status)
   m_tft->unloadFont();
 
   digitalWrite(ALARM_INDICATOR_CS, HIGH);
+#endif /* ESP32 */
 }
 
 void AlarmIndicator::setAltitudeDataCaution(bool status)
 {
+#ifdef ESP32
   uint32_t buttonColor = TFT_LIGHTGREY;
   uint32_t textColor = TFT_DARKGREY;
 
@@ -348,10 +371,12 @@ void AlarmIndicator::setAltitudeDataCaution(bool status)
   m_tft->unloadFont();
 
   digitalWrite(ALARM_INDICATOR_CS, HIGH);
+#endif /* ESP32 */
 }
 
 void AlarmIndicator::setVelocityDataCaution(bool status)
 {
+#ifdef ESP32
   uint32_t buttonColor = TFT_LIGHTGREY;
   uint32_t textColor = TFT_DARKGREY;
 
@@ -375,4 +400,5 @@ void AlarmIndicator::setVelocityDataCaution(bool status)
   m_tft->unloadFont();
 
   digitalWrite(ALARM_INDICATOR_CS, HIGH);
+#endif /* ESP32 */
 }

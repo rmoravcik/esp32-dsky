@@ -31,8 +31,8 @@ AsyncWebServer server(80);
 AsyncWebConfig conf;
 
 struct verb verbs[VERB_COUNT] = {
-  { verb35_start, verb35_cycle },
-  { verb69_start, verb69_cycle }
+  { 35, verb35_start, verb35_cycle },
+  { 69, verb69_start, verb69_cycle }
 };
 
 String params = "["
@@ -60,7 +60,10 @@ boolean initWiFi() {
       uint8_t cnt = 0;
 
       while ((WiFi.status() != WL_CONNECTED) && (cnt < 20)) {
-        delay(500);
+        digitalInd->setComputerActivityStatus(true);
+        delay(250);
+        digitalInd->setComputerActivityStatus(false);
+        delay(250);
         Serial.print(".");
         cnt++;
       }
@@ -117,7 +120,6 @@ void setup() {
   digitalWrite(DIGITAL_INDICATOR_CS, HIGH);
 
   alarmInd = new AlarmIndicator(&tft);
-  alarmInd->setProgramCondition(true);
 
   digitalInd = new DigitalIndicator(&tft, &spr);
 
@@ -161,7 +163,11 @@ uint8_t acty_cycle(void) {
 }
 
 uint8_t state = FAGC_INIT;
+int8_t verbCode = VERB_CODE_INVALID;
 uint8_t actyVerb = VERB_UNSET;
+
+// REMOVE ME
+uint32_t start_verb35 = 1000;
 
 void loop() {
   uint8_t next_state = state;
@@ -169,6 +175,7 @@ void loop() {
   switch (state) {
     case FAGC_INIT:
       {
+        alarmInd->setProgramCondition(true);
         next_state = FAGC_IDLE;
         break;
       }
@@ -177,7 +184,32 @@ void loop() {
         next_state = acty_cycle();
 
         // REMOVE ME
-        // actyVerb = VERB35;
+        if (start_verb35 > 0)
+        {
+          if (start_verb35 == 200) {
+            digitalInd->setVerbCode(3);
+          }
+          if (start_verb35 == 100) {
+            digitalInd->setVerbCode(35);
+          }
+          if (start_verb35 == 1) {
+            verbCode = 35;
+          }
+          start_verb35--;
+        }
+
+        for (uint8_t i = 0; i < VERB_COUNT; i ++) {
+          if (verbs[i].code == verbCode) {
+            actyVerb = i;
+            verbCode = VERB_CODE_INVALID;
+            break;
+          }
+        }
+
+        if ((verbCode != VERB_CODE_INVALID) && (actyVerb == VERB_UNSET))
+        {
+          alarmInd->setOperatorErrorStatus(true);
+        }
 
         if (actyVerb != VERB_UNSET) {
           next_state = verbs[actyVerb].startFn(alarmInd, digitalInd);
@@ -189,7 +221,7 @@ void loop() {
         if (actyVerb != VERB_UNSET) {
           next_state = verbs[actyVerb].cycleFn();
           if (next_state == FAGC_IDLE) {
-            actyVerb = VERB_COUNT;
+            actyVerb = VERB_UNSET;
           }          
         }
         break;
