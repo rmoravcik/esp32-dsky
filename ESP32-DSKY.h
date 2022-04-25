@@ -8,6 +8,8 @@
 #define ACTY_ON_DELAY_MS    (500 / MAIN_LOOP_DELAY_MS)
 #define ACTY_OFF_DELAY_MS   (1500 / MAIN_LOOP_DELAY_MS)
 
+#define WEATHER_UPDATE_S    (15 * 60)
+
 #define FAGC_INIT           (0)
 #define FAGC_IDLE           (1)
 #define FAGC_BUSY           (2)

@@ -18,6 +18,7 @@
 #include "Verb69.h"
 #include "OTA.h"
 #include "RTC.h"
+#include "Weather.h"
 
 #include "ESP32-DSKY.h"
 
@@ -27,6 +28,7 @@ DigitalIndicator *digitalInd;
 OTA *ota;
 #endif
 RTC *rtc;
+Weather *weather;
 
 TFT_eSPI tft = TFT_eSPI(320, 480);
 TFT_eSprite spr = TFT_eSprite(&tft);
@@ -72,6 +74,24 @@ String params = "["
   "'label':'Time zone',"
   "'type':"+String(INPUTTEXT)+","
   "'default':'1'"
+  "},"
+  "{"
+  "'name':'weather_city',"
+  "'label':'City',"
+  "'type':"+String(INPUTTEXT)+","
+  "'default':''"
+  "},"
+  "{"
+  "'name':'weather_country',"
+  "'label':'Country',"
+  "'type':"+String(INPUTTEXT)+","
+  "'default':''"
+  "},"
+  "{"
+  "'name':'weather_api_key',"
+  "'label':'OpenWeatherMap API Key',"
+  "'type':"+String(INPUTTEXT)+","
+  "'default':''"
   "}"
 "]";
 
@@ -164,7 +184,12 @@ void setup() {
   server.on("/", handleRoot);
   server.begin();
 
-  rtc = new RTC(conf.getString("ntp_server"), conf.getInt("time_zone"));
+  rtc = new RTC(conf.getString("ntp_server"),
+                conf.getInt("time_zone"));
+
+  weather = new Weather(conf.getString("weather_city"),
+                        conf.getString("weather_country"),
+                        conf.getString("weather_api_key"));
 }
 
 bool acty = false;
@@ -337,6 +362,8 @@ void loop() {
       Serial.println(state);
       state = next_state;
   }
+
+  weather->update();
 
 #ifndef ESP32
   MDNS.update();
