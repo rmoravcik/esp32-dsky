@@ -256,10 +256,10 @@ void loop() {
         if (start_verb35 > 0)
         {
           if (start_verb35 == 200) {
-            digitalInd->setVerbCode(0x3F);
+            digitalInd->setVerbCode("3");
           }
           if (start_verb35 == 100) {
-            digitalInd->setVerbCode(35);
+            digitalInd->setVerbCode("35");
           }
           if (start_verb35 == 1) {
             verbCode = 35;
@@ -269,10 +269,10 @@ void loop() {
         if (start_verb36 > 0)
         {
           if (start_verb36 == 200) {
-            digitalInd->setVerbCode(0x3F);
+            digitalInd->setVerbCode("3");
           }
           if (start_verb36 == 100) {
-            digitalInd->setVerbCode(36);
+            digitalInd->setVerbCode("36");
           }
           if (start_verb36 == 1) {
             verbCode = 36;
@@ -282,16 +282,16 @@ void loop() {
         if (start_verb06verb43 > 0)
         {
           if (start_verb06verb43 == 400) {
-            digitalInd->setVerbCode(0x0F);
+            digitalInd->setVerbCode("0");
           }
           if (start_verb06verb43 == 300) {
-            digitalInd->setVerbCode(06);
+            digitalInd->setVerbCode("06");
           }
           if (start_verb06verb43 == 200) {
-            digitalInd->setNounCode(0x4F);
+            digitalInd->setNounCode("4");
           }
           if (start_verb06verb43 == 100) {
-            digitalInd->setNounCode(43);
+            digitalInd->setNounCode("43");
           }
           if (start_verb06verb43 == 1) {
             verbCode = 6;
@@ -302,16 +302,16 @@ void loop() {
         if (start_verb16verb36 > 0)
         {
           if (start_verb16verb36 == 400) {
-            digitalInd->setVerbCode(0x1F);
+            digitalInd->setVerbCode("1");
           }
           if (start_verb16verb36 == 300) {
-            digitalInd->setVerbCode(16);
+            digitalInd->setVerbCode("16");
           }
           if (start_verb16verb36 == 200) {
-            digitalInd->setNounCode(0x3F);
+            digitalInd->setNounCode("3");
           }
           if (start_verb16verb36 == 100) {
-            digitalInd->setNounCode(36);
+            digitalInd->setNounCode("36");
           }
           if (start_verb16verb36 == 1) {
             verbCode = 16;

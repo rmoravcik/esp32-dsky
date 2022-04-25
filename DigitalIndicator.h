@@ -5,7 +5,7 @@
 
 #define DIGITAL_INDICATOR_CS PIN_D2
 
-#define DIGITAL_INDICATOR_VALUE_UINT8_NAN     0xFFU
+#define DIGITAL_INDICATOR_VALUE_UINT8_NAN     "NAN"
 #define DIGITAL_INDICATOR_REGISTER_VALUE_NAN  INT32_MIN
 
 class DigitalIndicator
@@ -18,14 +18,14 @@ public:
 
   void setComputerActivityStatus(bool status);
 
-  void setProgramNumber(uint8_t number);
-  uint8_t getProgramNumber(void);
+  void setProgramNumber(String number);
+  String getProgramNumber(void);
 
-  void setVerbCode(uint8_t code);
-  uint8_t getVerbCode(void);
+  void setVerbCode(String code);
+  String getVerbCode(void);
 
-  void setNounCode(uint8_t code);
-  uint8_t getNounCode(void);
+  void setNounCode(String code);
+  String getNounCode(void);
 
   void setRegister1(int32_t value);
   int32_t getRegister1(void);
@@ -41,12 +41,12 @@ private:
   TFT_eSprite *m_spr;
 
   bool m_compActyStatus;
-  uint8_t m_programNumber;
-  uint8_t m_verbCode;
-  uint8_t m_nounCode;
+  String m_programNumber;
+  String m_verbCode;
+  String m_nounCode;
   int32_t m_registerValue[3];
 
-  void printUInt8Value(uint16_t x, uint16_t y, uint8_t value);
+  void printUInt8Value(uint16_t x, uint16_t y, String value);
   void printInt32Value(uint16_t x, uint16_t y, int32_t value);
 
 };

@@ -70,8 +70,8 @@ uint8_t verb35_cycle(void)
   } else if (deltaMillis > 4800) {
     inst->m_ai->setKeyReleaseStatus(true);
     inst->m_ai->setOperatorErrorStatus(true);
-    inst->m_di->setVerbCode(88);
-    inst->m_di->setNounCode(88);
+    inst->m_di->setVerbCode("88");
+    inst->m_di->setNounCode("88");
   } else if (deltaMillis > 4400) {
     inst->m_ai->setKeyReleaseStatus(false);
     inst->m_ai->setOperatorErrorStatus(false);
@@ -80,8 +80,8 @@ uint8_t verb35_cycle(void)
   } else if (deltaMillis > 3400) {
     inst->m_ai->setKeyReleaseStatus(true);
     inst->m_ai->setOperatorErrorStatus(true);
-    inst->m_di->setVerbCode(88);
-    inst->m_di->setNounCode(88);
+    inst->m_di->setVerbCode("88");
+    inst->m_di->setNounCode("88");
   } else if (deltaMillis > 3000) {
     inst->m_ai->setKeyReleaseStatus(false);
     inst->m_ai->setOperatorErrorStatus(false);
@@ -90,8 +90,8 @@ uint8_t verb35_cycle(void)
   } else if (deltaMillis > 2000) {
     inst->m_ai->setKeyReleaseStatus(true);
     inst->m_ai->setOperatorErrorStatus(true);
-    inst->m_di->setVerbCode(88);
-    inst->m_di->setNounCode(88);
+    inst->m_di->setVerbCode("88");
+    inst->m_di->setNounCode("88");
   } else if (deltaMillis > 1600) {
     inst->m_ai->setKeyReleaseStatus(false);
     inst->m_ai->setOperatorErrorStatus(false);
@@ -100,11 +100,11 @@ uint8_t verb35_cycle(void)
   } else if (deltaMillis > 600) {
     inst->m_ai->setKeyReleaseStatus(true);
     inst->m_ai->setOperatorErrorStatus(true);
-    inst->m_di->setVerbCode(88);
-    inst->m_di->setNounCode(88);
+    inst->m_di->setVerbCode("88");
+    inst->m_di->setNounCode("88");
   } else if (deltaMillis > 500) {
     inst->m_di->setRegister3(88888);
-    inst->m_di->setProgramNumber(88);
+    inst->m_di->setProgramNumber("88");
   } else if (deltaMillis > 400) {
     inst->m_di->setRegister2(88888);
   } else if (deltaMillis > 300) {
@@ -114,7 +114,7 @@ uint8_t verb35_cycle(void)
     inst->m_di->setNounCode(DIGITAL_INDICATOR_VALUE_UINT8_NAN);
     inst->m_di->setRegister1(88888);
   } else if (deltaMillis > 200) {
-    inst->m_di->setNounCode(88);
+    inst->m_di->setNounCode("88");
   } else if (deltaMillis > 100) {
     inst->m_ai->setUplinkActivityStatus(true);
     inst->m_ai->setNoAttitudeStatus(true);
@@ -128,7 +128,7 @@ uint8_t verb35_cycle(void)
     inst->m_ai->setTrackerCondition(true);
     inst->m_ai->setAltitudeDataCaution(true);
     inst->m_ai->setVelocityDataCaution(true);
-    inst->m_di->setVerbCode(88);
+    inst->m_di->setVerbCode("88");
   }
   return FAGC_BUSY;
 }

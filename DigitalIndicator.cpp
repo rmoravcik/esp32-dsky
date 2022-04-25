@@ -104,7 +104,7 @@ void DigitalIndicator::setComputerActivityStatus(bool status)
   }
 }
 
-void DigitalIndicator::setProgramNumber(uint8_t number)
+void DigitalIndicator::setProgramNumber(String number)
 {
   if (m_programNumber != number) {
      printUInt8Value(145, 70, number);
@@ -112,12 +112,12 @@ void DigitalIndicator::setProgramNumber(uint8_t number)
   }
 }
 
-uint8_t DigitalIndicator::getProgramNumber(void)
+String DigitalIndicator::getProgramNumber(void)
 {
   return m_programNumber;
 }
 
-void DigitalIndicator::setVerbCode(uint8_t code)
+void DigitalIndicator::setVerbCode(String code)
 {
   if (m_verbCode != code) {
     printUInt8Value(25, 146, code);
@@ -125,12 +125,12 @@ void DigitalIndicator::setVerbCode(uint8_t code)
   }
 }
 
-uint8_t DigitalIndicator::getVerbCode(void)
+String DigitalIndicator::getVerbCode(void)
 {
   return m_verbCode;
 }
 
-void DigitalIndicator::setNounCode(uint8_t code)
+void DigitalIndicator::setNounCode(String code)
 {
   if (m_nounCode != code) {
     printUInt8Value(145, 146, code);
@@ -138,7 +138,7 @@ void DigitalIndicator::setNounCode(uint8_t code)
   }
 }
 
-uint8_t DigitalIndicator::getNounCode(void)
+String DigitalIndicator::getNounCode(void)
 {
   return m_nounCode;
 }
@@ -182,7 +182,7 @@ int32_t DigitalIndicator::getRegister3(void)
   return m_registerValue[2];
 }
 
-void DigitalIndicator::printUInt8Value(uint16_t x, uint16_t y, uint8_t value)
+void DigitalIndicator::printUInt8Value(uint16_t x, uint16_t y, String value)
 {  
   char str[3];
   int ret;
@@ -196,11 +196,7 @@ void DigitalIndicator::printUInt8Value(uint16_t x, uint16_t y, uint8_t value)
 
   if (value != DIGITAL_INDICATOR_VALUE_UINT8_NAN) {
     m_spr->setTextColor(TFT_GREEN, TFT_BLACK);
-    if ((value & 0x0F) == 0x0F) {
-      ret = snprintf(str, sizeof(str), "%u", uint8_t(value >> 4));
-    } else {
-      ret = snprintf(str, sizeof(str), "%02u", value);
-    }
+    ret = snprintf(str, sizeof(str), "%s", value);
 
     if (ret < 0) {
       Serial.print("DigitalIndicator::printInt32Value(): ERROR=");
