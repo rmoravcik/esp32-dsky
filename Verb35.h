@@ -3,11 +3,12 @@
 
 #include "AlarmIndicator.h"
 #include "DigitalIndicator.h"
+#include "Weather.h"
 
 class Verb35
 {
 public:
-  Verb35(AlarmIndicator *ai, DigitalIndicator *di);
+  Verb35(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather);
   virtual ~Verb35();
 
   AlarmIndicator *m_ai;
@@ -16,7 +17,7 @@ public:
   unsigned long startMillis;
 };
 
-uint8_t verb35_start(AlarmIndicator *ai, DigitalIndicator *di);
+uint8_t verb35_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather);
 uint8_t verb35_cycle(void);
 
 #endif /* VERB35_H */

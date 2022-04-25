@@ -21,7 +21,9 @@ void DigitalIndicator::resetIndicator(void)
   m_programNumber = DIGITAL_INDICATOR_VALUE_UINT8_NAN;
   m_verbCode = DIGITAL_INDICATOR_VALUE_UINT8_NAN;
   m_nounCode = DIGITAL_INDICATOR_VALUE_UINT8_NAN;
-  memset(m_registerValue, 0, sizeof(m_registerValue));
+  m_registerValue[0] = DIGITAL_INDICATOR_REGISTER_VALUE_NAN;
+  m_registerValue[1] = DIGITAL_INDICATOR_REGISTER_VALUE_NAN;
+  m_registerValue[2] = DIGITAL_INDICATOR_REGISTER_VALUE_NAN;
 
   digitalWrite(DIGITAL_INDICATOR_CS, LOW);
 
@@ -194,7 +196,11 @@ void DigitalIndicator::printUInt8Value(uint16_t x, uint16_t y, uint8_t value)
 
   if (value != DIGITAL_INDICATOR_VALUE_UINT8_NAN) {
     m_spr->setTextColor(TFT_GREEN, TFT_BLACK);
-    ret = snprintf(str, sizeof(str), "%u", value);
+    if ((value & 0x0F) == 0x0F) {
+      ret = snprintf(str, sizeof(str), "%u", uint8_t(value >> 4));
+    } else {
+      ret = snprintf(str, sizeof(str), "%02u", value);
+    }
 
     if (ret < 0) {
       Serial.print("DigitalIndicator::printInt32Value(): ERROR=");

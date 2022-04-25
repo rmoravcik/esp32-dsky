@@ -3,7 +3,7 @@
 
 static Verb35 *inst = NULL;
 
-Verb35::Verb35(AlarmIndicator *ai, DigitalIndicator *di)
+Verb35::Verb35(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather)
 {
   m_ai = ai;
   m_di = di;
@@ -33,10 +33,10 @@ Verb35::~Verb35()
 {
 }
 
-uint8_t verb35_start(AlarmIndicator *ai, DigitalIndicator *di)
+uint8_t verb35_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather)
 {
   if (inst == NULL) {
-    inst = new Verb35(ai, di);
+    inst = new Verb35(ai, di, weather);
   }
 
   inst->startMillis = millis();

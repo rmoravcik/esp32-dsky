@@ -12,6 +12,7 @@
 
 #include "AlarmIndicator.h"
 #include "DigitalIndicator.h"
+#include "Verb06.h"
 #include "Verb16.h"
 #include "Verb35.h"
 #include "Verb36.h"
@@ -36,12 +37,18 @@ TFT_eSprite spr = TFT_eSprite(&tft);
 AsyncWebServer server(80);
 AsyncWebConfig conf;
 
+struct noun verb06nouns[] = {
+  { 43, verb06noun43_start, verb06noun43_cycle },
+  { -1,                  0,                  0 }
+};
+
 struct noun verb16nouns[] = {
   { 36, verb16noun36_start, verb16noun36_cycle },
   { -1,                  0,                  0 }
 };
 
 struct verb verbs[] = {
+  { 06,  true,            0,            0, verb06nouns },
   { 16,  true,            0,            0, verb16nouns },
   { 35, false, verb35_start, verb35_cycle,           0 },
   { 36, false, verb36_start, verb36_cycle,           0 },
@@ -207,8 +214,8 @@ uint8_t acty_cycle(void) {
       acty = !acty;
       actyCounter = 0;
       digitalInd->setComputerActivityStatus(acty);
-    }    
-  }  
+    }
+  }
   actyCounter++;
   return FAGC_IDLE;
 }
@@ -223,7 +230,7 @@ cycleFn_t cycleFn = 0;
 // REMOVE ME
 uint32_t start_verb35 = 1000;
 uint32_t start_verb36 = 2000;
-uint32_t start_verb69 = 3000;
+uint32_t start_verb06verb43 = 3000;
 uint32_t start_verb16verb36 = 4000;
 // REMOVE ME
 
@@ -249,7 +256,7 @@ void loop() {
         if (start_verb35 > 0)
         {
           if (start_verb35 == 200) {
-            digitalInd->setVerbCode(3);
+            digitalInd->setVerbCode(0x3F);
           }
           if (start_verb35 == 100) {
             digitalInd->setVerbCode(35);
@@ -262,7 +269,7 @@ void loop() {
         if (start_verb36 > 0)
         {
           if (start_verb36 == 200) {
-            digitalInd->setVerbCode(3);
+            digitalInd->setVerbCode(0x3F);
           }
           if (start_verb36 == 100) {
             digitalInd->setVerbCode(36);
@@ -272,29 +279,36 @@ void loop() {
           }
           start_verb36--;
         }
-        if (start_verb69 > 0)
+        if (start_verb06verb43 > 0)
         {
-          if (start_verb69 == 200) {
-            digitalInd->setVerbCode(6);
+          if (start_verb06verb43 == 400) {
+            digitalInd->setVerbCode(0x0F);
           }
-          if (start_verb69 == 100) {
-            digitalInd->setVerbCode(69);
+          if (start_verb06verb43 == 300) {
+            digitalInd->setVerbCode(06);
           }
-//          if (start_verb69 == 1) {
-//            verbCode = 69;
-//          }
-          start_verb69--;
+          if (start_verb06verb43 == 200) {
+            digitalInd->setNounCode(0x4F);
+          }
+          if (start_verb06verb43 == 100) {
+            digitalInd->setNounCode(43);
+          }
+          if (start_verb06verb43 == 1) {
+            verbCode = 6;
+            nounCode = 43;
+          }
+          start_verb06verb43--;
         }
         if (start_verb16verb36 > 0)
         {
           if (start_verb16verb36 == 400) {
-            digitalInd->setVerbCode(1);
+            digitalInd->setVerbCode(0x1F);
           }
           if (start_verb16verb36 == 300) {
             digitalInd->setVerbCode(16);
           }
           if (start_verb16verb36 == 200) {
-            digitalInd->setNounCode(3);
+            digitalInd->setNounCode(0x3F);
           }
           if (start_verb16verb36 == 100) {
             digitalInd->setNounCode(36);
@@ -331,7 +345,7 @@ void loop() {
         }
 
         if (startFn) {
-          next_state = startFn(alarmInd, digitalInd);
+          next_state = startFn(alarmInd, digitalInd, weather);
           verbCode = VERB_CODE_INVALID;
           nounCode = NOUN_CODE_INVALID;
           startFn = 0;

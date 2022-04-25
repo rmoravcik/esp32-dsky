@@ -3,11 +3,12 @@
 
 #include "AlarmIndicator.h"
 #include "DigitalIndicator.h"
+#include "Weather.h"
 
 class Verb16
 {
 public:
-  Verb16(AlarmIndicator *ai, DigitalIndicator *di);
+  Verb16(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather);
   virtual ~Verb16();
 
   AlarmIndicator *m_ai;
@@ -17,7 +18,7 @@ public:
   uint8_t m_actyCounter;
 };
 
-uint8_t verb16noun36_start(AlarmIndicator *ai, DigitalIndicator *di);
+uint8_t verb16noun36_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather);
 uint8_t verb16noun36_cycle(void);
 
 #endif /* VERB16_H */

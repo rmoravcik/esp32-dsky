@@ -5,7 +5,7 @@
 
 static Verb16 *inst = NULL;
 
-Verb16::Verb16(AlarmIndicator *ai, DigitalIndicator *di)
+Verb16::Verb16(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather)
 {
   m_ai = ai;
   m_di = di;
@@ -15,10 +15,10 @@ Verb16::~Verb16()
 {
 }
 
-uint8_t verb16noun36_start(AlarmIndicator *ai, DigitalIndicator *di)
+uint8_t verb16noun36_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather)
 {
   if (inst == NULL) {
-    inst = new Verb16(ai, di);
+    inst = new Verb16(ai, di, weather);
   }
 
   inst->m_di->setRegister1(0);

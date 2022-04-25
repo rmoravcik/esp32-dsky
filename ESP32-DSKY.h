@@ -3,6 +3,7 @@
 
 #include "AlarmIndicator.h"
 #include "DigitalIndicator.h"
+#include "Weather.h"
 
 #define MAIN_LOOP_DELAY_MS  (10)
 #define ACTY_ON_DELAY_MS    (500 / MAIN_LOOP_DELAY_MS)
@@ -17,7 +18,7 @@
 #define VERB_CODE_INVALID   (-1)
 #define NOUN_CODE_INVALID   (-1)
 
-typedef uint8_t (*startFn_t)(AlarmIndicator*, DigitalIndicator*);
+typedef uint8_t (*startFn_t)(AlarmIndicator*, DigitalIndicator*, Weather*);
 typedef uint8_t (*cycleFn_t)(void);
 
 struct noun {
