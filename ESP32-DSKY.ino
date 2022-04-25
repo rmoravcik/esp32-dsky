@@ -39,6 +39,7 @@ AsyncWebConfig conf;
 
 struct noun verb06nouns[] = {
   { 43, verb06noun43_start, verb06noun43_cycle },
+  { 95, verb06noun95_start, verb06noun95_cycle },
   { -1,                  0,                  0 }
 };
 
@@ -231,7 +232,8 @@ cycleFn_t cycleFn = 0;
 uint32_t start_verb35 = 1000;
 uint32_t start_verb36 = 2000;
 uint32_t start_verb06verb43 = 3000;
-uint32_t start_verb16verb36 = 4000;
+uint32_t start_verb06verb95 = 4000;
+uint32_t start_verb16verb36 = 5000;
 // REMOVE ME
 
 void loop() {
@@ -298,6 +300,26 @@ void loop() {
             nounCode = 43;
           }
           start_verb06verb43--;
+        }
+        if (start_verb06verb95 > 0)
+        {
+          if (start_verb06verb95 == 400) {
+            digitalInd->setVerbCode("0");
+          }
+          if (start_verb06verb95 == 300) {
+            digitalInd->setVerbCode("06");
+          }
+          if (start_verb06verb95 == 200) {
+            digitalInd->setNounCode("9");
+          }
+          if (start_verb06verb95 == 100) {
+            digitalInd->setNounCode("95");
+          }
+          if (start_verb06verb95 == 1) {
+            verbCode = 6;
+            nounCode = 95;
+          }
+          start_verb06verb95--;
         }
         if (start_verb16verb36 > 0)
         {

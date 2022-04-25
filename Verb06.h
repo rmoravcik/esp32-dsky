@@ -19,4 +19,7 @@ public:
 uint8_t verb06noun43_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather);
 uint8_t verb06noun43_cycle(void);
 
+uint8_t verb06noun95_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather);
+uint8_t verb06noun95_cycle(void);
+
 #endif /* VERB06_H */
