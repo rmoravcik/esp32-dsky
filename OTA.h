@@ -8,11 +8,11 @@
 class OTA
 {
 public:
-  OTA(AsyncWebServer &server);
+  OTA(AsyncWebServer *server);
   virtual ~OTA();
 
 private:
-  AsyncWebServer m_server;
+  AsyncWebServer *m_server;
 };
 
 #endif /* ESP32 */

@@ -196,7 +196,7 @@ void DigitalIndicator::printUInt8Value(uint16_t x, uint16_t y, String value)
 
   if (value != DIGITAL_INDICATOR_VALUE_UINT8_NAN) {
     m_spr->setTextColor(TFT_GREEN, TFT_BLACK);
-    ret = snprintf(str, sizeof(str), "%s", value);
+    ret = snprintf(str, sizeof(str), "%s", value.c_str());
 
     if (ret < 0) {
       Serial.print("DigitalIndicator::printInt32Value(): ERROR=");

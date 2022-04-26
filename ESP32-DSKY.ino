@@ -183,13 +183,13 @@ void setup() {
 
   initWiFi();
 
-  sprintf(dns,"%s.local",conf.getApName());
+  sprintf(dns,"%s",conf.getApName());
   if (MDNS.begin(dns)) {
     Serial.println("MDNS responder started");
   }
 
-#ifdef EPS32
-  ota = new OTA(server);
+#ifdef ESP32
+  ota = new OTA(&server);
 #endif
 
   server.on("/", handleRoot);
@@ -229,7 +229,7 @@ uint8_t state = FAGC_INIT;
 startFn_t startFn = 0;
 cycleFn_t cycleFn = 0;
 
-void findStartCycleFunctions(int8_t verbCode, int8_t nounCode)
+void findStartCycleFunctions(int8_t verbCode, int8_t nounCode, startFn_t *startFn, cycleFn_t *cycleFn)
 {
   if (verbCode != VERB_CODE_INVALID) {
     for (uint8_t verb = 0; verbs[verb].code != VERB_CODE_INVALID; verb++) {
@@ -238,15 +238,15 @@ void findStartCycleFunctions(int8_t verbCode, int8_t nounCode)
           if (nounCode != NOUN_CODE_INVALID) {
             for (uint8_t noun = 0; verbs[verb].nouns[noun].code != NOUN_CODE_INVALID; noun++) {
               if (verbs[verb].nouns[noun].code == nounCode) {
-                startFn = verbs[verb].nouns[noun].startFn;
-                cycleFn = verbs[verb].nouns[noun].cycleFn;
+                *startFn = verbs[verb].nouns[noun].startFn;
+                *cycleFn = verbs[verb].nouns[noun].cycleFn;
                 break;
               }
             }                  
           }
         } else {
-          startFn = verbs[verb].startFn;
-          cycleFn = verbs[verb].cycleFn;
+          *startFn = verbs[verb].startFn;
+          *cycleFn = verbs[verb].cycleFn;
           break;
         }
       }
@@ -261,8 +261,6 @@ void findStartCycleFunctions(int8_t verbCode, int8_t nounCode)
 
 void loop() {
   uint8_t next_state = state;
-
-  findStartCycleFunctions(kbd->getVerbCode(), kbd->getNounCode());
 
   switch (state) {
     case FAGC_INIT:
@@ -279,6 +277,8 @@ void loop() {
       {
         next_state = acty_cycle();
 
+        findStartCycleFunctions(kbd->getVerbCode(), kbd->getNounCode(), &startFn, &cycleFn);
+
         if (startFn) {
           next_state = startFn(alarmInd, digitalInd, weather);
           startFn = 0;
@@ -287,11 +287,21 @@ void loop() {
       }
     case FAGC_BUSY:
       {
+        startFn_t newStartFn = 0;
+        cycleFn_t newCycleFn = 0;
+
+        findStartCycleFunctions(kbd->getVerbCode(), kbd->getNounCode(), &newStartFn, &newCycleFn);
+
         if (cycleFn) {
-          next_state = cycleFn(startFn ? true : false);
+          next_state = cycleFn(newStartFn ? true : false);
 
           if (next_state != FAGC_BUSY) {
-            cycleFn = 0;
+            if (newStartFn) {
+              startFn = newStartFn;
+              cycleFn = newCycleFn;
+            } else {
+              cycleFn = 0;
+            }
           }
         }
         break;
