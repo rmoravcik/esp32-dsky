@@ -13,11 +13,16 @@ public:
 
   void resetIndicator(void);
 
+  void update(void);
+
   void setUplinkActivityStatus(bool status);
   void setNoAttitudeStatus(bool status);
   void setStandbyStatus(bool status);
   void setKeyReleaseStatus(bool status);
   void setOperatorErrorStatus(bool status);
+
+  void setKeyReleaseStatusBlinking(void);
+  void setOperatorErrorStatusBlinking(void);
 
   void setTemperatureCaution(bool status);
   void setGimbalLockStatus(bool status);
@@ -36,6 +41,9 @@ private:
   bool m_keyReleaseStatus;
   bool m_operatorErrorStatus;
 
+  bool m_keyReleaseStatusBlinking;
+  bool m_operatorErrorStatusBlinking;
+
   bool m_temperatureCaution;
   bool m_gimbalLockStatus;
   bool m_programCondition;
@@ -43,6 +51,11 @@ private:
   bool m_trackerCondition;
   bool m_altitudeDataCaution;
   bool m_velocityDataCaution;
+
+  uint16_t m_toggleCounter;
+
+  void _setKeyReleaseStatus(bool status);
+  void _setOperatorErrorStatus(bool status);
 };
 
 #endif /* ALARMINDICATOR_H */

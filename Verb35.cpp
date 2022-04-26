@@ -52,6 +52,8 @@ uint8_t verb35_cycle(void)
   unsigned long deltaMillis = millis() - inst->startMillis;
 
   if (deltaMillis > 5900) {
+    Serial.print("VERB35 finished at ");
+    Serial.println(millis());
     return FAGC_IDLE;
   } else if (deltaMillis > 5800) {
     inst->m_ai->setUplinkActivityStatus(false);

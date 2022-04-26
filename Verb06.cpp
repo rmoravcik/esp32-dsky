@@ -34,8 +34,11 @@ uint8_t verb06noun43_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *we
 
 uint8_t verb06noun43_cycle(void)
 {
-  inst->m_di->setRegister1(inst->m_weather->getLongitude());
-  inst->m_di->setRegister2(inst->m_weather->getLatitude());
+  inst->m_di->setRegister1(inst->m_weather->getLatitude());
+  inst->m_di->setRegister2(inst->m_weather->getLongitude());
+
+  Serial.print("VERB06NOUN43 finished at ");
+  Serial.println(millis());
 
   return FAGC_IDLE;
 }
@@ -61,6 +64,9 @@ uint8_t verb06noun95_cycle(void)
   inst->m_di->setRegister1(inst->m_weather->getTemperature());
   inst->m_di->setRegister2(inst->m_weather->getPressure());
   inst->m_di->setRegister3(inst->m_weather->getHumidity());
+
+  Serial.print("VERB06NOUN95 finished at ");
+  Serial.println(millis());
 
   return FAGC_IDLE;
 }

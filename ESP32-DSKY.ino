@@ -12,6 +12,7 @@
 
 #include "AlarmIndicator.h"
 #include "DigitalIndicator.h"
+#include "Kbd.h"
 #include "Verb06.h"
 #include "Verb16.h"
 #include "Verb35.h"
@@ -25,6 +26,7 @@
 
 AlarmIndicator *alarmInd;
 DigitalIndicator *digitalInd;
+Kbd *kbd;
 #ifdef ESP32
 OTA *ota;
 #endif
@@ -174,6 +176,7 @@ void setup() {
 
   alarmInd = new AlarmIndicator(&tft);
   digitalInd = new DigitalIndicator(&tft, &spr);
+  kbd = new Kbd(alarmInd, digitalInd);
 
   conf.setDescription(params);
   conf.readConfig();
@@ -222,19 +225,9 @@ uint8_t acty_cycle(void) {
 }
 
 uint8_t state = FAGC_INIT;
-int8_t verbCode = VERB_CODE_INVALID;
-int8_t nounCode = NOUN_CODE_INVALID;
 
 startFn_t startFn = 0;
 cycleFn_t cycleFn = 0;
-
-// REMOVE ME
-uint32_t start_verb35 = 1000;
-uint32_t start_verb36 = 2000;
-uint32_t start_verb06verb43 = 3000;
-uint32_t start_verb06verb95 = 4000;
-uint32_t start_verb16verb36 = 5000;
-// REMOVE ME
 
 void loop() {
   uint8_t next_state = state;
@@ -252,124 +245,40 @@ void loop() {
       }
     case FAGC_IDLE:
       {
+        int8_t verbCode = kbd->getVerbCode();
+        int8_t nounCode = kbd->getNounCode();
+
         next_state = acty_cycle();
 
-        // REMOVE ME
-        if (start_verb35 > 0)
-        {
-          if (start_verb35 == 200) {
-            digitalInd->setVerbCode("3");
-          }
-          if (start_verb35 == 100) {
-            digitalInd->setVerbCode("35");
-          }
-          if (start_verb35 == 1) {
-            verbCode = 35;
-          }
-          start_verb35--;
-        }
-        if (start_verb36 > 0)
-        {
-          if (start_verb36 == 200) {
-            digitalInd->setVerbCode("3");
-          }
-          if (start_verb36 == 100) {
-            digitalInd->setVerbCode("36");
-          }
-          if (start_verb36 == 1) {
-            verbCode = 36;
-          }
-          start_verb36--;
-        }
-        if (start_verb06verb43 > 0)
-        {
-          if (start_verb06verb43 == 400) {
-            digitalInd->setVerbCode("0");
-          }
-          if (start_verb06verb43 == 300) {
-            digitalInd->setVerbCode("06");
-          }
-          if (start_verb06verb43 == 200) {
-            digitalInd->setNounCode("4");
-          }
-          if (start_verb06verb43 == 100) {
-            digitalInd->setNounCode("43");
-          }
-          if (start_verb06verb43 == 1) {
-            verbCode = 6;
-            nounCode = 43;
-          }
-          start_verb06verb43--;
-        }
-        if (start_verb06verb95 > 0)
-        {
-          if (start_verb06verb95 == 400) {
-            digitalInd->setVerbCode("0");
-          }
-          if (start_verb06verb95 == 300) {
-            digitalInd->setVerbCode("06");
-          }
-          if (start_verb06verb95 == 200) {
-            digitalInd->setNounCode("9");
-          }
-          if (start_verb06verb95 == 100) {
-            digitalInd->setNounCode("95");
-          }
-          if (start_verb06verb95 == 1) {
-            verbCode = 6;
-            nounCode = 95;
-          }
-          start_verb06verb95--;
-        }
-        if (start_verb16verb36 > 0)
-        {
-          if (start_verb16verb36 == 400) {
-            digitalInd->setVerbCode("1");
-          }
-          if (start_verb16verb36 == 300) {
-            digitalInd->setVerbCode("16");
-          }
-          if (start_verb16verb36 == 200) {
-            digitalInd->setNounCode("3");
-          }
-          if (start_verb16verb36 == 100) {
-            digitalInd->setNounCode("36");
-          }
-          if (start_verb16verb36 == 1) {
-            verbCode = 16;
-            nounCode = 36;
-          }
-          start_verb16verb36--;
-        }
-        // REMOVE ME
-
-        for (uint8_t verb = 0; verbs[verb].code != VERB_CODE_INVALID; verb++) {
-          if (verbs[verb].code == verbCode) {
-            if (verbs[verb].nounRequired) {
-              for (uint8_t noun = 0; verbs[verb].nouns[noun].code != NOUN_CODE_INVALID; noun++) {
-                if (verbs[verb].nouns[noun].code == nounCode) {
-                  startFn = verbs[verb].nouns[noun].startFn;
-                  cycleFn = verbs[verb].nouns[noun].cycleFn;
-                  break;
+        if (verbCode != VERB_CODE_INVALID) {
+          for (uint8_t verb = 0; verbs[verb].code != VERB_CODE_INVALID; verb++) {
+            if (verbs[verb].code == verbCode) {
+              if (verbs[verb].nounRequired) {
+                if (nounCode != NOUN_CODE_INVALID) {
+                  for (uint8_t noun = 0; verbs[verb].nouns[noun].code != NOUN_CODE_INVALID; noun++) {
+                    if (verbs[verb].nouns[noun].code == nounCode) {
+                      startFn = verbs[verb].nouns[noun].startFn;
+                      cycleFn = verbs[verb].nouns[noun].cycleFn;
+                      break;
+                    }
+                  }                  
                 }
+              } else {
+                startFn = verbs[verb].startFn;
+                cycleFn = verbs[verb].cycleFn;
+                break;
               }
-            } else {
-              startFn = verbs[verb].startFn;
-              cycleFn = verbs[verb].cycleFn;
-              break;
             }
           }
-        }
-
-        if ((verbCode != VERB_CODE_INVALID) && (startFn == 0))
-        {
-          alarmInd->setOperatorErrorStatus(true);
+          
+          if (startFn == 0)
+          {
+            alarmInd->setOperatorErrorStatusBlinking();
+          }
         }
 
         if (startFn) {
           next_state = startFn(alarmInd, digitalInd, weather);
-          verbCode = VERB_CODE_INVALID;
-          nounCode = NOUN_CODE_INVALID;
           startFn = 0;
         }
         break;
@@ -379,7 +288,7 @@ void loop() {
         if (cycleFn) {
           next_state = cycleFn();
 
-          if (next_state == FAGC_IDLE) {
+          if (next_state != FAGC_BUSY) {
             cycleFn = 0;
           }
         }
@@ -399,6 +308,8 @@ void loop() {
       state = next_state;
   }
 
+  alarmInd->update();
+  kbd->update();
   weather->update();
 
 #ifndef ESP32

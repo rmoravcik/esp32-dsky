@@ -1,6 +1,9 @@
+#include "ESP32-DSKY.h"
 #include "AlarmIndicator.h"
 
 #include "Gorton-Normal-12014.h"
+
+#define TOGGLE_DELAY_MS (1000 / MAIN_LOOP_DELAY_MS)
 
 AlarmIndicator::AlarmIndicator(TFT_eSPI *tft)
 {
@@ -24,11 +27,16 @@ void AlarmIndicator::resetIndicator(void)
   // REMOVE ME
   m_tft->drawRect(0, 0, 240, 320, TFT_WHITE);
 
+  m_toggleCounter = 0;
+
   m_uplinkActivityStatus = true;
   m_noAttitudeStatus = true;
   m_standbyStatus = true;
   m_keyReleaseStatus = true;
   m_operatorErrorStatus = true;
+
+  m_keyReleaseStatusBlinking = false;
+  m_operatorErrorStatusBlinking = false;
 
   m_temperatureCaution = true;
   m_gimbalLockStatus = true;
@@ -54,6 +62,37 @@ void AlarmIndicator::resetIndicator(void)
 
   digitalWrite(ALARM_INDICATOR_CS, HIGH);
 #endif /* ESP32 */  
+}
+
+void AlarmIndicator::update(void)
+{
+  static bool toggle = true;
+
+  if (m_toggleCounter == TOGGLE_DELAY_MS) {
+    if (toggle) {
+      toggle = false;
+
+      if (m_keyReleaseStatusBlinking) {
+        _setKeyReleaseStatus(true);
+      }
+      if (m_operatorErrorStatusBlinking) {
+        _setOperatorErrorStatus(true);
+      }
+    } else {
+      toggle = true;
+
+      if (m_keyReleaseStatusBlinking) {
+        _setKeyReleaseStatus(false);
+      }
+      if (m_operatorErrorStatusBlinking) {
+        _setOperatorErrorStatus(false);
+      }
+    }
+
+    m_toggleCounter = 0;
+  }
+
+  m_toggleCounter++;
 }
 
 void AlarmIndicator::setUplinkActivityStatus(bool status)
@@ -145,16 +184,11 @@ void AlarmIndicator::setStandbyStatus(bool status)
 #endif /* ESP32 */
 }
 
-void AlarmIndicator::setKeyReleaseStatus(bool status)
+void AlarmIndicator::_setKeyReleaseStatus(bool status)
 {
 #ifdef ESP32
   uint32_t buttonColor = TFT_LIGHTGREY;
   uint32_t textColor = TFT_DARKGREY;
-
-  if (m_keyReleaseStatus == status) {
-    return;
-  }
-  m_keyReleaseStatus = status;
 
   digitalWrite(ALARM_INDICATOR_CS, LOW);
 
@@ -174,16 +208,11 @@ void AlarmIndicator::setKeyReleaseStatus(bool status)
 #endif /* ESP32 */
 }
 
-void AlarmIndicator::setOperatorErrorStatus(bool status)
+void AlarmIndicator::_setOperatorErrorStatus(bool status)
 {
 #ifdef ESP32
   uint32_t buttonColor = TFT_LIGHTGREY;
   uint32_t textColor = TFT_DARKGREY;
-
-  if (m_operatorErrorStatus == status) {
-    return;
-  }
-  m_operatorErrorStatus = status;
 
   digitalWrite(ALARM_INDICATOR_CS, LOW);
 
@@ -201,6 +230,38 @@ void AlarmIndicator::setOperatorErrorStatus(bool status)
 
   digitalWrite(ALARM_INDICATOR_CS, HIGH);
 #endif /* ESP32 */
+}
+
+void AlarmIndicator::setKeyReleaseStatus(bool status)
+{
+  if ((m_keyReleaseStatusBlinking) && (status == false)) {
+    m_keyReleaseStatusBlinking = false;
+    _setKeyReleaseStatus(status);
+  } else if (m_keyReleaseStatus != status) {
+    m_keyReleaseStatus = status;
+    _setKeyReleaseStatus(status);
+  }
+}
+
+void AlarmIndicator::setOperatorErrorStatus(bool status)
+{
+  if ((m_operatorErrorStatusBlinking) && (status == false)) {
+    m_operatorErrorStatusBlinking = false;
+    _setOperatorErrorStatus(status);
+  } else if (m_operatorErrorStatus != status) {
+    m_operatorErrorStatus = status;
+    _setOperatorErrorStatus(status);
+  }
+}
+
+void AlarmIndicator::setKeyReleaseStatusBlinking(void)
+{
+  m_keyReleaseStatusBlinking = true;
+}
+
+void AlarmIndicator::setOperatorErrorStatusBlinking(void)
+{
+  m_operatorErrorStatusBlinking = true;
 }
 
 void AlarmIndicator::setTemperatureCaution(bool status)
