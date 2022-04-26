@@ -25,7 +25,7 @@ uint8_t verb36_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather)
   return FAGC_BUSY;
 }
 
-uint8_t verb36_cycle(void)
+uint8_t verb36_cycle(bool stop)
 {
   inst->m_ai->resetIndicator();
   inst->m_di->resetIndicator();

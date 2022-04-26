@@ -19,6 +19,6 @@ public:
 };
 
 uint8_t verb16noun36_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather);
-uint8_t verb16noun36_cycle(void);
+uint8_t verb16noun36_cycle(bool stop);
 
 #endif /* VERB16_H */

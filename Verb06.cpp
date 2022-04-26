@@ -32,7 +32,7 @@ uint8_t verb06noun43_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *we
   return FAGC_BUSY;
 }
 
-uint8_t verb06noun43_cycle(void)
+uint8_t verb06noun43_cycle(bool stop)
 {
   inst->m_di->setRegister1(inst->m_weather->getLatitude());
   inst->m_di->setRegister2(inst->m_weather->getLongitude());
@@ -59,7 +59,7 @@ uint8_t verb06noun95_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *we
   return FAGC_BUSY;
 }
 
-uint8_t verb06noun95_cycle(void)
+uint8_t verb06noun95_cycle(bool stop)
 {
   inst->m_di->setRegister1(inst->m_weather->getTemperature());
   inst->m_di->setRegister2(inst->m_weather->getPressure());

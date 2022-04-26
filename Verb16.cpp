@@ -33,9 +33,15 @@ uint8_t verb16noun36_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *we
   return FAGC_BUSY;
 }
 
-uint8_t verb16noun36_cycle(void)
+uint8_t verb16noun36_cycle(bool stop)
 {
   time_t currTime = now();
+
+  if (stop) {
+    Serial.print("VERB16NOUN36 finished at ");
+    Serial.println(millis());
+    return FAGC_IDLE;
+  }
 
   if (second(currTime) != inst->m_prevSecond) {
     inst->m_di->setRegister1(hour(currTime));

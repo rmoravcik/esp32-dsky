@@ -19,7 +19,7 @@
 #define NOUN_CODE_INVALID   (-1)
 
 typedef uint8_t (*startFn_t)(AlarmIndicator*, DigitalIndicator*, Weather*);
-typedef uint8_t (*cycleFn_t)(void);
+typedef uint8_t (*cycleFn_t)(bool stop);
 
 struct noun {
   int8_t code;

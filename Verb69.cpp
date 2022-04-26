@@ -8,7 +8,7 @@ uint8_t verb69_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather)
   return FAGC_BUSY;
 }
 
-uint8_t verb69_cycle(void)
+uint8_t verb69_cycle(bool stop)
 {
   ESP.restart();
   return FAGC_IDLE;

@@ -225,6 +225,7 @@ void Kbd::update(void)
         keypadEvent('e');
       }
       start_verb16verb36--;
+      start_verb06verb95 = 10000;
     }
     // REMOVE ME
 }

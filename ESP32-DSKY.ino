@@ -229,8 +229,40 @@ uint8_t state = FAGC_INIT;
 startFn_t startFn = 0;
 cycleFn_t cycleFn = 0;
 
+void findStartCycleFunctions(int8_t verbCode, int8_t nounCode)
+{
+  if (verbCode != VERB_CODE_INVALID) {
+    for (uint8_t verb = 0; verbs[verb].code != VERB_CODE_INVALID; verb++) {
+      if (verbs[verb].code == verbCode) {
+        if (verbs[verb].nounRequired) {
+          if (nounCode != NOUN_CODE_INVALID) {
+            for (uint8_t noun = 0; verbs[verb].nouns[noun].code != NOUN_CODE_INVALID; noun++) {
+              if (verbs[verb].nouns[noun].code == nounCode) {
+                startFn = verbs[verb].nouns[noun].startFn;
+                cycleFn = verbs[verb].nouns[noun].cycleFn;
+                break;
+              }
+            }                  
+          }
+        } else {
+          startFn = verbs[verb].startFn;
+          cycleFn = verbs[verb].cycleFn;
+          break;
+        }
+      }
+    }
+
+    if (startFn == 0)
+    {
+      alarmInd->setOperatorErrorStatusBlinking();
+    }
+  }
+}
+
 void loop() {
   uint8_t next_state = state;
+
+  findStartCycleFunctions(kbd->getVerbCode(), kbd->getNounCode());
 
   switch (state) {
     case FAGC_INIT:
@@ -245,37 +277,7 @@ void loop() {
       }
     case FAGC_IDLE:
       {
-        int8_t verbCode = kbd->getVerbCode();
-        int8_t nounCode = kbd->getNounCode();
-
         next_state = acty_cycle();
-
-        if (verbCode != VERB_CODE_INVALID) {
-          for (uint8_t verb = 0; verbs[verb].code != VERB_CODE_INVALID; verb++) {
-            if (verbs[verb].code == verbCode) {
-              if (verbs[verb].nounRequired) {
-                if (nounCode != NOUN_CODE_INVALID) {
-                  for (uint8_t noun = 0; verbs[verb].nouns[noun].code != NOUN_CODE_INVALID; noun++) {
-                    if (verbs[verb].nouns[noun].code == nounCode) {
-                      startFn = verbs[verb].nouns[noun].startFn;
-                      cycleFn = verbs[verb].nouns[noun].cycleFn;
-                      break;
-                    }
-                  }                  
-                }
-              } else {
-                startFn = verbs[verb].startFn;
-                cycleFn = verbs[verb].cycleFn;
-                break;
-              }
-            }
-          }
-          
-          if (startFn == 0)
-          {
-            alarmInd->setOperatorErrorStatusBlinking();
-          }
-        }
 
         if (startFn) {
           next_state = startFn(alarmInd, digitalInd, weather);
@@ -286,7 +288,7 @@ void loop() {
     case FAGC_BUSY:
       {
         if (cycleFn) {
-          next_state = cycleFn();
+          next_state = cycleFn(startFn ? true : false);
 
           if (next_state != FAGC_BUSY) {
             cycleFn = 0;
