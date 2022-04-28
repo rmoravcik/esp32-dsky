@@ -19,13 +19,10 @@ AlarmIndicator::~AlarmIndicator()
 void AlarmIndicator::resetIndicator(void)
 {
 #ifdef ESP32
-  digitalWrite(ALARM_INDICATOR_CS, LOW);
+  m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
 
   m_tft->fillScreen(TFT_BLACK);
-  m_tft->setRotation(0);
-
-  // REMOVE ME
-  m_tft->drawRect(0, 0, 240, 320, TFT_WHITE);
+  m_tft->setRotation(1);
 
   m_toggleCounter = 0;
 
@@ -59,8 +56,6 @@ void AlarmIndicator::resetIndicator(void)
   setTrackerCondition(false);
   setAltitudeDataCaution(false);
   setVelocityDataCaution(false);
-
-  digitalWrite(ALARM_INDICATOR_CS, HIGH);
 #endif /* ESP32 */  
 }
 
@@ -106,7 +101,7 @@ void AlarmIndicator::setUplinkActivityStatus(bool status)
   }
   m_uplinkActivityStatus = status;
 
-  digitalWrite(ALARM_INDICATOR_CS, LOW);
+  m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
 
   if (status == true) {
     buttonColor = TFT_WHITE;
@@ -121,8 +116,6 @@ void AlarmIndicator::setUplinkActivityStatus(bool status)
   m_tft->setCursor(52, 26);
   m_tft->print("ACTY");    
   m_tft->unloadFont();
-
-  digitalWrite(ALARM_INDICATOR_CS, HIGH);
 #endif /* ESP32 */
 }
 
@@ -137,7 +130,7 @@ void AlarmIndicator::setNoAttitudeStatus(bool status)
   }
   m_noAttitudeStatus = status;
 
-  digitalWrite(ALARM_INDICATOR_CS, LOW);
+  m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
 
   if (status == true) {
     buttonColor = TFT_WHITE;
@@ -150,8 +143,6 @@ void AlarmIndicator::setNoAttitudeStatus(bool status)
   m_tft->setCursor(46, 63);
   m_tft->print("NO ATT");
   m_tft->unloadFont();
-
-  digitalWrite(ALARM_INDICATOR_CS, HIGH);
 #endif /* ESP32 */
 }
 
@@ -166,7 +157,7 @@ void AlarmIndicator::setStandbyStatus(bool status)
   }
   m_standbyStatus = status;
 
-  digitalWrite(ALARM_INDICATOR_CS, LOW);
+  m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
 
   if (status == true) {
     buttonColor = TFT_WHITE;
@@ -179,8 +170,6 @@ void AlarmIndicator::setStandbyStatus(bool status)
   m_tft->setCursor(52, 108);
   m_tft->print("STBY");
   m_tft->unloadFont();
-
-  digitalWrite(ALARM_INDICATOR_CS, HIGH);
 #endif /* ESP32 */
 }
 
@@ -190,7 +179,7 @@ void AlarmIndicator::_setKeyReleaseStatus(bool status)
   uint32_t buttonColor = TFT_LIGHTGREY;
   uint32_t textColor = TFT_DARKGREY;
 
-  digitalWrite(ALARM_INDICATOR_CS, LOW);
+  m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
 
   if (status == true) {
     buttonColor = TFT_WHITE;
@@ -203,8 +192,6 @@ void AlarmIndicator::_setKeyReleaseStatus(bool status)
   m_tft->setCursor(40, 153);
   m_tft->print("KEY   REL");
   m_tft->unloadFont();
-
-  digitalWrite(ALARM_INDICATOR_CS, HIGH);
 #endif /* ESP32 */
 }
 
@@ -214,7 +201,7 @@ void AlarmIndicator::_setOperatorErrorStatus(bool status)
   uint32_t buttonColor = TFT_LIGHTGREY;
   uint32_t textColor = TFT_DARKGREY;
 
-  digitalWrite(ALARM_INDICATOR_CS, LOW);
+  m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
 
   if (status == true) {
     buttonColor = TFT_WHITE;
@@ -227,8 +214,6 @@ void AlarmIndicator::_setOperatorErrorStatus(bool status)
   m_tft->setCursor(37, 198);
   m_tft->print("OPR   ERR");
   m_tft->unloadFont();
-
-  digitalWrite(ALARM_INDICATOR_CS, HIGH);
 #endif /* ESP32 */
 }
 
@@ -275,7 +260,7 @@ void AlarmIndicator::setTemperatureCaution(bool status)
   }
   m_temperatureCaution = status;
 
-  digitalWrite(ALARM_INDICATOR_CS, LOW);
+  m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
 
   if (status == true) {
     buttonColor = TFT_YELLOW;
@@ -288,8 +273,6 @@ void AlarmIndicator::setTemperatureCaution(bool status)
   m_tft->setCursor(150, 18);
   m_tft->print("TEMP");
   m_tft->unloadFont();
-
-  digitalWrite(ALARM_INDICATOR_CS, HIGH);
 #endif /* ESP32 */
 }
 
@@ -304,7 +287,7 @@ void AlarmIndicator::setGimbalLockStatus(bool status)
   }
   m_gimbalLockStatus = status;
 
-  digitalWrite(ALARM_INDICATOR_CS, LOW);
+  m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
 
   if (status == true) {
     buttonColor = TFT_YELLOW;
@@ -319,8 +302,6 @@ void AlarmIndicator::setGimbalLockStatus(bool status)
   m_tft->setCursor(152, 71);
   m_tft->print("LOCK");
   m_tft->unloadFont();
-
-  digitalWrite(ALARM_INDICATOR_CS, HIGH);
 #endif /* ESP32 */
 }
 
@@ -335,10 +316,10 @@ void AlarmIndicator::setProgramCondition(bool status)
   }
   m_programCondition = status;
 
-  digitalWrite(ALARM_INDICATOR_CS, LOW);
+  m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
 
   if (status == true) {
-    buttonColor = TFT_YELLOW;
+    buttonColor = TFT_ORANGE;
     textColor = TFT_BLACK;
   }
 
@@ -348,8 +329,6 @@ void AlarmIndicator::setProgramCondition(bool status)
   m_tft->setCursor(152, 108);
   m_tft->print("PROG");
   m_tft->unloadFont();
-
-  digitalWrite(ALARM_INDICATOR_CS, HIGH);
 #endif /* ESP32 */
 }
 
@@ -364,7 +343,7 @@ void AlarmIndicator::setRestartCondition(bool status)
   }
   m_restartCondition = status;
 
-  digitalWrite(ALARM_INDICATOR_CS, LOW);
+  m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
 
   if (status == true) {
     buttonColor = TFT_YELLOW;
@@ -377,8 +356,6 @@ void AlarmIndicator::setRestartCondition(bool status)
   m_tft->setCursor(138, 153);
   m_tft->print("RESTART");
   m_tft->unloadFont();
-
-  digitalWrite(ALARM_INDICATOR_CS, HIGH);
 #endif /* ESP32 */
 }
 
@@ -393,7 +370,7 @@ void AlarmIndicator::setTrackerCondition(bool status)
   }
   m_trackerCondition = status;
 
-  digitalWrite(ALARM_INDICATOR_CS, LOW);
+  m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
 
   if (status == true) {
     buttonColor = TFT_YELLOW;
@@ -406,8 +383,6 @@ void AlarmIndicator::setTrackerCondition(bool status)
   m_tft->setCursor(136, 198);
   m_tft->print("TRACKER");
   m_tft->unloadFont();
-
-  digitalWrite(ALARM_INDICATOR_CS, HIGH);
 #endif /* ESP32 */
 }
 
@@ -422,7 +397,7 @@ void AlarmIndicator::setAltitudeDataCaution(bool status)
   }
   m_altitudeDataCaution = status;
 
-  digitalWrite(ALARM_INDICATOR_CS, LOW);
+  m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
 
   if (status == true) {
     buttonColor = TFT_YELLOW;
@@ -435,8 +410,6 @@ void AlarmIndicator::setAltitudeDataCaution(bool status)
   m_tft->setCursor(157, 243);
   m_tft->print("ALT");
   m_tft->unloadFont();
-
-  digitalWrite(ALARM_INDICATOR_CS, HIGH);
 #endif /* ESP32 */
 }
 
@@ -451,7 +424,7 @@ void AlarmIndicator::setVelocityDataCaution(bool status)
   }
   m_velocityDataCaution = status;
 
-  digitalWrite(ALARM_INDICATOR_CS, LOW);
+  m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
 
   if (status == true) {
     buttonColor = TFT_YELLOW;
@@ -464,7 +437,5 @@ void AlarmIndicator::setVelocityDataCaution(bool status)
   m_tft->setCursor(157, 288);
   m_tft->print("VEL");
   m_tft->unloadFont();
-
-  digitalWrite(ALARM_INDICATOR_CS, HIGH);
 #endif /* ESP32 */
 }

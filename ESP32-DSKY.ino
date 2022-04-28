@@ -33,7 +33,7 @@ OTA *ota;
 RTC *rtc;
 Weather *weather;
 
-TFT_eSPI tft = TFT_eSPI(320, 480);
+TFT_eSPI tft = TFT_eSPI(320, 240);
 TFT_eSprite spr = TFT_eSprite(&tft);
 
 AsyncWebServer server(80);
@@ -161,18 +161,33 @@ void setup() {
 
   Serial.begin(115200);
 
+  pinMode(9, OUTPUT);
+  digitalWrite(9, HIGH);
+
   pinMode(ALARM_INDICATOR_CS, OUTPUT);
-  digitalWrite(ALARM_INDICATOR_CS, HIGH);
+ digitalWrite(ALARM_INDICATOR_CS, HIGH);
 
   pinMode(DIGITAL_INDICATOR_CS, OUTPUT);
   digitalWrite(DIGITAL_INDICATOR_CS, HIGH);
 
+   pinMode(0, OUTPUT);
+    digitalWrite(0, HIGH);
+    delay(5);
+    digitalWrite(0, LOW);
+    delay(20);
+    digitalWrite(0, HIGH);
+
+
   // Initialize both displays
-  digitalWrite(ALARM_INDICATOR_CS, LOW);
-  digitalWrite(DIGITAL_INDICATOR_CS, LOW);
+//  digitalWrite(ALARM_INDICATOR_CS, LOW);
+//  digitalWrite(DIGITAL_INDICATOR_CS, LOW);
+  tft.TFT_CS_MASK = (1 << ALARM_INDICATOR_CS) | (1 << DIGITAL_INDICATOR_CS);
   tft.init();
-  digitalWrite(ALARM_INDICATOR_CS, HIGH);
-  digitalWrite(DIGITAL_INDICATOR_CS, HIGH);
+
+//  tft.TFT_CS_MASK = (1 << DIGITAL_INDICATOR_CS);
+//  tft.init();
+//  digitalWrite(ALARM_INDICATOR_CS, HIGH);
+//  digitalWrite(DIGITAL_INDICATOR_CS, HIGH);
 
   alarmInd = new AlarmIndicator(&tft);
   digitalInd = new DigitalIndicator(&tft, &spr);

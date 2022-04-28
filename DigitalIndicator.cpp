@@ -25,13 +25,10 @@ void DigitalIndicator::resetIndicator(void)
   m_registerValue[1] = DIGITAL_INDICATOR_REGISTER_VALUE_NAN;
   m_registerValue[2] = DIGITAL_INDICATOR_REGISTER_VALUE_NAN;
 
-  digitalWrite(DIGITAL_INDICATOR_CS, LOW);
+  m_tft->TFT_CS_MASK = (1 << DIGITAL_INDICATOR_CS);
 
   m_tft->fillScreen(TFT_BLACK);
-  m_tft->setRotation(0);
-
-  // REMOVE ME
-  m_tft->drawRect(0, 0, 240, 320, TFT_WHITE);
+  m_tft->setRotation(1);
 
   m_tft->loadFont(Gorton_Normal_180_11);
 
@@ -72,8 +69,6 @@ void DigitalIndicator::resetIndicator(void)
   m_tft->fillRoundRect(42, 265, 156, 4, 0, TFT_GREEN);
 
   setComputerActivityStatus(false);
-
-  digitalWrite(DIGITAL_INDICATOR_CS, HIGH);
 }
 
 void DigitalIndicator::setComputerActivityStatus(bool status)
@@ -82,7 +77,7 @@ void DigitalIndicator::setComputerActivityStatus(bool status)
   uint32_t textColor = TFT_DARKGREY;
 
   if (m_compActyStatus != status) {
-    digitalWrite(DIGITAL_INDICATOR_CS, LOW);
+    m_tft->TFT_CS_MASK = (1 << DIGITAL_INDICATOR_CS);
 
     if (status == true) {
       buttonColor = TFT_GREEN;
@@ -97,8 +92,6 @@ void DigitalIndicator::setComputerActivityStatus(bool status)
     m_tft->setCursor(41, 40);
     m_tft->print("ACTY");
     m_tft->unloadFont();
-
-    digitalWrite(DIGITAL_INDICATOR_CS, HIGH);    
 
     m_compActyStatus = status;
   }
@@ -187,7 +180,7 @@ void DigitalIndicator::printUInt8Value(uint16_t x, uint16_t y, String value)
   char str[3];
   int ret;
 
-  digitalWrite(DIGITAL_INDICATOR_CS, LOW);
+  m_tft->TFT_CS_MASK = (1 << DIGITAL_INDICATOR_CS);
 
   m_spr->setFreeFont(&Zerlina26pt7b);
   m_spr->createSprite(69, 44);
@@ -208,8 +201,6 @@ void DigitalIndicator::printUInt8Value(uint16_t x, uint16_t y, String value)
 
   m_spr->pushSprite(x, y - 44 + 3);
   m_spr->deleteSprite();
-
-  digitalWrite(DIGITAL_INDICATOR_CS, HIGH);
 }
 void DigitalIndicator::printInt32Value(uint16_t x, uint16_t y, int32_t value)
 {
@@ -217,7 +208,7 @@ void DigitalIndicator::printInt32Value(uint16_t x, uint16_t y, int32_t value)
   uint32_t raw = abs(value);
   int ret;
 
-  digitalWrite(DIGITAL_INDICATOR_CS, LOW);
+  m_tft->TFT_CS_MASK = (1 << DIGITAL_INDICATOR_CS);
   
   m_spr->setFreeFont(&Zerlina26pt7b);
   m_spr->createSprite(184, 44);
@@ -243,6 +234,4 @@ void DigitalIndicator::printInt32Value(uint16_t x, uint16_t y, int32_t value)
 
   m_spr->pushSprite(x, y - 44 + 3);
   m_spr->deleteSprite();
-
-  digitalWrite(DIGITAL_INDICATOR_CS, HIGH);
 }

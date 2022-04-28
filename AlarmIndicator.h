@@ -3,7 +3,7 @@
 
 #include <TFT_eSPI.h>
 
-#define ALARM_INDICATOR_CS PIN_D0
+#define ALARM_INDICATOR_CS 5
 
 class AlarmIndicator
 {

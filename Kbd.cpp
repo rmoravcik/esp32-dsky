@@ -5,13 +5,13 @@ const byte ROWS = 3;
 const byte COLS = 7;
 
 char keys[ROWS][COLS] = {
-  { 'v', '+', '7', '8', '9', 'c', 'e' },
-  { 'n', '-', '4', '5', '6', 'p', 'r' },
-  { ' ', '0', '1', '2', '3', 'k', ' ' },
+  { ' ', '+', '7', '8', '9', 'c', ' ' },
+  { 'v', '-', '4', '5', '6', 'p', 'e' },
+  { 'n', '0', '1', '2', '3', 'k', 'r' },
 };
 
-byte rowPins[ROWS] = { 3, 8, 7 };
-byte colPins[COLS] = { 4, 2, 6, 1, 5, 9, 10 };
+byte rowPins[ROWS] = { 4, 35, 34 };
+byte colPins[COLS] = { 8, 33, 21, 22, 32, 25, 27 };
 
 static Kbd *inst = NULL;
 
@@ -125,15 +125,21 @@ int8_t Kbd::getNounCode(void)
 }
 
 // REMOVE ME
+#ifndef ESP32
 uint32_t start_verb35 = 1000;
 uint32_t start_verb36 = 2000;
 uint32_t start_verb06verb43 = 3000;
 uint32_t start_verb06verb95 = 4000;
 uint32_t start_verb16verb36 = 5000;
+#endif
 // REMOVE ME
 
 void Kbd::update(void)
 {
+    char key = m_keypad->getKey();
+//    Serial.print("key=");
+//    Serial.println(key);
+#ifndef ESP32
     // REMOVE ME
     if (start_verb35 > 0)
     {
@@ -227,5 +233,6 @@ void Kbd::update(void)
       start_verb16verb36--;
       start_verb06verb95 = 10000;
     }
+#endif
     // REMOVE ME
 }
