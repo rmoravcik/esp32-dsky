@@ -27,8 +27,8 @@ void DigitalIndicator::resetIndicator(void)
 
   m_tft->TFT_CS_MASK = (1 << DIGITAL_INDICATOR_CS);
 
-  m_tft->fillScreen(TFT_BLACK);
   m_tft->setRotation(1);
+  m_tft->fillScreen(TFT_BLACK);
 
   m_tft->loadFont(Gorton_Normal_180_11);
 

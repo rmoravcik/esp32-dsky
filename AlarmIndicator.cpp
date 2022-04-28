@@ -4,6 +4,8 @@
 #include "Gorton-Normal-12014.h"
 
 #define TOGGLE_DELAY_MS (1000 / MAIN_LOOP_DELAY_MS)
+// For some reason R and B channels are inverted
+#define TFT_ALARM_YELLOW TFT_CYAN
 
 AlarmIndicator::AlarmIndicator(TFT_eSPI *tft)
 {
@@ -21,8 +23,8 @@ void AlarmIndicator::resetIndicator(void)
 #ifdef ESP32
   m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
 
-  m_tft->fillScreen(TFT_BLACK);
   m_tft->setRotation(1);
+  m_tft->fillScreen(TFT_BLACK);
 
   m_toggleCounter = 0;
 
@@ -263,7 +265,7 @@ void AlarmIndicator::setTemperatureCaution(bool status)
   m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
 
   if (status == true) {
-    buttonColor = TFT_YELLOW;
+    buttonColor = TFT_ALARM_YELLOW;
     textColor = TFT_BLACK;
   }
 
@@ -290,7 +292,7 @@ void AlarmIndicator::setGimbalLockStatus(bool status)
   m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
 
   if (status == true) {
-    buttonColor = TFT_YELLOW;
+    buttonColor = TFT_ALARM_YELLOW;
     textColor = TFT_BLACK;
   }
 
@@ -319,7 +321,7 @@ void AlarmIndicator::setProgramCondition(bool status)
   m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
 
   if (status == true) {
-    buttonColor = TFT_ORANGE;
+    buttonColor = TFT_ALARM_YELLOW;
     textColor = TFT_BLACK;
   }
 
@@ -346,7 +348,7 @@ void AlarmIndicator::setRestartCondition(bool status)
   m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
 
   if (status == true) {
-    buttonColor = TFT_YELLOW;
+    buttonColor = TFT_ALARM_YELLOW;
     textColor = TFT_BLACK;
   }
 
@@ -373,7 +375,7 @@ void AlarmIndicator::setTrackerCondition(bool status)
   m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
 
   if (status == true) {
-    buttonColor = TFT_YELLOW;
+    buttonColor = TFT_ALARM_YELLOW;
     textColor = TFT_BLACK;
   }
 
@@ -400,7 +402,7 @@ void AlarmIndicator::setAltitudeDataCaution(bool status)
   m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
 
   if (status == true) {
-    buttonColor = TFT_YELLOW;
+    buttonColor = TFT_ALARM_YELLOW;
     textColor = TFT_BLACK;
   }
 
@@ -427,7 +429,7 @@ void AlarmIndicator::setVelocityDataCaution(bool status)
   m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
 
   if (status == true) {
-    buttonColor = TFT_YELLOW;
+    buttonColor = TFT_ALARM_YELLOW;
     textColor = TFT_BLACK;
   }
 

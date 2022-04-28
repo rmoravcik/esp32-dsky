@@ -28,10 +28,12 @@ void keypadEvent(KeypadEvent key)
           case 'v':
             {
               inst->m_verbKeyPressed = true;
+              inst->m_nounKeyPressed = false;
             }
             break;
           case 'n':
             {
+              inst->m_verbKeyPressed = false;
               inst->m_nounKeyPressed = true;
             }
             break;
@@ -46,8 +48,12 @@ void keypadEvent(KeypadEvent key)
               inst->m_ai->setKeyReleaseStatus(false);
             }
             break;
-          case 'r':
+          case 'c':
             {
+              inst->m_verbCode = "";
+              inst->m_nounCode = "";
+              inst->m_verbKeyPressed = false;
+              inst->m_nounKeyPressed = false;
               inst->m_ai->setOperatorErrorStatus(false);
             }
             break;
@@ -59,6 +65,7 @@ void keypadEvent(KeypadEvent key)
                       inst->m_verbCode += key;
                       inst->m_di->setVerbCode(inst->m_verbCode);
                   } else {
+                      Serial.println("OPR ERR: verbCode full");
                       inst->m_ai->setOperatorErrorStatusBlinking();
                   }
                 }
@@ -68,6 +75,7 @@ void keypadEvent(KeypadEvent key)
                       inst->m_nounCode += key;
                       inst->m_di->setNounCode(inst->m_nounCode);
                   } else {
+                      Serial.println("OPR ERR: nounCode full");
                       inst->m_ai->setOperatorErrorStatusBlinking();
                   }
                 }
@@ -104,7 +112,7 @@ Kbd::~Kbd()
 
 int8_t Kbd::getVerbCode(void)
 {
-  if (!m_verbKeyPressed) {
+  if (!m_verbKeyPressed && !m_nounKeyPressed) {
     int8_t ret = m_verbCode.toInt();
     m_verbCode = "";
     return ret;
@@ -115,7 +123,7 @@ int8_t Kbd::getVerbCode(void)
 
 int8_t Kbd::getNounCode(void)
 {
-  if (!m_nounKeyPressed) {
+  if (!m_verbKeyPressed && !m_nounKeyPressed) {
     int8_t ret = m_nounCode.toInt();
     m_nounCode = "";
     return ret;

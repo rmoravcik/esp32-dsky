@@ -165,29 +165,21 @@ void setup() {
   digitalWrite(9, HIGH);
 
   pinMode(ALARM_INDICATOR_CS, OUTPUT);
- digitalWrite(ALARM_INDICATOR_CS, HIGH);
+  digitalWrite(ALARM_INDICATOR_CS, HIGH);
 
   pinMode(DIGITAL_INDICATOR_CS, OUTPUT);
   digitalWrite(DIGITAL_INDICATOR_CS, HIGH);
 
-   pinMode(0, OUTPUT);
-    digitalWrite(0, HIGH);
-    delay(5);
-    digitalWrite(0, LOW);
-    delay(20);
-    digitalWrite(0, HIGH);
-
+  pinMode(0, OUTPUT);
+  digitalWrite(0, HIGH);
+  delay(5);
+  digitalWrite(0, LOW);
+  delay(20);
+  digitalWrite(0, HIGH);
 
   // Initialize both displays
-//  digitalWrite(ALARM_INDICATOR_CS, LOW);
-//  digitalWrite(DIGITAL_INDICATOR_CS, LOW);
   tft.TFT_CS_MASK = (1 << ALARM_INDICATOR_CS) | (1 << DIGITAL_INDICATOR_CS);
   tft.init();
-
-//  tft.TFT_CS_MASK = (1 << DIGITAL_INDICATOR_CS);
-//  tft.init();
-//  digitalWrite(ALARM_INDICATOR_CS, HIGH);
-//  digitalWrite(DIGITAL_INDICATOR_CS, HIGH);
 
   alarmInd = new AlarmIndicator(&tft);
   digitalInd = new DigitalIndicator(&tft, &spr);
@@ -267,8 +259,12 @@ void findStartCycleFunctions(int8_t verbCode, int8_t nounCode, startFn_t *startF
       }
     }
 
-    if (startFn == 0)
+    if ((verbCode != 0) && (*startFn == 0))
     {
+      Serial.print("OPR ERR: verb:");
+      Serial.print(verbCode);
+      Serial.print(" noun:");
+      Serial.println(nounCode);
       alarmInd->setOperatorErrorStatusBlinking();
     }
   }

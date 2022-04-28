@@ -9,6 +9,7 @@ Verb16::Verb16(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather)
 {
   m_ai = ai;
   m_di = di;
+  randomSeed(now());
 }
 
 Verb16::~Verb16()
@@ -46,7 +47,7 @@ uint8_t verb16noun36_cycle(bool stop)
   if (second(currTime) != inst->m_prevSecond) {
     inst->m_di->setRegister1(hour(currTime));
     inst->m_di->setRegister2(minute(currTime));
-    inst->m_di->setRegister3(second(currTime) * 1000);
+    inst->m_di->setRegister3((second(currTime) * 100) + random(10));
 
     if (((second(currTime) % 3) == 0) && (inst->m_actyCounter == 0)) {
       inst->m_di->setComputerActivityStatus(true);
