@@ -10,7 +10,7 @@ char keys[ROWS][COLS] = {
   { 'n', '0', '1', '2', '3', 'k', 'r' },
 };
 
-byte rowPins[ROWS] = { 4, 35, 34 };
+byte rowPins[ROWS] = { 4, 39, 34 };
 byte colPins[COLS] = { 8, 33, 21, 22, 32, 25, 27 };
 
 static Kbd *inst = NULL;

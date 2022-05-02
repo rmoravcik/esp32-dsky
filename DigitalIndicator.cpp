@@ -3,19 +3,21 @@
 #include "Gorton-Normal-18011.h"
 #include "Zerlina26pt7b.h"
 
+#define TFT_GREEN_INDICATOR 0x068F
+
 DigitalIndicator::DigitalIndicator(TFT_eSPI *tft, TFT_eSprite *spr)
 {
   m_tft = tft;
   m_spr = spr;
 
-  resetIndicator();
+  resetIndicator(true);
 }
 
 DigitalIndicator::~DigitalIndicator()
 {
 }
 
-void DigitalIndicator::resetIndicator(void)
+void DigitalIndicator::resetIndicator(bool startup)
 {
   m_compActyStatus = true;
   m_programNumber = DIGITAL_INDICATOR_VALUE_UINT8_NAN;
@@ -27,30 +29,8 @@ void DigitalIndicator::resetIndicator(void)
 
   m_tft->TFT_CS_MASK = (1 << DIGITAL_INDICATOR_CS);
 
-  m_tft->setRotation(1);
   m_tft->fillScreen(TFT_BLACK);
-
   m_tft->loadFont(Gorton_Normal_180_11);
-
-  // VERB
-  m_tft->fillRoundRect(25, 81, 70, 20, 3, TFT_GREEN);
-  m_tft->setCursor(40, 86);
-  m_tft->setTextColor(TFT_BLACK, TFT_GREEN);
-  m_tft->print("VERB");
-
-  // PROG
-  m_tft->fillRoundRect(145, 5, 70, 20, 3, TFT_GREEN);
-  m_tft->setCursor(161, 10);
-  m_tft->setTextColor(TFT_BLACK, TFT_GREEN);
-  m_tft->print("PROG");
-
-  // NOUN
-  m_tft->fillRoundRect(145, 81, 70, 20, 3, TFT_GREEN);
-  m_tft->setCursor(160, 86);
-  m_tft->setTextColor(TFT_BLACK, TFT_GREEN);
-  m_tft->print("NOUN");
-
-  m_tft->unloadFont();
 
   // Dots
   m_tft->fillCircle(120, 15, 2, TFT_WHITE);
@@ -68,7 +48,55 @@ void DigitalIndicator::resetIndicator(void)
   m_tft->fillRoundRect(42, 209, 156, 4, 0, TFT_GREEN);
   m_tft->fillRoundRect(42, 265, 156, 4, 0, TFT_GREEN);
 
-  setComputerActivityStatus(false);
+  if (!startup) {
+    setComputerActivityStatus(false);
+    
+    // PROG
+    m_tft->fillRoundRect(145, 5, 70, 20, 3, TFT_GREEN);
+    m_tft->setCursor(161, 10);
+    m_tft->setTextColor(TFT_BLACK, TFT_GREEN);
+    m_tft->print("PROG");
+
+    // VERB
+    m_tft->fillRoundRect(25, 81, 70, 20, 3, TFT_GREEN);
+    m_tft->setCursor(40, 86);
+    m_tft->setTextColor(TFT_BLACK, TFT_GREEN);
+    m_tft->print("VERB");
+    m_tft->unloadFont();
+
+    // NOUN
+    m_tft->fillRoundRect(145, 81, 70, 20, 3, TFT_GREEN);
+    m_tft->setCursor(160, 86);
+    m_tft->setTextColor(TFT_BLACK, TFT_GREEN);
+    m_tft->print("NOUN");
+  } else {
+    // NOUN
+    m_tft->fillRoundRect(145, 81, 70, 20, 3, TFT_GREEN);
+    m_tft->setCursor(160, 86);
+    m_tft->setTextColor(TFT_BLACK, TFT_GREEN);
+    m_tft->print("NOUN");
+    setNounCode("88");
+    delay(200);
+
+    // PROG
+    m_tft->fillRoundRect(145, 5, 70, 20, 3, TFT_GREEN);
+    m_tft->setCursor(161, 10);
+    m_tft->setTextColor(TFT_BLACK, TFT_GREEN);
+    m_tft->print("PROG");
+    setProgramNumber("88");
+    delay(200);
+
+    // VERB
+    m_tft->fillRoundRect(25, 81, 70, 20, 3, TFT_GREEN);
+    m_tft->setCursor(40, 86);
+    m_tft->setTextColor(TFT_BLACK, TFT_GREEN);
+    m_tft->print("VERB");
+    m_tft->unloadFont();
+    setVerbCode("88");
+    delay(200);
+
+    setComputerActivityStatus(true);
+  }
 }
 
 void DigitalIndicator::setComputerActivityStatus(bool status)

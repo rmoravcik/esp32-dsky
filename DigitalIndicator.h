@@ -14,7 +14,7 @@ public:
   DigitalIndicator(TFT_eSPI *tft, TFT_eSprite *spr);
   virtual ~DigitalIndicator();
 
-  void resetIndicator(void);
+  void resetIndicator(bool statup);
 
   void setComputerActivityStatus(bool status);
 

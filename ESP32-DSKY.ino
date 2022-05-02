@@ -156,13 +156,46 @@ void handleRoot(AsyncWebServerRequest *request) {
   }
 }
 
+void startUp(void)
+{
+  for (int reg = 0; reg < 4; reg++) {
+    uint32_t value = 0;
+    for (int i = 0; i < 6; i++) {
+      value = value + 8 * pow(10, i);
+      if (reg == 0) {
+        digitalInd->setRegister1(value);
+      } else if (reg == 1) {
+        digitalInd->setRegister2(value);
+      } else {
+        digitalInd->setRegister3(value);        
+      }
+      delay(25);
+    }  
+  }
+  delay(1000);
+  digitalInd->setComputerActivityStatus(false);
+  alarmInd->setTemperatureCaution(false);
+  alarmInd->setGimbalLockStatus(false);
+  alarmInd->setProgramCondition(false);
+  alarmInd->setTrackerCondition(false);
+  alarmInd->setAltitudeDataCaution(false);
+  alarmInd->setVelocityDataCaution(false);
+  alarmInd->setOperatorErrorStatus(false);
+  alarmInd->setKeyReleaseStatus(false);
+  alarmInd->setStandbyStatus(false);
+  alarmInd->setUplinkActivityStatus(false);
+  digitalInd->setProgramNumber(DIGITAL_INDICATOR_VALUE_UINT8_NAN);
+  digitalInd->setVerbCode(DIGITAL_INDICATOR_VALUE_UINT8_NAN);
+  digitalInd->setNounCode(DIGITAL_INDICATOR_VALUE_UINT8_NAN);
+  digitalInd->setRegister1(DIGITAL_INDICATOR_REGISTER_VALUE_NAN);
+  digitalInd->setRegister2(DIGITAL_INDICATOR_REGISTER_VALUE_NAN);
+  digitalInd->setRegister3(DIGITAL_INDICATOR_REGISTER_VALUE_NAN);        
+}
+
 void setup() {
   char dns[30];
 
   Serial.begin(115200);
-
-  pinMode(9, OUTPUT);
-  digitalWrite(9, HIGH);
 
   pinMode(ALARM_INDICATOR_CS, OUTPUT);
   digitalWrite(ALARM_INDICATOR_CS, HIGH);
@@ -180,10 +213,18 @@ void setup() {
   // Initialize both displays
   tft.TFT_CS_MASK = (1 << ALARM_INDICATOR_CS) | (1 << DIGITAL_INDICATOR_CS);
   tft.init();
+  tft.setRotation(3);
+  tft.fillScreen(TFT_BLACK);
 
-  alarmInd = new AlarmIndicator(&tft);
+  // Backlight
+  pinMode(9, OUTPUT);
+  digitalWrite(9, HIGH);
+
   digitalInd = new DigitalIndicator(&tft, &spr);
+  alarmInd = new AlarmIndicator(&tft);
   kbd = new Kbd(alarmInd, digitalInd);
+
+  startUp();
 
   conf.setDescription(params);
   conf.readConfig();
