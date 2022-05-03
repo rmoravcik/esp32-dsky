@@ -13,6 +13,7 @@
 #include "AlarmIndicator.h"
 #include "DigitalIndicator.h"
 #include "Kbd.h"
+#include "Program00.h"
 #include "Verb06.h"
 #include "Verb16.h"
 #include "Verb35.h"
@@ -58,6 +59,11 @@ struct verb verbs[] = {
   // 37
   { 69, false, verb69_start, verb69_cycle,           0 },
   { -1, false,            0,            0,           0 }
+};
+
+struct program programs[] = {
+  {  0, program00_start, program00_cycle },
+  { -1,               0,               0 }
 };
 
 String params = "["
@@ -184,7 +190,7 @@ void startUp(void)
   alarmInd->setKeyReleaseStatus(false);
   alarmInd->setStandbyStatus(false);
   alarmInd->setUplinkActivityStatus(false);
-  digitalInd->setProgramNumber(DIGITAL_INDICATOR_VALUE_UINT8_NAN);
+  digitalInd->setProgramNumber("00");
   digitalInd->setVerbCode(DIGITAL_INDICATOR_VALUE_UINT8_NAN);
   digitalInd->setNounCode(DIGITAL_INDICATOR_VALUE_UINT8_NAN);
   digitalInd->setRegister1(DIGITAL_INDICATOR_REGISTER_VALUE_NAN);
@@ -251,27 +257,6 @@ void setup() {
                         conf.getString("weather_api_key"));
 }
 
-bool acty = false;
-uint8_t actyCounter = 0;
-
-uint8_t acty_cycle(void) {
-  if (!acty) {
-    if (actyCounter > ACTY_OFF_DELAY_MS) {
-      acty = !acty;
-      actyCounter = 0;
-      digitalInd->setComputerActivityStatus(acty);
-    }
-  } else {
-    if (actyCounter > ACTY_ON_DELAY_MS) {
-      acty = !acty;
-      actyCounter = 0;
-      digitalInd->setComputerActivityStatus(acty);
-    }
-  }
-  actyCounter++;
-  return FAGC_IDLE;
-}
-
 uint8_t state = FAGC_INIT;
 
 startFn_t startFn = 0;
@@ -311,24 +296,43 @@ void findStartCycleFunctions(int8_t verbCode, int8_t nounCode, startFn_t *startF
   }
 }
 
+startFn_t programStartFn = 0;
+cycleFn_t programCycleFn = 0;
+
+void findProgramStartCycleFunctions(int8_t programNumber, startFn_t *startFn, cycleFn_t *cycleFn)
+{
+  if (programNumber != PROGRAM_NUMBER_INVALID) {
+    for (uint8_t program = 0; programs[program].number != PROGRAM_NUMBER_INVALID; program++) {
+      if (programs[program].number == programNumber) {
+          *startFn = programs[program].startFn;
+          *cycleFn = programs[program].cycleFn;
+          break;
+      }
+    }
+
+    if ((programNumber != 0) && (*startFn == 0))
+    {
+      Serial.print("PROGRAM: program not found:");
+      Serial.println(programNumber);
+      alarmInd->setProgramCondition(true);
+    }
+  }
+}
+
 void loop() {
   uint8_t next_state = state;
 
   switch (state) {
     case FAGC_INIT:
       {
-        alarmInd->setProgramCondition(true);
-        acty = false;
-        actyCounter = 0;
         startFn = 0;
         cycleFn = 0;
+        findProgramStartCycleFunctions(0, &programStartFn, &programCycleFn);
         next_state = FAGC_IDLE;
         break;
       }
     case FAGC_IDLE:
       {
-        next_state = acty_cycle();
-
         findStartCycleFunctions(kbd->getVerbCode(), kbd->getNounCode(), &startFn, &cycleFn);
 
         if (startFn) {
@@ -362,6 +366,15 @@ void loop() {
       Serial.print("ERROR: Unknown state:");
       Serial.println(state);
       break;
+  }
+
+  if (programStartFn) {
+    programStartFn(alarmInd, digitalInd, weather);
+    programStartFn = 0;
+  }
+
+  if (programCycleFn) {
+    programCycleFn(false);
   }
 
   if (next_state != state) {

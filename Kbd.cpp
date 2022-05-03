@@ -54,6 +54,7 @@ void keypadEvent(KeypadEvent key)
               inst->m_nounCode = "";
               inst->m_verbKeyPressed = false;
               inst->m_nounKeyPressed = false;
+              inst->m_ai->setRestartCondition(false);
               inst->m_ai->setOperatorErrorStatus(false);
             }
             break;

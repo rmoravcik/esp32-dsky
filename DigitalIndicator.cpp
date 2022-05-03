@@ -125,6 +125,11 @@ void DigitalIndicator::setComputerActivityStatus(bool status)
   }
 }
 
+bool DigitalIndicator::getComputerActivityStatus(void)
+{
+  return m_compActyStatus;
+}
+
 void DigitalIndicator::setProgramNumber(String number)
 {
   if (m_programNumber != number) {

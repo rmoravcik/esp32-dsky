@@ -17,6 +17,7 @@ public:
   void resetIndicator(bool statup);
 
   void setComputerActivityStatus(bool status);
+  bool getComputerActivityStatus(void);
 
   void setProgramNumber(String number);
   String getProgramNumber(void);

@@ -15,8 +15,9 @@
 #define FAGC_IDLE           (1)
 #define FAGC_BUSY           (2)
 
-#define VERB_CODE_INVALID   (-1)
-#define NOUN_CODE_INVALID   (-1)
+#define VERB_CODE_INVALID        (-1)
+#define NOUN_CODE_INVALID        (-1)
+#define PROGRAM_NUMBER_INVALID   (-1)
 
 typedef uint8_t (*startFn_t)(AlarmIndicator*, DigitalIndicator*, Weather*);
 typedef uint8_t (*cycleFn_t)(bool stop);
@@ -33,6 +34,12 @@ struct verb {
   startFn_t startFn;
   cycleFn_t cycleFn;
   struct noun* nouns;
+};
+
+struct program {
+  int8_t number;
+  startFn_t startFn;
+  cycleFn_t cycleFn;
 };
 
 #endif /* ESP32_DSKY_h */
