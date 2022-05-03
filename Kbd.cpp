@@ -41,6 +41,7 @@ void keypadEvent(KeypadEvent key)
             {
               inst->m_verbKeyPressed = false;
               inst->m_nounKeyPressed = false;
+              inst->m_di->setVerbCodeBlinking(false);
             }
             break;
           case 'k':
@@ -114,9 +115,12 @@ Kbd::~Kbd()
 int8_t Kbd::getVerbCode(void)
 {
   if (!m_verbKeyPressed && !m_nounKeyPressed) {
-    int8_t ret = m_verbCode.toInt();
-    m_verbCode = "";
-    return ret;
+    if (m_verbCode.length() > 0) {
+      int8_t ret = m_verbCode.toInt();
+      m_verbCode = "";
+      return ret;
+    }
+    return VERB_CODE_INVALID;
   } else {
     return VERB_CODE_INVALID;
   }
@@ -125,123 +129,19 @@ int8_t Kbd::getVerbCode(void)
 int8_t Kbd::getNounCode(void)
 {
   if (!m_verbKeyPressed && !m_nounKeyPressed) {
-    int8_t ret = m_nounCode.toInt();
-    m_nounCode = "";
-    return ret;
+    if (m_nounCode.length() > 0) {
+      int8_t ret = m_nounCode.toInt();
+      m_nounCode = "";
+      return ret;
+    }
+
+    return NOUN_CODE_INVALID;
   } else {
     return NOUN_CODE_INVALID;
   }
 }
 
-// REMOVE ME
-#ifndef ESP32
-uint32_t start_verb35 = 1000;
-uint32_t start_verb36 = 2000;
-uint32_t start_verb06verb43 = 3000;
-uint32_t start_verb06verb95 = 4000;
-uint32_t start_verb16verb36 = 5000;
-#endif
-// REMOVE ME
-
 void Kbd::update(void)
 {
     char key = m_keypad->getKey();
-//    Serial.print("key=");
-//    Serial.println(key);
-#ifndef ESP32
-    // REMOVE ME
-    if (start_verb35 > 0)
-    {
-      if (start_verb35 == 200) {
-        keypadEvent('v');
-        keypadEvent('3');
-      }
-      if (start_verb35 == 100) {
-        keypadEvent('5');
-      }
-      if (start_verb35 == 1) {
-        keypadEvent('e');
-      }
-      start_verb35--;
-    }
-    if (start_verb36 > 0)
-    {
-      if (start_verb36 == 200) {
-        keypadEvent('v');
-        keypadEvent('3');
-      }
-      if (start_verb36 == 100) {
-        keypadEvent('6');
-      }
-      if (start_verb36 == 1) {
-        keypadEvent('e');
-      }
-      start_verb36--;
-    }
-    if (start_verb06verb43 > 0)
-    {
-      if (start_verb06verb43 == 400) {
-        keypadEvent('v');
-        keypadEvent('0');
-      }
-      if (start_verb06verb43 == 300) {
-        keypadEvent('6');
-      }
-      if (start_verb06verb43 == 200) {
-        keypadEvent('n');
-        keypadEvent('4');
-      }
-      if (start_verb06verb43 == 100) {
-        keypadEvent('3');
-      }
-      if (start_verb06verb43 == 1) {
-        keypadEvent('e');
-      }
-      start_verb06verb43--;
-    }
-    if (start_verb06verb95 > 0)
-    {
-      if (start_verb06verb95 == 400) {
-        keypadEvent('v');
-        keypadEvent('0');
-      }
-      if (start_verb06verb95 == 300) {
-        keypadEvent('6');
-      }
-      if (start_verb06verb95 == 200) {
-        keypadEvent('n');
-        keypadEvent('9');
-      }
-      if (start_verb06verb95 == 100) {
-        keypadEvent('5');
-      }
-      if (start_verb06verb95 == 1) {
-        keypadEvent('e');
-      }
-      start_verb06verb95--;
-    }
-    if (start_verb16verb36 > 0)
-    {
-      if (start_verb16verb36 == 400) {
-        keypadEvent('v');
-        keypadEvent('1');
-      }
-      if (start_verb16verb36 == 300) {
-        keypadEvent('6');
-      }
-      if (start_verb16verb36 == 200) {
-        keypadEvent('n');
-        keypadEvent('3');
-      }
-      if (start_verb16verb36 == 100) {
-        keypadEvent('6');
-      }
-      if (start_verb16verb36 == 1) {
-        keypadEvent('e');
-      }
-      start_verb16verb36--;
-      start_verb06verb95 = 10000;
-    }
-#endif
-    // REMOVE ME
 }

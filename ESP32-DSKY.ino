@@ -264,6 +264,14 @@ cycleFn_t cycleFn = 0;
 
 void findStartCycleFunctions(int8_t verbCode, int8_t nounCode, startFn_t *startFn, cycleFn_t *cycleFn)
 {
+  bool nounCodeMissing = false;
+
+  if ((verbCode == VERB_CODE_INVALID) && (nounCode != NOUN_CODE_INVALID)) {
+    if (digitalInd->getVerbCode() != DIGITAL_INDICATOR_VALUE_UINT8_NAN) {
+      verbCode = digitalInd->getVerbCode().toInt();
+    }
+  }
+
   if (verbCode != VERB_CODE_INVALID) {
     for (uint8_t verb = 0; verbs[verb].code != VERB_CODE_INVALID; verb++) {
       if (verbs[verb].code == verbCode) {
@@ -276,6 +284,9 @@ void findStartCycleFunctions(int8_t verbCode, int8_t nounCode, startFn_t *startF
                 break;
               }
             }                  
+          } else {
+            digitalInd->setVerbCodeBlinking(true);
+            nounCodeMissing = true;
           }
         } else {
           *startFn = verbs[verb].startFn;
@@ -285,7 +296,7 @@ void findStartCycleFunctions(int8_t verbCode, int8_t nounCode, startFn_t *startF
       }
     }
 
-    if ((verbCode != 0) && (*startFn == 0))
+    if ((!nounCodeMissing) && (verbCode != VERB_CODE_INVALID) && (*startFn == 0))
     {
       Serial.print("OPR ERR: verb:");
       Serial.print(verbCode);
@@ -386,6 +397,7 @@ void loop() {
   }
 
   alarmInd->update();
+  digitalInd->update();
   kbd->update();
   weather->update();
 

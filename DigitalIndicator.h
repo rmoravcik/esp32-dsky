@@ -16,6 +16,8 @@ public:
 
   void resetIndicator(bool statup);
 
+  void update(void);
+
   void setComputerActivityStatus(bool status);
   bool getComputerActivityStatus(void);
 
@@ -24,6 +26,7 @@ public:
 
   void setVerbCode(String code);
   String getVerbCode(void);
+  void setVerbCodeBlinking(bool blinking);
 
   void setNounCode(String code);
   String getNounCode(void);
@@ -41,6 +44,8 @@ private:
   TFT_eSPI *m_tft;
   TFT_eSprite *m_spr;
 
+  bool m_verbCodeBlinking;
+
   bool m_compActyStatus;
   String m_programNumber;
   String m_verbCode;
@@ -49,6 +54,8 @@ private:
 
   void printUInt8Value(uint16_t x, uint16_t y, String value);
   void printInt32Value(uint16_t x, uint16_t y, int32_t value);
+
+  uint16_t m_toggleCounter;
 
 };
 

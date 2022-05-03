@@ -1,7 +1,10 @@
+#include "ESP32-DSKY.h"
 #include "DigitalIndicator.h"
 
 #include "Gorton-Normal-18011.h"
 #include "Zerlina26pt7b.h"
+
+#define TOGGLE_DELAY_MS (1000 / MAIN_LOOP_DELAY_MS)
 
 #define TFT_GREEN_INDICATOR 0x068F
 
@@ -19,6 +22,8 @@ DigitalIndicator::~DigitalIndicator()
 
 void DigitalIndicator::resetIndicator(bool startup)
 {
+  m_toggleCounter = 0;
+  m_verbCodeBlinking = false;
   m_compActyStatus = true;
   m_programNumber = DIGITAL_INDICATOR_VALUE_UINT8_NAN;
   m_verbCode = DIGITAL_INDICATOR_VALUE_UINT8_NAN;
@@ -99,6 +104,31 @@ void DigitalIndicator::resetIndicator(bool startup)
   }
 }
 
+void DigitalIndicator::update(void)
+{
+  static bool toggle = true;
+
+  if (m_toggleCounter == TOGGLE_DELAY_MS) {
+    if (toggle) {
+      toggle = false;
+
+      if (m_verbCodeBlinking) {
+        printUInt8Value(25, 146, m_verbCode);
+      }
+    } else {
+      toggle = true;
+
+      if (m_verbCodeBlinking) {
+        printUInt8Value(25, 146, DIGITAL_INDICATOR_VALUE_UINT8_NAN);
+      }
+    }
+
+    m_toggleCounter = 0;
+  }
+
+  m_toggleCounter++;
+}
+
 void DigitalIndicator::setComputerActivityStatus(bool status)
 {
   uint32_t buttonColor = TFT_BLACK;
@@ -154,6 +184,14 @@ void DigitalIndicator::setVerbCode(String code)
 String DigitalIndicator::getVerbCode(void)
 {
   return m_verbCode;
+}
+
+void DigitalIndicator::setVerbCodeBlinking(bool blinking)
+{
+  m_verbCodeBlinking = blinking;
+  if (!m_verbCodeBlinking) {
+    printUInt8Value(25, 146, m_verbCode);
+  }
 }
 
 void DigitalIndicator::setNounCode(String code)

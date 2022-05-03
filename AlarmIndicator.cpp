@@ -4,6 +4,7 @@
 #include "Gorton-Normal-12014.h"
 
 #define TOGGLE_DELAY_MS (1000 / MAIN_LOOP_DELAY_MS)
+
 // For some reason R and B channels are inverted
 #define TFT_ALARM_YELLOW_ACTIVE TFT_CYAN
 #define TFT_ALARM_FONT_INACTIVE 0x3186
