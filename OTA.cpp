@@ -70,9 +70,10 @@ const char* handleOta =
    "});"
 "</script>";
 
-OTA::OTA(AsyncWebServer *server)
+OTA::OTA(AsyncWebServer *server, AlarmIndicator *ai)
 {
   m_server = server;
+  m_ai = ai;
 
   m_server->on("/ota", HTTP_GET, [&](AsyncWebServerRequest *request) {
     request->send(200, "text/html", handleOta);
@@ -82,6 +83,8 @@ OTA::OTA(AsyncWebServer *server)
     request->send(200, "text/plain", (Update.hasError()) ? "FAIL" : "OK");
     ESP.restart();
   }, [&](AsyncWebServerRequest *request, const String& filename, size_t index, uint8_t *data, size_t len, bool final) {
+    m_ai->setUplinkActivityStatus(true);
+
     if (!index) {
       Serial.printf("Update: %s\n", filename.c_str());
       if (!Update.begin(UPDATE_SIZE_UNKNOWN)) { //start with max available size
@@ -102,6 +105,8 @@ OTA::OTA(AsyncWebServer *server)
         Update.printError(Serial);
       }
     }
+
+    m_ai->setUplinkActivityStatus(false);
   });
 }
 

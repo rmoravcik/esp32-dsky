@@ -244,7 +244,7 @@ void setup() {
   }
 
 #ifdef ESP32
-  ota = new OTA(&server);
+  ota = new OTA(&server, alarmInd);
 #endif
 
   server.on("/", handleRoot);
