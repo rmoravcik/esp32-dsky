@@ -23,6 +23,13 @@ uint8_t program06_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weath
   Serial.println(millis());
 
   inst->m_actyCounter = 0;
+  inst->m_di->setVerbCode("50");
+  inst->m_di->setNounCode("25");
+  inst->m_di->setRegister1("+00062");
+  inst->m_di->setRegister2("+00000");
+  inst->m_di->setRegister3("+00000");
+  inst->m_di->setVerbCodeBlinking(true);
+  inst->m_di->setNounCodeBlinking(true);
   return FAGC_BUSY;
 }
 

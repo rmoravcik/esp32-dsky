@@ -27,6 +27,8 @@ void keypadEvent(KeypadEvent key)
         switch (key) {
           case 'v':
             {
+              inst->m_di->setVerbCodeBlinking(false);
+              inst->m_di->setNounCodeBlinking(false);
               inst->m_verbKeyPressed = true;
               inst->m_nounKeyPressed = false;
             }
@@ -72,7 +74,19 @@ void keypadEvent(KeypadEvent key)
                   }
                 }
 
-                if (inst->m_nounKeyPressed) {
+                else if (inst->m_nounKeyPressed) {
+                  if (inst->m_nounCode.length() < 2) {
+                      inst->m_nounCode += key;
+                      inst->m_di->setNounCode(inst->m_nounCode);
+                  } else {
+                      Serial.println("OPR ERR: nounCode full");
+                      inst->m_ai->setOperatorErrorStatusBlinking();
+                  }
+                }
+
+                // Allow to enter program number in sequence: V37E 06E
+                else if (inst->m_di->getVerbCode() == "37") {
+                  inst->m_nounKeyPressed = true;
                   if (inst->m_nounCode.length() < 2) {
                       inst->m_nounCode += key;
                       inst->m_di->setNounCode(inst->m_nounCode);

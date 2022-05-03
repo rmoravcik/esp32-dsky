@@ -29,6 +29,7 @@ public:
 
   void setNounCode(String code);
   String getNounCode(void);
+  void setNounCodeBlinking(bool blinking);
 
   void setRegister1(String value);
   String getRegister1(void);
@@ -44,6 +45,7 @@ private:
   TFT_eSprite *m_spr;
 
   bool m_verbCodeBlinking;
+  bool m_nounCodeBlinking;
 
   bool m_compActyStatus;
   String m_programNumber;

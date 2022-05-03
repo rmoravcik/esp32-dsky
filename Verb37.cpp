@@ -10,7 +10,7 @@ cycleFn_t programCycleFn = 0;
 
 struct program programs[] = {
   {  0, program00_start, program00_cycle },
-  {  0, program06_start, program06_cycle },
+  {  6, program06_start, program06_cycle },
   { -1,               0,               0 }
 };
 

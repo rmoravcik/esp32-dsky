@@ -24,6 +24,7 @@ void DigitalIndicator::resetIndicator(bool startup)
 {
   m_toggleCounter = 0;
   m_verbCodeBlinking = false;
+  m_nounCodeBlinking = false;
   m_compActyStatus = true;
   m_programNumber = DIGITAL_INDICATOR_VALUE_NAN;
   m_verbCode = DIGITAL_INDICATOR_VALUE_NAN;
@@ -115,11 +116,17 @@ void DigitalIndicator::update(void)
       if (m_verbCodeBlinking) {
         printUInt8Value(25, 146, m_verbCode);
       }
+      if (m_nounCodeBlinking) {
+        printInt32Value(145, 146, m_nounCode);
+      }
     } else {
       toggle = true;
 
       if (m_verbCodeBlinking) {
         printUInt8Value(25, 146, DIGITAL_INDICATOR_VALUE_NAN);
+      }
+      if (m_nounCodeBlinking) {
+        printInt32Value(145, 146, DIGITAL_INDICATOR_VALUE_NAN);
       }
     }
 
@@ -205,6 +212,14 @@ void DigitalIndicator::setNounCode(String code)
 String DigitalIndicator::getNounCode(void)
 {
   return m_nounCode;
+}
+
+void DigitalIndicator::setNounCodeBlinking(bool blinking)
+{
+  m_nounCodeBlinking = blinking;
+  if (!m_nounCodeBlinking) {
+    printUInt8Value(145, 146, m_nounCode);
+  }
 }
 
 void DigitalIndicator::setRegister1(String value)
