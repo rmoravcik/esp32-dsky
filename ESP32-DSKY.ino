@@ -13,11 +13,11 @@
 #include "AlarmIndicator.h"
 #include "DigitalIndicator.h"
 #include "Kbd.h"
-#include "Program00.h"
 #include "Verb06.h"
 #include "Verb16.h"
 #include "Verb35.h"
 #include "Verb36.h"
+#include "Verb37.h"
 #include "Verb69.h"
 #include "OTA.h"
 #include "RTC.h"
@@ -51,19 +51,20 @@ struct noun verb16nouns[] = {
   { -1,                  0,                  0 }
 };
 
+struct noun verb37nouns[] = {
+  {  0,       verb37noun00_start,       verb37noun00_cycle },
+  {  6,       verb37noun06_start,       verb37noun06_cycle },
+  { -1,                        0,                        0 }
+};
+
 struct verb verbs[] = {
   { 06,  true,            0,            0, verb06nouns },
   { 16,  true,            0,            0, verb16nouns },
   { 35, false, verb35_start, verb35_cycle,           0 },
   { 36, false, verb36_start, verb36_cycle,           0 },
-  // 37
+  { 37,  true,            0,            0, verb37nouns },
   { 69, false, verb69_start, verb69_cycle,           0 },
   { -1, false,            0,            0,           0 }
-};
-
-struct program programs[] = {
-  {  0, program00_start, program00_cycle },
-  { -1,               0,               0 }
 };
 
 String params = "["
@@ -190,7 +191,7 @@ void startUp(void)
   alarmInd->setKeyReleaseStatus(false);
   alarmInd->setStandbyStatus(false);
   alarmInd->setUplinkActivityStatus(false);
-  digitalInd->setProgramNumber("00");
+  digitalInd->setProgramNumber(DIGITAL_INDICATOR_VALUE_NAN);
   digitalInd->setVerbCode(DIGITAL_INDICATOR_VALUE_NAN);
   digitalInd->setNounCode(DIGITAL_INDICATOR_VALUE_NAN);
   digitalInd->setRegister1(DIGITAL_INDICATOR_VALUE_NAN);
@@ -261,6 +262,7 @@ uint8_t state = FAGC_INIT;
 
 startFn_t startFn = 0;
 cycleFn_t cycleFn = 0;
+extern cycleFn_t programCycleFn;
 
 void findStartCycleFunctions(int8_t verbCode, int8_t nounCode, startFn_t *startFn, cycleFn_t *cycleFn)
 {
@@ -307,29 +309,6 @@ void findStartCycleFunctions(int8_t verbCode, int8_t nounCode, startFn_t *startF
   }
 }
 
-startFn_t programStartFn = 0;
-cycleFn_t programCycleFn = 0;
-
-void findProgramStartCycleFunctions(int8_t programNumber, startFn_t *startFn, cycleFn_t *cycleFn)
-{
-  if (programNumber != PROGRAM_NUMBER_INVALID) {
-    for (uint8_t program = 0; programs[program].number != PROGRAM_NUMBER_INVALID; program++) {
-      if (programs[program].number == programNumber) {
-          *startFn = programs[program].startFn;
-          *cycleFn = programs[program].cycleFn;
-          break;
-      }
-    }
-
-    if ((programNumber != 0) && (*startFn == 0))
-    {
-      Serial.print("PROGRAM: program not found:");
-      Serial.println(programNumber);
-      alarmInd->setProgramCondition(true);
-    }
-  }
-}
-
 void loop() {
   uint8_t next_state = state;
 
@@ -338,7 +317,7 @@ void loop() {
       {
         startFn = 0;
         cycleFn = 0;
-        findProgramStartCycleFunctions(0, &programStartFn, &programCycleFn);
+        verb37noun00_start(alarmInd, digitalInd, weather);
         next_state = FAGC_IDLE;
         break;
       }
@@ -377,11 +356,6 @@ void loop() {
       Serial.print("ERROR: Unknown state:");
       Serial.println(state);
       break;
-  }
-
-  if (programStartFn) {
-    programStartFn(alarmInd, digitalInd, weather);
-    programStartFn = 0;
   }
 
   if (programCycleFn) {
