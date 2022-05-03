@@ -25,12 +25,12 @@ void DigitalIndicator::resetIndicator(bool startup)
   m_toggleCounter = 0;
   m_verbCodeBlinking = false;
   m_compActyStatus = true;
-  m_programNumber = DIGITAL_INDICATOR_VALUE_UINT8_NAN;
-  m_verbCode = DIGITAL_INDICATOR_VALUE_UINT8_NAN;
-  m_nounCode = DIGITAL_INDICATOR_VALUE_UINT8_NAN;
-  m_registerValue[0] = DIGITAL_INDICATOR_REGISTER_VALUE_NAN;
-  m_registerValue[1] = DIGITAL_INDICATOR_REGISTER_VALUE_NAN;
-  m_registerValue[2] = DIGITAL_INDICATOR_REGISTER_VALUE_NAN;
+  m_programNumber = DIGITAL_INDICATOR_VALUE_NAN;
+  m_verbCode = DIGITAL_INDICATOR_VALUE_NAN;
+  m_nounCode = DIGITAL_INDICATOR_VALUE_NAN;
+  m_registerValue[0] = DIGITAL_INDICATOR_VALUE_NAN;
+  m_registerValue[1] = DIGITAL_INDICATOR_VALUE_NAN;
+  m_registerValue[2] = DIGITAL_INDICATOR_VALUE_NAN;
 
   m_tft->TFT_CS_MASK = (1 << DIGITAL_INDICATOR_CS);
 
@@ -119,7 +119,7 @@ void DigitalIndicator::update(void)
       toggle = true;
 
       if (m_verbCodeBlinking) {
-        printUInt8Value(25, 146, DIGITAL_INDICATOR_VALUE_UINT8_NAN);
+        printUInt8Value(25, 146, DIGITAL_INDICATOR_VALUE_NAN);
       }
     }
 
@@ -207,7 +207,7 @@ String DigitalIndicator::getNounCode(void)
   return m_nounCode;
 }
 
-void DigitalIndicator::setRegister1(int32_t value)
+void DigitalIndicator::setRegister1(String value)
 {
   if (m_registerValue[0] != value) {
     printInt32Value(25, 203, value);
@@ -215,12 +215,12 @@ void DigitalIndicator::setRegister1(int32_t value)
   }
 }
 
-int32_t DigitalIndicator::getRegister1(void)
+String DigitalIndicator::getRegister1(void)
 {
   return m_registerValue[0];
 }
 
-void DigitalIndicator::setRegister2(int32_t value)
+void DigitalIndicator::setRegister2(String value)
 {
   if (m_registerValue[1] != value) {
     printInt32Value(25, 259, value);
@@ -228,12 +228,12 @@ void DigitalIndicator::setRegister2(int32_t value)
   }
 }
 
-int32_t DigitalIndicator::getRegister2(void)
+String DigitalIndicator::getRegister2(void)
 {
   return m_registerValue[1];
 }
 
-void DigitalIndicator::setRegister3(int32_t value)
+void DigitalIndicator::setRegister3(String value)
 {
   if (m_registerValue[2] != value) {
     printInt32Value(25, 315, value);
@@ -241,7 +241,7 @@ void DigitalIndicator::setRegister3(int32_t value)
   }
 }
 
-int32_t DigitalIndicator::getRegister3(void)
+String DigitalIndicator::getRegister3(void)
 {
   return m_registerValue[2];
 }
@@ -258,7 +258,7 @@ void DigitalIndicator::printUInt8Value(uint16_t x, uint16_t y, String value)
 
   m_spr->fillSprite(TFT_BLACK);
 
-  if (value != DIGITAL_INDICATOR_VALUE_UINT8_NAN) {
+  if (value != DIGITAL_INDICATOR_VALUE_NAN) {
     m_spr->setTextColor(TFT_GREEN, TFT_BLACK);
     ret = snprintf(str, sizeof(str), "%s", value.c_str());
 
@@ -273,10 +273,9 @@ void DigitalIndicator::printUInt8Value(uint16_t x, uint16_t y, String value)
   m_spr->pushSprite(x, y - 44 + 3);
   m_spr->deleteSprite();
 }
-void DigitalIndicator::printInt32Value(uint16_t x, uint16_t y, int32_t value)
+void DigitalIndicator::printInt32Value(uint16_t x, uint16_t y, String value)
 {
   char str[7];
-  uint32_t raw = abs(value);
   int ret;
 
   m_tft->TFT_CS_MASK = (1 << DIGITAL_INDICATOR_CS);
@@ -286,14 +285,9 @@ void DigitalIndicator::printInt32Value(uint16_t x, uint16_t y, int32_t value)
 
   m_spr->fillSprite(TFT_BLACK);
 
-  if (value != DIGITAL_INDICATOR_REGISTER_VALUE_NAN) {
+  if (value != DIGITAL_INDICATOR_VALUE_NAN) {
     m_spr->setTextColor(TFT_GREEN, TFT_BLACK);
-
-    if (value >= 0) {
-      ret = snprintf(str, sizeof(str), "+%05u", raw);
-    } else {
-      ret = snprintf(str, sizeof(str), "-%05u", raw);
-    }
+    ret = snprintf(str, sizeof(str), "%s", value.c_str());
 
     if (ret < 0) {
       Serial.print("DigitalIndicator::printInt32Value(): ERROR=");

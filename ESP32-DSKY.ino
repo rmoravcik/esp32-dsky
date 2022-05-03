@@ -164,10 +164,10 @@ void handleRoot(AsyncWebServerRequest *request) {
 
 void startUp(void)
 {
-  for (int reg = 0; reg < 4; reg++) {
-    uint32_t value = 0;
+  for (int reg = 0; reg < 3; reg++) {
+    String value = "+";
     for (int i = 0; i < 6; i++) {
-      value = value + 8 * pow(10, i);
+      value = value + "8";
       if (reg == 0) {
         digitalInd->setRegister1(value);
       } else if (reg == 1) {
@@ -191,11 +191,11 @@ void startUp(void)
   alarmInd->setStandbyStatus(false);
   alarmInd->setUplinkActivityStatus(false);
   digitalInd->setProgramNumber("00");
-  digitalInd->setVerbCode(DIGITAL_INDICATOR_VALUE_UINT8_NAN);
-  digitalInd->setNounCode(DIGITAL_INDICATOR_VALUE_UINT8_NAN);
-  digitalInd->setRegister1(DIGITAL_INDICATOR_REGISTER_VALUE_NAN);
-  digitalInd->setRegister2(DIGITAL_INDICATOR_REGISTER_VALUE_NAN);
-  digitalInd->setRegister3(DIGITAL_INDICATOR_REGISTER_VALUE_NAN);        
+  digitalInd->setVerbCode(DIGITAL_INDICATOR_VALUE_NAN);
+  digitalInd->setNounCode(DIGITAL_INDICATOR_VALUE_NAN);
+  digitalInd->setRegister1(DIGITAL_INDICATOR_VALUE_NAN);
+  digitalInd->setRegister2(DIGITAL_INDICATOR_VALUE_NAN);
+  digitalInd->setRegister3(DIGITAL_INDICATOR_VALUE_NAN);        
 }
 
 void setup() {
@@ -267,7 +267,7 @@ void findStartCycleFunctions(int8_t verbCode, int8_t nounCode, startFn_t *startF
   bool nounCodeMissing = false;
 
   if ((verbCode == VERB_CODE_INVALID) && (nounCode != NOUN_CODE_INVALID)) {
-    if (digitalInd->getVerbCode() != DIGITAL_INDICATOR_VALUE_UINT8_NAN) {
+    if (digitalInd->getVerbCode() != DIGITAL_INDICATOR_VALUE_NAN) {
       verbCode = digitalInd->getVerbCode().toInt();
     }
   }

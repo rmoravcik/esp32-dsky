@@ -22,9 +22,9 @@ uint8_t verb06noun43_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *we
     inst = new Verb06(ai, di, weather);
   }
 
-  inst->m_di->setRegister1(0);
-  inst->m_di->setRegister2(0);
-  inst->m_di->setRegister3(0);
+  inst->m_di->setRegister1("+00000");
+  inst->m_di->setRegister2("+00000");
+  inst->m_di->setRegister3(DIGITAL_INDICATOR_VALUE_NAN);
 
   Serial.print("VERB06NOUN43 started at ");
   Serial.println(millis());
@@ -34,8 +34,12 @@ uint8_t verb06noun43_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *we
 
 uint8_t verb06noun43_cycle(bool stop)
 {
-  inst->m_di->setRegister1(inst->m_weather->getLatitude());
-  inst->m_di->setRegister2(inst->m_weather->getLongitude());
+  char value[7];
+
+  snprintf(value, sizeof(value), "+%05d", inst->m_weather->getLatitude());
+  inst->m_di->setRegister1(value);
+  snprintf(value, sizeof(value), "+%05d", inst->m_weather->getLongitude());
+  inst->m_di->setRegister2(value);
 
   Serial.print("VERB06NOUN43 finished at ");
   Serial.println(millis());
@@ -49,9 +53,9 @@ uint8_t verb06noun95_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *we
     inst = new Verb06(ai, di, weather);
   }
 
-  inst->m_di->setRegister1(0);
-  inst->m_di->setRegister2(0);
-  inst->m_di->setRegister3(0);
+  inst->m_di->setRegister1("+00000");
+  inst->m_di->setRegister2("+00000");
+  inst->m_di->setRegister3("+00000");
 
   Serial.print("VERB06NOUN95 started at ");
   Serial.println(millis());
@@ -61,9 +65,14 @@ uint8_t verb06noun95_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *we
 
 uint8_t verb06noun95_cycle(bool stop)
 {
-  inst->m_di->setRegister1(inst->m_weather->getTemperature());
-  inst->m_di->setRegister2(inst->m_weather->getPressure());
-  inst->m_di->setRegister3(inst->m_weather->getHumidity());
+  char value[7];
+
+  snprintf(value, sizeof(value), "+%05d", inst->m_weather->getTemperature());
+  inst->m_di->setRegister1(value);
+  snprintf(value, sizeof(value), "+%05d", inst->m_weather->getPressure());
+  inst->m_di->setRegister2(value);
+  snprintf(value, sizeof(value), "+%05d", inst->m_weather->getHumidity());
+  inst->m_di->setRegister3(value);
 
   Serial.print("VERB06NOUN95 finished at ");
   Serial.println(millis());

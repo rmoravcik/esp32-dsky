@@ -22,9 +22,9 @@ uint8_t verb16noun36_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *we
     inst = new Verb16(ai, di, weather);
   }
 
-  inst->m_di->setRegister1(0);
-  inst->m_di->setRegister2(0);
-  inst->m_di->setRegister3(0);
+  inst->m_di->setRegister1("+00000");
+  inst->m_di->setRegister2("+00000");
+  inst->m_di->setRegister3("+00000");
 
   inst->m_prevSecond = 0;
 
@@ -45,9 +45,14 @@ uint8_t verb16noun36_cycle(bool stop)
   }
 
   if (second(currTime) != inst->m_prevSecond) {
-    inst->m_di->setRegister1(hour(currTime));
-    inst->m_di->setRegister2(minute(currTime));
-    inst->m_di->setRegister3((second(currTime) * 100) + random(10));
+    char value[7];
+
+    snprintf(value, sizeof(value), "+%05d", hour(currTime));
+    inst->m_di->setRegister1(value);
+    snprintf(value, sizeof(value), "+%05d", minute(currTime));
+    inst->m_di->setRegister2(value);
+    snprintf(value, sizeof(value), "+%05d", (int32_t)((second(currTime) * 100) + random(10)));
+    inst->m_di->setRegister3(value);
 
     if (((second(currTime) % 3) == 0) && (inst->m_actyCounter == 0)) {
       inst->m_di->setComputerActivityStatus(true);

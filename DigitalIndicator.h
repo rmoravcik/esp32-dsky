@@ -5,8 +5,7 @@
 
 #define DIGITAL_INDICATOR_CS 26
 
-#define DIGITAL_INDICATOR_VALUE_UINT8_NAN     "NAN"
-#define DIGITAL_INDICATOR_REGISTER_VALUE_NAN  INT32_MIN
+#define DIGITAL_INDICATOR_VALUE_NAN "NAN"
 
 class DigitalIndicator
 {
@@ -31,14 +30,14 @@ public:
   void setNounCode(String code);
   String getNounCode(void);
 
-  void setRegister1(int32_t value);
-  int32_t getRegister1(void);
+  void setRegister1(String value);
+  String getRegister1(void);
 
-  void setRegister2(int32_t value);
-  int32_t getRegister2(void);
+  void setRegister2(String value);
+  String getRegister2(void);
 
-  void setRegister3(int32_t value);
-  int32_t getRegister3(void);
+  void setRegister3(String value);
+  String getRegister3(void);
 
 private:
   TFT_eSPI *m_tft;
@@ -50,10 +49,10 @@ private:
   String m_programNumber;
   String m_verbCode;
   String m_nounCode;
-  int32_t m_registerValue[3];
+  String m_registerValue[3];
 
   void printUInt8Value(uint16_t x, uint16_t y, String value);
-  void printInt32Value(uint16_t x, uint16_t y, int32_t value);
+  void printInt32Value(uint16_t x, uint16_t y, String value);
 
   uint16_t m_toggleCounter;
 
