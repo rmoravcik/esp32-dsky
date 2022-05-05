@@ -49,14 +49,13 @@ void keypadEvent(KeypadEvent key)
               inst->m_ai->setKeyReleaseStatus(false);
             }
             break;
-          case KEY_CLR:
+          case KEY_RSET:
             {
               inst->m_verbCode = "";
               inst->m_nounCode = "";
               inst->m_verbKeyPressed = false;
               inst->m_nounKeyPressed = false;
-              inst->m_ai->setRestartCondition(false);
-              inst->m_ai->setOperatorErrorStatus(false);
+              inst->m_ai->resetIndicator();
             }
             break;
           default:

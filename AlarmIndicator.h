@@ -11,7 +11,7 @@ public:
   AlarmIndicator(TFT_eSPI *tft);
   virtual ~AlarmIndicator();
 
-  void resetIndicator(bool startup);
+  void resetIndicator(void);
   void powerDownIndicator(void);
 
   void update(void);

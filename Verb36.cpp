@@ -27,7 +27,7 @@ uint8_t verb36_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather)
 
 uint8_t verb36_cycle(char key, bool stopRequested, uint8_t state)
 {
-  inst->m_ai->resetIndicator(false);
-  inst->m_di->resetIndicator(false);
+  inst->m_ai->resetIndicator();
+  inst->m_di->resetIndicator();
   return DSKY_STATE_INIT;
 }

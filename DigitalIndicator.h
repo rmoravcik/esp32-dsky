@@ -13,7 +13,7 @@ public:
   DigitalIndicator(TFT_eSPI *tft, TFT_eSprite *spr);
   virtual ~DigitalIndicator();
 
-  void resetIndicator(bool statup);
+  void resetIndicator(void);
   void powerDownIndicator(void);
 
   void update(void);
@@ -58,6 +58,9 @@ private:
   void printInt32Value(uint16_t x, uint16_t y, String value);
 
   void drawLayout(void);
+  void drawProgramLabel(void);
+  void drawVerbLabel(void);
+  void drawNounLabel(void);
 
   uint16_t m_toggleCounter;
 

@@ -5,11 +5,15 @@
 #include "DigitalIndicator.h"
 #include "Weather.h"
 
-#define MAIN_LOOP_DELAY_MS  (10)
-#define ACTY_ON_DELAY_MS    (500 / MAIN_LOOP_DELAY_MS)
-#define ACTY_OFF_DELAY_MS   (1500 / MAIN_LOOP_DELAY_MS)
+#define MAIN_LOOP_DELAY_MS     (10)
 
-#define WEATHER_UPDATE_S    (15 * 60)
+#define ACTY_ON_DELAY_MS       (500 / MAIN_LOOP_DELAY_MS)
+#define ACTY_OFF_DELAY_MS      (1500 / MAIN_LOOP_DELAY_MS)
+
+#define VERB_NOUN_OFF_DELAY_MS (400 / MAIN_LOOP_DELAY_MS)
+#define VERB_NOUN_ON_DELAY_MS  (1000 / MAIN_LOOP_DELAY_MS)
+
+#define WEATHER_UPDATE_S       (15 * 60)
 
 #define DSKY_STATE_INIT           (0)
 #define DSKY_STATE_IDLE           (1)

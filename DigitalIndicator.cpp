@@ -13,7 +13,30 @@ DigitalIndicator::DigitalIndicator(TFT_eSPI *tft, TFT_eSprite *spr)
   m_tft = tft;
   m_spr = spr;
 
-  resetIndicator(true);
+  m_toggleCounter = 0;
+  m_verbCodeBlinking = false;
+  m_nounCodeBlinking = false;
+  m_compActyStatus = true;
+  m_programNumber = DIGITAL_INDICATOR_VALUE_NAN;
+  m_verbCode = DIGITAL_INDICATOR_VALUE_NAN;
+  m_nounCode = DIGITAL_INDICATOR_VALUE_NAN;
+  m_registerValue[0] = DIGITAL_INDICATOR_VALUE_NAN;
+  m_registerValue[1] = DIGITAL_INDICATOR_VALUE_NAN;
+  m_registerValue[2] = DIGITAL_INDICATOR_VALUE_NAN;
+
+  m_tft->TFT_CS_MASK = (1 << DIGITAL_INDICATOR_CS);
+
+  drawLayout();
+  drawNounLabel();
+  setNounCode("88");
+  delay(200);
+  drawProgramLabel();
+  setProgramNumber("88");
+  delay(200);
+  drawVerbLabel();
+  setVerbCode("88");
+  delay(200);
+  setComputerActivityStatus(true);
 }
 
 DigitalIndicator::~DigitalIndicator()
@@ -44,7 +67,7 @@ void DigitalIndicator::drawLayout(void)
   m_tft->fillRoundRect(42, 265, 156, 4, 0, TFT_GREEN);
 }
 
-void DigitalIndicator::resetIndicator(bool startup)
+void DigitalIndicator::resetIndicator(void)
 {
   m_toggleCounter = 0;
   m_verbCodeBlinking = false;
@@ -61,55 +84,35 @@ void DigitalIndicator::resetIndicator(bool startup)
 
   m_tft->TFT_CS_MASK = (1 << DIGITAL_INDICATOR_CS);
 
-  if (!startup) {
-    setComputerActivityStatus(false);
+  setComputerActivityStatus(false);
+  drawProgramLabel();
+  drawVerbLabel();
+  drawNounLabel();
+}
     
-    // PROG
-    m_tft->fillRoundRect(145, 5, 70, 20, 3, TFT_GREEN);
-    m_tft->setCursor(161, 10);
-    m_tft->setTextColor(TFT_BLACK, TFT_GREEN);
-    m_tft->print("PROG");
+void DigitalIndicator::drawProgramLabel(void)
+{
+  m_tft->fillRoundRect(145, 5, 70, 20, 3, TFT_GREEN);
+  m_tft->setCursor(161, 10);
+  m_tft->setTextColor(TFT_BLACK, TFT_GREEN);
+  m_tft->print("PROG");
+}
 
-    // VERB
-    m_tft->fillRoundRect(25, 81, 70, 20, 3, TFT_GREEN);
-    m_tft->setCursor(40, 86);
-    m_tft->setTextColor(TFT_BLACK, TFT_GREEN);
-    m_tft->print("VERB");
-    m_tft->unloadFont();
+void DigitalIndicator::drawVerbLabel(void)
+{
+  m_tft->fillRoundRect(25, 81, 70, 20, 3, TFT_GREEN);
+  m_tft->setCursor(40, 86);
+  m_tft->setTextColor(TFT_BLACK, TFT_GREEN);
+  m_tft->print("VERB");
+  m_tft->unloadFont();
+}
 
-    // NOUN
-    m_tft->fillRoundRect(145, 81, 70, 20, 3, TFT_GREEN);
-    m_tft->setCursor(160, 86);
-    m_tft->setTextColor(TFT_BLACK, TFT_GREEN);
-    m_tft->print("NOUN");
-  } else {
-    // NOUN
-    m_tft->fillRoundRect(145, 81, 70, 20, 3, TFT_GREEN);
-    m_tft->setCursor(160, 86);
-    m_tft->setTextColor(TFT_BLACK, TFT_GREEN);
-    m_tft->print("NOUN");
-    setNounCode("88");
-    delay(200);
-
-    // PROG
-    m_tft->fillRoundRect(145, 5, 70, 20, 3, TFT_GREEN);
-    m_tft->setCursor(161, 10);
-    m_tft->setTextColor(TFT_BLACK, TFT_GREEN);
-    m_tft->print("PROG");
-    setProgramNumber("88");
-    delay(200);
-
-    // VERB
-    m_tft->fillRoundRect(25, 81, 70, 20, 3, TFT_GREEN);
-    m_tft->setCursor(40, 86);
-    m_tft->setTextColor(TFT_BLACK, TFT_GREEN);
-    m_tft->print("VERB");
-    m_tft->unloadFont();
-    setVerbCode("88");
-    delay(200);
-
-    setComputerActivityStatus(true);
-  }
+void DigitalIndicator::drawNounLabel(void)
+{
+  m_tft->fillRoundRect(145, 81, 70, 20, 3, TFT_GREEN);
+  m_tft->setCursor(160, 86);
+  m_tft->setTextColor(TFT_BLACK, TFT_GREEN);
+  m_tft->print("NOUN");
 }
 
 void DigitalIndicator::powerDownIndicator(void)
@@ -123,9 +126,12 @@ void DigitalIndicator::update(void)
 {
   static bool toggle = true;
 
-  if (m_toggleCounter == TOGGLE_DELAY_MS) {
-    if (toggle) {
-      toggle = false;
+  Serial.print("m_toggleCounter=");
+  Serial.println(m_toggleCounter);
+  if (!toggle) {
+    if (m_toggleCounter > VERB_NOUN_OFF_DELAY_MS) {
+      m_toggleCounter = 0;
+      toggle = true;
 
       if (m_verbCodeBlinking) {
         printUInt8Value(25, 146, m_verbCode);
@@ -133,8 +139,11 @@ void DigitalIndicator::update(void)
       if (m_nounCodeBlinking) {
         printInt32Value(145, 146, m_nounCode);
       }
-    } else {
-      toggle = true;
+    }
+  } else {
+    if (m_toggleCounter > VERB_NOUN_ON_DELAY_MS) {
+      m_toggleCounter = 0;
+      toggle = false;
 
       if (m_verbCodeBlinking) {
         printUInt8Value(25, 146, DIGITAL_INDICATOR_VALUE_NAN);
@@ -143,8 +152,6 @@ void DigitalIndicator::update(void)
         printInt32Value(145, 146, DIGITAL_INDICATOR_VALUE_NAN);
       }
     }
-
-    m_toggleCounter = 0;
   }
 
   m_toggleCounter++;

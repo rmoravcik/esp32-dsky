@@ -50,8 +50,8 @@ uint8_t program06_cycle(char key, bool stopRequested, uint8_t state)
       inst->m_ai->powerDownIndicator();
       inst->m_standbyMode = true;
     } else {
-      inst->m_ai->resetIndicator(false);
-      inst->m_di->resetIndicator(false);
+      inst->m_ai->resetIndicator();
+      inst->m_di->resetIndicator();
       inst->m_standbyMode = false;
       return DSKY_STATE_INIT;
     }

@@ -321,6 +321,7 @@ void loop() {
         startFn = 0;
         cycleFn = 0;
         verb37noun00_start(alarmInd, digitalInd, weather);
+        alarmInd->setRestartCondition(true);
         next_state = DSKY_STATE_IDLE;
         break;
       }
@@ -342,7 +343,7 @@ void loop() {
         findStartCycleFunctions(kbd->getVerbCode(), kbd->getNounCode(), &newStartFn, &newCycleFn);
 
         if (cycleFn) {
-          next_state = cycleFn(key, newStartFn ? true : false, state);
+          next_state = cycleFn(key, newStartFn ? true : false, next_state);
 
           if (next_state != DSKY_STATE_BUSY) {
             if (newStartFn) {
@@ -362,7 +363,7 @@ void loop() {
   }
 
   if (programCycleFn) {
-    next_state = programCycleFn(key, false, state);
+    next_state = programCycleFn(key, false, next_state);
   }
 
   if (next_state != state) {
@@ -376,10 +377,6 @@ void loop() {
   alarmInd->update();
   digitalInd->update();
   weather->update();
-
-#ifndef ESP32
-  MDNS.update();
-#endif
 
   delay(MAIN_LOOP_DELAY_MS);
 }
