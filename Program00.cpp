@@ -23,15 +23,15 @@ uint8_t program00_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weath
   Serial.println(millis());
 
   inst->m_actyCounter = 0;
-  return FAGC_BUSY;
+  return DSKY_STATE_BUSY;
 }
 
-uint8_t program00_cycle(char key, bool stop)
+uint8_t program00_cycle(char key, bool stopRequested, uint8_t state)
 {
-  if (stop) {
+  if (stopRequested) {
     Serial.print("PROGRAM00 finished at ");
     Serial.println(millis());
-    return FAGC_IDLE;
+    return state;
   }
 
   bool acty = inst->m_di->getComputerActivityStatus();
@@ -48,5 +48,5 @@ uint8_t program00_cycle(char key, bool stop)
   }
 
   inst->m_actyCounter++;
-  return FAGC_BUSY;
+  return state;
 }

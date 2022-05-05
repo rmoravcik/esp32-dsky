@@ -31,17 +31,17 @@ uint8_t verb16noun36_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *we
   Serial.print("VERB16NOUN36 started at ");
   Serial.println(millis());
 
-  return FAGC_BUSY;
+  return DSKY_STATE_BUSY;
 }
 
-uint8_t verb16noun36_cycle(char key, bool stop)
+uint8_t verb16noun36_cycle(char key, bool stopRequested, uint8_t state)
 {
   time_t currTime = now();
 
-  if (stop) {
+  if (stopRequested) {
     Serial.print("VERB16NOUN36 finished at ");
     Serial.println(millis());
-    return FAGC_IDLE;
+    return DSKY_STATE_IDLE;
   }
 
   if (second(currTime) != inst->m_prevSecond) {
@@ -68,5 +68,5 @@ uint8_t verb16noun36_cycle(char key, bool stop)
     inst->m_actyCounter--;
   }
 
-  return FAGC_BUSY;
+  return DSKY_STATE_BUSY;
 }

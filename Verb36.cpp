@@ -22,12 +22,12 @@ uint8_t verb36_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather)
   Serial.print("VERB36 started at ");
   Serial.println(millis());
 
-  return FAGC_BUSY;
+  return DSKY_STATE_BUSY;
 }
 
-uint8_t verb36_cycle(char key, bool stop)
+uint8_t verb36_cycle(char key, bool stopRequested, uint8_t state)
 {
   inst->m_ai->resetIndicator(false);
   inst->m_di->resetIndicator(false);
-  return FAGC_INIT;
+  return DSKY_STATE_INIT;
 }

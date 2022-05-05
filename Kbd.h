@@ -6,7 +6,14 @@
 #include "AlarmIndicator.h"
 #include "DigitalIndicator.h"
 
-#define KEY_PRO 'p'
+#define KEY_NONE ' '
+#define KEY_VERB 'v'
+#define KEY_NOUN 'n'
+#define KEY_CLR  'c'
+#define KEY_PRO  'p'
+#define KEY_ENTR 'e'
+#define KEY_REL  'k'
+#define KEY_RSET 'r'
 
 class Kbd
 {

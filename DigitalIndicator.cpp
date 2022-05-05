@@ -114,6 +114,8 @@ void DigitalIndicator::resetIndicator(bool startup)
 
 void DigitalIndicator::powerDownIndicator(void)
 {
+  setVerbCodeBlinking(false);
+  setNounCodeBlinking(false);
   drawLayout();
 }
 

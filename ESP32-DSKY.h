@@ -11,16 +11,16 @@
 
 #define WEATHER_UPDATE_S    (15 * 60)
 
-#define FAGC_INIT           (0)
-#define FAGC_IDLE           (1)
-#define FAGC_BUSY           (2)
+#define DSKY_STATE_INIT           (0)
+#define DSKY_STATE_IDLE           (1)
+#define DSKY_STATE_BUSY           (2)
 
 #define VERB_CODE_INVALID        (-1)
 #define NOUN_CODE_INVALID        (-1)
 #define PROGRAM_NUMBER_INVALID   (-1)
 
 typedef uint8_t (*startFn_t)(AlarmIndicator*, DigitalIndicator*, Weather*);
-typedef uint8_t (*cycleFn_t)(char key, bool stop);
+typedef uint8_t (*cycleFn_t)(char key, bool stopRequested, uint8_t state);
 
 struct noun {
   int8_t code;

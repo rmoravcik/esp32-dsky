@@ -9,7 +9,7 @@ Program06::Program06(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather)
   m_ai = ai;
   m_di = di;
   
-  m_standby = false;
+  m_standbyMode = false;
 }
 
 Program06::~Program06()
@@ -33,28 +33,31 @@ uint8_t program06_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weath
   inst->m_di->setRegister3("+00000");
   inst->m_di->setVerbCodeBlinking(true);
   inst->m_di->setNounCodeBlinking(true);
-  return FAGC_BUSY;
+  return DSKY_STATE_BUSY;
 }
 
-uint8_t program06_cycle(char key, bool stop)
+uint8_t program06_cycle(char key, bool stopRequested, uint8_t state)
 {
-  if (stop) {
+  if (stopRequested) {
     Serial.print("PROGRAM06 finished at ");
     Serial.println(millis());
-    return FAGC_IDLE;
+    return DSKY_STATE_IDLE;
   }
 
-  if (key = KEY_PRO) {
-    if (!inst->m_standby) {
+  if (key == KEY_PRO) {
+    if (!inst->m_standbyMode) {
       inst->m_di->powerDownIndicator();
       inst->m_ai->powerDownIndicator();
-      inst->m_standby = true;
+      inst->m_standbyMode = true;
     } else {
-      inst->m_standby = false;
+      inst->m_ai->resetIndicator(false);
+      inst->m_di->resetIndicator(false);
+      inst->m_standbyMode = false;
+      return DSKY_STATE_INIT;
     }
   }
 
-  if (!inst->m_standby) {
+  if (!inst->m_standbyMode) {
     bool acty = inst->m_di->getComputerActivityStatus();
     if (!acty) {
       if (inst->m_actyCounter > ACTY_OFF_DELAY_MS) {
@@ -71,5 +74,5 @@ uint8_t program06_cycle(char key, bool stop)
     inst->m_actyCounter++;
   }
 
-  return FAGC_BUSY;
+  return state;
 }

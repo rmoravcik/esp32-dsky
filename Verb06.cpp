@@ -29,10 +29,10 @@ uint8_t verb06noun43_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *we
   Serial.print("VERB06NOUN43 started at ");
   Serial.println(millis());
 
-  return FAGC_BUSY;
+  return DSKY_STATE_BUSY;
 }
 
-uint8_t verb06noun43_cycle(char key, bool stop)
+uint8_t verb06noun43_cycle(char key, bool stopRequested, uint8_t state)
 {
   char value[7];
 
@@ -44,7 +44,7 @@ uint8_t verb06noun43_cycle(char key, bool stop)
   Serial.print("VERB06NOUN43 finished at ");
   Serial.println(millis());
 
-  return FAGC_IDLE;
+  return DSKY_STATE_IDLE;
 }
 
 uint8_t verb06noun95_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather)
@@ -60,10 +60,10 @@ uint8_t verb06noun95_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *we
   Serial.print("VERB06NOUN95 started at ");
   Serial.println(millis());
 
-  return FAGC_BUSY;
+  return DSKY_STATE_BUSY;
 }
 
-uint8_t verb06noun95_cycle(char key, bool stop)
+uint8_t verb06noun95_cycle(char key, bool stopRequested, uint8_t state)
 {
   char value[7];
 
@@ -77,5 +77,5 @@ uint8_t verb06noun95_cycle(char key, bool stop)
   Serial.print("VERB06NOUN95 finished at ");
   Serial.println(millis());
 
-  return FAGC_IDLE;
+  return DSKY_STATE_IDLE;
 }

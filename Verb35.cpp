@@ -44,17 +44,17 @@ uint8_t verb35_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather)
   Serial.print("VERB35 started at ");
   Serial.println(inst->startMillis);
 
-  return FAGC_BUSY;
+  return DSKY_STATE_BUSY;
 }
 
-uint8_t verb35_cycle(char key, bool stop)
+uint8_t verb35_cycle(char key, bool stopRequested, uint8_t state)
 {
   unsigned long deltaMillis = millis() - inst->startMillis;
 
   if (deltaMillis > 5900) {
     Serial.print("VERB35 finished at ");
     Serial.println(millis());
-    return FAGC_IDLE;
+    return DSKY_STATE_IDLE;
   } else if (deltaMillis > 5800) {
     inst->m_ai->setUplinkActivityStatus(false);
     inst->m_ai->setNoAttitudeStatus(false);
@@ -132,5 +132,5 @@ uint8_t verb35_cycle(char key, bool stop)
     inst->m_ai->setVelocityDataCaution(true);
     inst->m_di->setVerbCode("88");
   }
-  return FAGC_BUSY;
+  return DSKY_STATE_BUSY;
 }

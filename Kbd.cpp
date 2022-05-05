@@ -5,9 +5,9 @@ const byte ROWS = 3;
 const byte COLS = 7;
 
 char keys[ROWS][COLS] = {
-  { ' ', '+', '7', '8', '9', 'c',     ' ' },
-  { 'v', '-', '4', '5', '6', KEY_PRO, 'e' },
-  { 'n', '0', '1', '2', '3', 'k',     'r' },
+  { KEY_NONE, '+', '7', '8', '9', KEY_CLR, KEY_NONE },
+  { KEY_VERB, '-', '4', '5', '6', KEY_PRO, KEY_ENTR },
+  { KEY_NOUN, '0', '1', '2', '3', KEY_REL, KEY_RSET },
 };
 
 byte rowPins[ROWS] = { 4, 39, 34 };
@@ -17,15 +17,13 @@ static Kbd *inst = NULL;
 
 void keypadEvent(KeypadEvent key)
 {
-#ifdef ESP32
   switch (inst->m_keypad->getState()) {
     case RELEASED:
       {
-#endif
         Serial.print("key=");
         Serial.println(key);
         switch (key) {
-          case 'v':
+          case KEY_VERB:
             {
               inst->m_di->setVerbCodeBlinking(false);
               inst->m_di->setNounCodeBlinking(false);
@@ -33,25 +31,25 @@ void keypadEvent(KeypadEvent key)
               inst->m_nounKeyPressed = false;
             }
             break;
-          case 'n':
+          case KEY_NOUN:
             {
               inst->m_verbKeyPressed = false;
               inst->m_nounKeyPressed = true;
             }
             break;
-          case 'e':
+          case KEY_ENTR:
             {
               inst->m_verbKeyPressed = false;
               inst->m_nounKeyPressed = false;
               inst->m_di->setVerbCodeBlinking(false);
             }
             break;
-          case 'k':
+          case KEY_REL:
             {
               inst->m_ai->setKeyReleaseStatus(false);
             }
             break;
-          case 'c':
+          case KEY_CLR:
             {
               inst->m_verbCode = "";
               inst->m_nounCode = "";
@@ -99,13 +97,11 @@ void keypadEvent(KeypadEvent key)
             }
             break;
         }
-#ifdef ESP32
       }
       break;
     default:
       break;
   }
-#endif
 }
 
 Kbd::Kbd(AlarmIndicator *ai, DigitalIndicator *di)

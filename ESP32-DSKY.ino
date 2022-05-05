@@ -259,7 +259,7 @@ void setup() {
                         alarmInd);
 }
 
-uint8_t state = FAGC_INIT;
+uint8_t state = DSKY_STATE_INIT;
 
 startFn_t startFn = 0;
 cycleFn_t cycleFn = 0;
@@ -316,15 +316,15 @@ void loop() {
   char key = kbd->update();
 
   switch (state) {
-    case FAGC_INIT:
+    case DSKY_STATE_INIT:
       {
         startFn = 0;
         cycleFn = 0;
         verb37noun00_start(alarmInd, digitalInd, weather);
-        next_state = FAGC_IDLE;
+        next_state = DSKY_STATE_IDLE;
         break;
       }
-    case FAGC_IDLE:
+    case DSKY_STATE_IDLE:
       {
         findStartCycleFunctions(kbd->getVerbCode(), kbd->getNounCode(), &startFn, &cycleFn);
 
@@ -334,7 +334,7 @@ void loop() {
         }
         break;
       }
-    case FAGC_BUSY:
+    case DSKY_STATE_BUSY:
       {
         startFn_t newStartFn = 0;
         cycleFn_t newCycleFn = 0;
@@ -342,9 +342,9 @@ void loop() {
         findStartCycleFunctions(kbd->getVerbCode(), kbd->getNounCode(), &newStartFn, &newCycleFn);
 
         if (cycleFn) {
-          next_state = cycleFn(key, newStartFn ? true : false);
+          next_state = cycleFn(key, newStartFn ? true : false, state);
 
-          if (next_state != FAGC_BUSY) {
+          if (next_state != DSKY_STATE_BUSY) {
             if (newStartFn) {
               startFn = newStartFn;
               cycleFn = newCycleFn;
@@ -362,7 +362,7 @@ void loop() {
   }
 
   if (programCycleFn) {
-    programCycleFn(key, false);
+    next_state = programCycleFn(key, false, state);
   }
 
   if (next_state != state) {

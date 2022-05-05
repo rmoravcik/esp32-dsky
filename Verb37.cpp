@@ -61,12 +61,12 @@ uint8_t verb37noun00_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *we
     programStartFn = 0;
   }
 
-  return FAGC_BUSY;
+  return DSKY_STATE_BUSY;
 }
 
-uint8_t verb37noun00_cycle(char key, bool stop)
+uint8_t verb37noun00_cycle(char key, bool stopRequested, uint8_t state)
 {
-  return FAGC_IDLE;
+  return DSKY_STATE_IDLE;
 }
 
 uint8_t verb37noun06_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather)
@@ -86,10 +86,10 @@ uint8_t verb37noun06_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *we
     programStartFn = 0;
   }
 
-  return FAGC_BUSY;
+  return DSKY_STATE_BUSY;
 }
 
-uint8_t verb37noun06_cycle(char key, bool stop)
+uint8_t verb37noun06_cycle(char key, bool stopRequested, uint8_t state)
 {
-  return FAGC_IDLE;
+  return DSKY_STATE_IDLE;
 }
