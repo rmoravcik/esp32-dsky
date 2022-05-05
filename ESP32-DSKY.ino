@@ -255,7 +255,8 @@ void setup() {
 
   weather = new Weather(conf.getString("weather_city"),
                         conf.getString("weather_country"),
-                        conf.getString("weather_api_key"));
+                        conf.getString("weather_api_key"),
+                        alarmInd);
 }
 
 uint8_t state = FAGC_INIT;
@@ -312,6 +313,8 @@ void findStartCycleFunctions(int8_t verbCode, int8_t nounCode, startFn_t *startF
 void loop() {
   uint8_t next_state = state;
 
+  char key = kbd->update();
+
   switch (state) {
     case FAGC_INIT:
       {
@@ -339,7 +342,7 @@ void loop() {
         findStartCycleFunctions(kbd->getVerbCode(), kbd->getNounCode(), &newStartFn, &newCycleFn);
 
         if (cycleFn) {
-          next_state = cycleFn(newStartFn ? true : false);
+          next_state = cycleFn(key, newStartFn ? true : false);
 
           if (next_state != FAGC_BUSY) {
             if (newStartFn) {
@@ -359,7 +362,7 @@ void loop() {
   }
 
   if (programCycleFn) {
-    programCycleFn(false);
+    programCycleFn(key, false);
   }
 
   if (next_state != state) {
@@ -372,7 +375,6 @@ void loop() {
 
   alarmInd->update();
   digitalInd->update();
-  kbd->update();
   weather->update();
 
 #ifndef ESP32

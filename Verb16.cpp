@@ -34,7 +34,7 @@ uint8_t verb16noun36_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *we
   return FAGC_BUSY;
 }
 
-uint8_t verb16noun36_cycle(bool stop)
+uint8_t verb16noun36_cycle(char key, bool stop)
 {
   time_t currTime = now();
 

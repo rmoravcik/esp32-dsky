@@ -6,6 +6,6 @@
 #include "Weather.h"
 
 uint8_t verb69_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather);
-uint8_t verb69_cycle(bool stop);
+uint8_t verb69_cycle(char key, bool stop);
 
 #endif /* VERB69 */

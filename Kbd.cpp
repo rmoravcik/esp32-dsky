@@ -155,7 +155,7 @@ int8_t Kbd::getNounCode(void)
   }
 }
 
-void Kbd::update(void)
+char Kbd::update(void)
 {
-    char key = m_keypad->getKey();
+  return m_keypad->getKey();
 }

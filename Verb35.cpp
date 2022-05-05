@@ -47,7 +47,7 @@ uint8_t verb35_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather)
   return FAGC_BUSY;
 }
 
-uint8_t verb35_cycle(bool stop)
+uint8_t verb35_cycle(char key, bool stop)
 {
   unsigned long deltaMillis = millis() - inst->startMillis;
 

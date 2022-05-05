@@ -8,7 +8,7 @@
 #include "ESP32-DSKY.h"
 #include "Weather.h"
 
-Weather::Weather(const String city, const String country, const String apiKey)
+Weather::Weather(const String city, const String country, const String apiKey, AlarmIndicator *ai)
 {
   m_city = city;
   m_country = country;
@@ -19,6 +19,8 @@ Weather::Weather(const String city, const String country, const String apiKey)
   m_temperature = 0;
   m_pressure = 0;
   m_humidity = 0;
+
+  m_ai = ai;
 
   m_lastUpdate = 0;
 }
@@ -89,6 +91,14 @@ bool Weather::update()
 
         m_client.stop();
         http.end();
+
+        if (m_temperature < 1000) {
+          m_ai->setTemperatureCaution(true);
+        } else {
+          m_ai->setTemperatureCaution(false);
+        }
+
+        m_ai->setAltitudeDataCaution(true);
         return true;
       } else {
         Serial.printf("Connection failed, error: %s", http.errorToString(httpCode).c_str());

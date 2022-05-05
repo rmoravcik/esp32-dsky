@@ -64,7 +64,7 @@ uint8_t verb37noun00_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *we
   return FAGC_BUSY;
 }
 
-uint8_t verb37noun00_cycle(bool stop)
+uint8_t verb37noun00_cycle(char key, bool stop)
 {
   return FAGC_IDLE;
 }
@@ -89,7 +89,7 @@ uint8_t verb37noun06_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *we
   return FAGC_BUSY;
 }
 
-uint8_t verb37noun06_cycle(bool stop)
+uint8_t verb37noun06_cycle(char key, bool stop)
 {
   return FAGC_IDLE;
 }

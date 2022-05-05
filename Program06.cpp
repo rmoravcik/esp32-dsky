@@ -33,7 +33,7 @@ uint8_t program06_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weath
   return FAGC_BUSY;
 }
 
-uint8_t program06_cycle(bool stop)
+uint8_t program06_cycle(char key, bool stop)
 {
   if (stop) {
     Serial.print("PROGRAM06 finished at ");

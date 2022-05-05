@@ -15,7 +15,7 @@ public:
   int8_t getVerbCode(void);
   int8_t getNounCode(void);
 
-  void update(void);
+  char update(void);
 
   Keypad *m_keypad;
 

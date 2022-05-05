@@ -18,6 +18,6 @@ public:
 };
 
 uint8_t program00_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather);
-uint8_t program00_cycle(bool stop);
+uint8_t program00_cycle(char key, bool stop);
 
 #endif /* PROGRAM00_H */

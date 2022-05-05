@@ -4,10 +4,12 @@
 #include <WiFiClient.h>
 #include <TimeLib.h>
 
+#include "AlarmIndicator.h"
+
 class Weather
 {
 public:
-  Weather(const String city, const String country, const String apikey);
+  Weather(const String city, const String country, const String apikey, AlarmIndicator *ai);
   virtual ~Weather();
 
   bool update(void);
@@ -20,6 +22,7 @@ public:
 
 private:
   WiFiClient m_client;
+  AlarmIndicator *m_ai;
 
   time_t m_lastUpdate;
 
