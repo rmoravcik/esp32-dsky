@@ -20,19 +20,8 @@ DigitalIndicator::~DigitalIndicator()
 {
 }
 
-void DigitalIndicator::resetIndicator(bool startup)
+void DigitalIndicator::drawLayout(void)
 {
-  m_toggleCounter = 0;
-  m_verbCodeBlinking = false;
-  m_nounCodeBlinking = false;
-  m_compActyStatus = true;
-  m_programNumber = DIGITAL_INDICATOR_VALUE_NAN;
-  m_verbCode = DIGITAL_INDICATOR_VALUE_NAN;
-  m_nounCode = DIGITAL_INDICATOR_VALUE_NAN;
-  m_registerValue[0] = DIGITAL_INDICATOR_VALUE_NAN;
-  m_registerValue[1] = DIGITAL_INDICATOR_VALUE_NAN;
-  m_registerValue[2] = DIGITAL_INDICATOR_VALUE_NAN;
-
   m_tft->TFT_CS_MASK = (1 << DIGITAL_INDICATOR_CS);
 
   m_tft->fillScreen(TFT_BLACK);
@@ -53,6 +42,24 @@ void DigitalIndicator::resetIndicator(bool startup)
   m_tft->fillRoundRect(42, 153, 156, 4, 0, TFT_GREEN);
   m_tft->fillRoundRect(42, 209, 156, 4, 0, TFT_GREEN);
   m_tft->fillRoundRect(42, 265, 156, 4, 0, TFT_GREEN);
+}
+
+void DigitalIndicator::resetIndicator(bool startup)
+{
+  m_toggleCounter = 0;
+  m_verbCodeBlinking = false;
+  m_nounCodeBlinking = false;
+  m_compActyStatus = true;
+  m_programNumber = DIGITAL_INDICATOR_VALUE_NAN;
+  m_verbCode = DIGITAL_INDICATOR_VALUE_NAN;
+  m_nounCode = DIGITAL_INDICATOR_VALUE_NAN;
+  m_registerValue[0] = DIGITAL_INDICATOR_VALUE_NAN;
+  m_registerValue[1] = DIGITAL_INDICATOR_VALUE_NAN;
+  m_registerValue[2] = DIGITAL_INDICATOR_VALUE_NAN;
+
+  drawLayout();
+
+  m_tft->TFT_CS_MASK = (1 << DIGITAL_INDICATOR_CS);
 
   if (!startup) {
     setComputerActivityStatus(false);
@@ -103,6 +110,11 @@ void DigitalIndicator::resetIndicator(bool startup)
 
     setComputerActivityStatus(true);
   }
+}
+
+void DigitalIndicator::powerDownIndicator(void)
+{
+  drawLayout();
 }
 
 void DigitalIndicator::update(void)

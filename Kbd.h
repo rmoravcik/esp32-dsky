@@ -6,6 +6,8 @@
 #include "AlarmIndicator.h"
 #include "DigitalIndicator.h"
 
+#define KEY_PRO 'p'
+
 class Kbd
 {
 public:

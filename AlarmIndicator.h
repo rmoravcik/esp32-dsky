@@ -12,6 +12,7 @@ public:
   virtual ~AlarmIndicator();
 
   void resetIndicator(bool startup);
+  void powerDownIndicator(void);
 
   void update(void);
 

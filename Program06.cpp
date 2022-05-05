@@ -1,4 +1,5 @@
 #include "ESP32-DSKY.h"
+#include "Kbd.h"
 #include "Program06.h"
 
 static Program06 *inst = NULL;
@@ -7,6 +8,8 @@ Program06::Program06(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather)
 {
   m_ai = ai;
   m_di = di;
+  
+  m_standby = false;
 }
 
 Program06::~Program06()
@@ -41,19 +44,32 @@ uint8_t program06_cycle(char key, bool stop)
     return FAGC_IDLE;
   }
 
-  bool acty = inst->m_di->getComputerActivityStatus();
-  if (!acty) {
-    if (inst->m_actyCounter > ACTY_OFF_DELAY_MS) {
-      inst->m_actyCounter = 0;
-      inst->m_di->setComputerActivityStatus(true);
-    }
-  } else {
-    if (inst->m_actyCounter > ACTY_ON_DELAY_MS) {
-      inst->m_actyCounter = 0;
-      inst->m_di->setComputerActivityStatus(false);
+  if (key = KEY_PRO) {
+    if (!inst->m_standby) {
+      inst->m_di->powerDownIndicator();
+      inst->m_ai->powerDownIndicator();
+      inst->m_standby = true;
+    } else {
+      inst->m_standby = false;
     }
   }
 
-  inst->m_actyCounter++;
+  if (!inst->m_standby) {
+    bool acty = inst->m_di->getComputerActivityStatus();
+    if (!acty) {
+      if (inst->m_actyCounter > ACTY_OFF_DELAY_MS) {
+        inst->m_actyCounter = 0;
+        inst->m_di->setComputerActivityStatus(true);
+      }
+    } else {
+      if (inst->m_actyCounter > ACTY_ON_DELAY_MS) {
+        inst->m_actyCounter = 0;
+        inst->m_di->setComputerActivityStatus(false);
+      }
+    }
+
+    inst->m_actyCounter++;
+  }
+
   return FAGC_BUSY;
 }

@@ -15,6 +15,7 @@ public:
   DigitalIndicator *m_di;
 
   uint8_t m_actyCounter;
+  bool m_standby;
 };
 
 uint8_t program06_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather);

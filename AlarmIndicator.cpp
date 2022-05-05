@@ -103,6 +103,11 @@ void AlarmIndicator::resetIndicator(bool startup)
 #endif /* ESP32 */  
 }
 
+void AlarmIndicator::powerDownIndicator(void)
+{
+  setStandbyStatus(true);
+}
+
 void AlarmIndicator::update(void)
 {
   static bool toggle = true;

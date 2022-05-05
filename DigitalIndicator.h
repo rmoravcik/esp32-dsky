@@ -14,6 +14,7 @@ public:
   virtual ~DigitalIndicator();
 
   void resetIndicator(bool statup);
+  void powerDownIndicator(void);
 
   void update(void);
 
@@ -55,6 +56,8 @@ private:
 
   void printUInt8Value(uint16_t x, uint16_t y, String value);
   void printInt32Value(uint16_t x, uint16_t y, String value);
+
+  void drawLayout(void);
 
   uint16_t m_toggleCounter;
 

@@ -29,7 +29,7 @@ void findProgramStartCycleFunctions(int8_t programNumber, startFn_t *startFn, cy
     {
       Serial.print("PROGRAM: program not found:");
       Serial.println(programNumber);
-      inst->m_ai->setProgramCondition(true);
+      inst->m_ai->setOperatorErrorStatusBlinking();
     }
   }
 }
