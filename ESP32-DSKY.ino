@@ -197,28 +197,28 @@ void setup() {
 
   Serial.begin(115200);
 
-  pinMode(ALARM_INDICATOR_CS, OUTPUT);
-  digitalWrite(ALARM_INDICATOR_CS, HIGH);
+  pinMode(GPIO_ALARM_INDICATOR_CS, OUTPUT);
+  digitalWrite(GPIO_ALARM_INDICATOR_CS, HIGH);
 
-  pinMode(DIGITAL_INDICATOR_CS, OUTPUT);
-  digitalWrite(DIGITAL_INDICATOR_CS, HIGH);
+  pinMode(GPIO_DIGITAL_INDICATOR_CS, OUTPUT);
+  digitalWrite(GPIO_DIGITAL_INDICATOR_CS, HIGH);
 
-  pinMode(0, OUTPUT);
-  digitalWrite(0, HIGH);
+  pinMode(GPIO_TFT_RST, OUTPUT);
+  digitalWrite(GPIO_TFT_RST, HIGH);
   delay(5);
-  digitalWrite(0, LOW);
+  digitalWrite(GPIO_TFT_RST, LOW);
   delay(20);
-  digitalWrite(0, HIGH);
+  digitalWrite(GPIO_TFT_RST, HIGH);
 
   // Initialize both displays
-  tft.TFT_CS_MASK = (1 << ALARM_INDICATOR_CS) | (1 << DIGITAL_INDICATOR_CS);
+  tft.TFT_CS_MASK = (1 << GPIO_ALARM_INDICATOR_CS) | (1 << GPIO_DIGITAL_INDICATOR_CS);
   tft.init();
   tft.setRotation(3);
   tft.fillScreen(TFT_BLACK);
 
   // Backlight
-  pinMode(9, OUTPUT);
-  digitalWrite(9, HIGH);
+  pinMode(GPIO_BACKLIGHT, OUTPUT);
+  digitalWrite(GPIO_BACKLIGHT, HIGH);
 
   digitalInd = new DigitalIndicator(&tft, &spr);
   alarmInd = new AlarmIndicator(&tft);

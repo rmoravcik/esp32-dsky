@@ -24,7 +24,7 @@ DigitalIndicator::DigitalIndicator(TFT_eSPI *tft, TFT_eSprite *spr)
   m_registerValue[1] = DIGITAL_INDICATOR_VALUE_NAN;
   m_registerValue[2] = DIGITAL_INDICATOR_VALUE_NAN;
 
-  m_tft->TFT_CS_MASK = (1 << DIGITAL_INDICATOR_CS);
+  m_tft->TFT_CS_MASK = (1 << GPIO_DIGITAL_INDICATOR_CS);
 
   drawLayout();
   drawNounLabel();
@@ -45,7 +45,7 @@ DigitalIndicator::~DigitalIndicator()
 
 void DigitalIndicator::drawLayout(void)
 {
-  m_tft->TFT_CS_MASK = (1 << DIGITAL_INDICATOR_CS);
+  m_tft->TFT_CS_MASK = (1 << GPIO_DIGITAL_INDICATOR_CS);
 
   m_tft->fillScreen(TFT_BLACK);
   m_tft->loadFont(Gorton_Normal_180_11);
@@ -82,7 +82,7 @@ void DigitalIndicator::resetIndicator(void)
 
   drawLayout();
 
-  m_tft->TFT_CS_MASK = (1 << DIGITAL_INDICATOR_CS);
+  m_tft->TFT_CS_MASK = (1 << GPIO_DIGITAL_INDICATOR_CS);
 
   setComputerActivityStatus(false);
   drawProgramLabel();
@@ -126,8 +126,6 @@ void DigitalIndicator::update(void)
 {
   static bool toggle = true;
 
-  Serial.print("m_toggleCounter=");
-  Serial.println(m_toggleCounter);
   if (!toggle) {
     if (m_toggleCounter > VERB_NOUN_OFF_DELAY_MS) {
       m_toggleCounter = 0;
@@ -163,7 +161,7 @@ void DigitalIndicator::setComputerActivityStatus(bool status)
   uint32_t textColor = TFT_DARKGREY;
 
   if (m_compActyStatus != status) {
-    m_tft->TFT_CS_MASK = (1 << DIGITAL_INDICATOR_CS);
+    m_tft->TFT_CS_MASK = (1 << GPIO_DIGITAL_INDICATOR_CS);
 
     if (status == true) {
       buttonColor = TFT_GREEN;
@@ -287,7 +285,7 @@ void DigitalIndicator::printUInt8Value(uint16_t x, uint16_t y, String value)
   char str[3];
   int ret;
 
-  m_tft->TFT_CS_MASK = (1 << DIGITAL_INDICATOR_CS);
+  m_tft->TFT_CS_MASK = (1 << GPIO_DIGITAL_INDICATOR_CS);
 
   m_spr->setFreeFont(&Zerlina26pt7b);
   m_spr->createSprite(69, 44);
@@ -314,7 +312,7 @@ void DigitalIndicator::printInt32Value(uint16_t x, uint16_t y, String value)
   char str[7];
   int ret;
 
-  m_tft->TFT_CS_MASK = (1 << DIGITAL_INDICATOR_CS);
+  m_tft->TFT_CS_MASK = (1 << GPIO_DIGITAL_INDICATOR_CS);
   
   m_spr->setFreeFont(&Zerlina26pt7b);
   m_spr->createSprite(184, 44);

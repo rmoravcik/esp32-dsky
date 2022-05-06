@@ -36,10 +36,12 @@ uint8_t verb06noun43_cycle(char key, bool stopRequested, uint8_t state)
 {
   char value[7];
 
-  snprintf(value, sizeof(value), "+%05d", inst->m_weather->getLatitude());
-  inst->m_di->setRegister1(value);
-  snprintf(value, sizeof(value), "+%05d", inst->m_weather->getLongitude());
-  inst->m_di->setRegister2(value);
+  if (inst->m_weather) {
+    snprintf(value, sizeof(value), "+%05d", inst->m_weather->getLatitude());
+    inst->m_di->setRegister1(value);
+    snprintf(value, sizeof(value), "+%05d", inst->m_weather->getLongitude());
+    inst->m_di->setRegister2(value);
+  }
 
   Serial.print("VERB06NOUN43 finished at ");
   Serial.println(millis());
@@ -67,12 +69,19 @@ uint8_t verb06noun95_cycle(char key, bool stopRequested, uint8_t state)
 {
   char value[7];
 
-  snprintf(value, sizeof(value), "+%05d", inst->m_weather->getTemperature());
-  inst->m_di->setRegister1(value);
-  snprintf(value, sizeof(value), "+%05d", inst->m_weather->getPressure());
-  inst->m_di->setRegister2(value);
-  snprintf(value, sizeof(value), "+%05d", inst->m_weather->getHumidity());
-  inst->m_di->setRegister3(value);
+  if (inst->m_weather) {
+    uint32_t absTemperatureValue = abs(inst->m_weather->getTemperature());
+    if (inst->m_weather->getTemperature() >= 0) {
+      snprintf(value, sizeof(value), "+%05d", absTemperatureValue);
+    } else {
+      snprintf(value, sizeof(value), "-%05d", absTemperatureValue);
+    }
+    inst->m_di->setRegister1(value);
+    snprintf(value, sizeof(value), "+%05d", inst->m_weather->getPressure());
+    inst->m_di->setRegister2(value);
+    snprintf(value, sizeof(value), "+%05d", inst->m_weather->getHumidity());
+    inst->m_di->setRegister3(value);
+  }
 
   Serial.print("VERB06NOUN95 finished at ");
   Serial.println(millis());

@@ -11,7 +11,7 @@ char keys[ROWS][COLS] = {
 };
 
 byte rowPins[ROWS] = { 4, 39, 34 };
-byte colPins[COLS] = { 8, 33, 21, 22, 32, 25, 27 };
+byte colPins[COLS] = { 12, 33, 21, 22, 32, 25, 27 };
 
 static Kbd *inst = NULL;
 

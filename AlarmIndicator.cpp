@@ -33,7 +33,7 @@ AlarmIndicator::AlarmIndicator(TFT_eSPI *tft)
   m_altitudeDataCaution = false;
   m_velocityDataCaution = false;
 
-  m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
+  m_tft->TFT_CS_MASK = (1 << GPIO_ALARM_INDICATOR_CS);
   m_tft->fillScreen(TFT_BLACK);
 
   setTemperatureCaution(true);
@@ -145,7 +145,7 @@ void AlarmIndicator::setUplinkActivityStatus(bool status)
   }
   m_uplinkActivityStatus = status;
 
-  m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
+  m_tft->TFT_CS_MASK = (1 << GPIO_ALARM_INDICATOR_CS);
 
   if (status == true) {
     buttonColor = TFT_WHITE;
@@ -172,7 +172,7 @@ void AlarmIndicator::setNoAttitudeStatus(bool status)
   }
   m_noAttitudeStatus = status;
 
-  m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
+  m_tft->TFT_CS_MASK = (1 << GPIO_ALARM_INDICATOR_CS);
 
   if (status == true) {
     buttonColor = TFT_WHITE;
@@ -197,7 +197,7 @@ void AlarmIndicator::setStandbyStatus(bool status)
   }
   m_standbyStatus = status;
 
-  m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
+  m_tft->TFT_CS_MASK = (1 << GPIO_ALARM_INDICATOR_CS);
 
   if (status == true) {
     buttonColor = TFT_WHITE;
@@ -217,7 +217,7 @@ void AlarmIndicator::_setKeyReleaseStatus(bool status)
   uint32_t buttonColor = ALARM_BUTTON_COLOR_INACTIVE;
   uint32_t textColor = ALARM_TEXT_COLOR_INACTIVE;
 
-  m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
+  m_tft->TFT_CS_MASK = (1 << GPIO_ALARM_INDICATOR_CS);
 
   if (status == true) {
     buttonColor = TFT_WHITE;
@@ -237,7 +237,7 @@ void AlarmIndicator::_setOperatorErrorStatus(bool status)
   uint32_t buttonColor = ALARM_BUTTON_COLOR_INACTIVE;
   uint32_t textColor = ALARM_TEXT_COLOR_INACTIVE;
 
-  m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
+  m_tft->TFT_CS_MASK = (1 << GPIO_ALARM_INDICATOR_CS);
 
   if (status == true) {
     buttonColor = TFT_WHITE;
@@ -296,7 +296,7 @@ void AlarmIndicator::setTemperatureCaution(bool status)
   }
   m_temperatureCaution = status;
 
-  m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
+  m_tft->TFT_CS_MASK = (1 << GPIO_ALARM_INDICATOR_CS);
 
   if (status == true) {
     buttonColor = TFT_ALARM_YELLOW_ACTIVE;
@@ -321,7 +321,7 @@ void AlarmIndicator::setGimbalLockStatus(bool status)
   }
   m_gimbalLockStatus = status;
 
-  m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
+  m_tft->TFT_CS_MASK = (1 << GPIO_ALARM_INDICATOR_CS);
 
   if (status == true) {
     buttonColor = TFT_ALARM_YELLOW_ACTIVE;
@@ -348,7 +348,7 @@ void AlarmIndicator::setProgramCondition(bool status)
   }
   m_programCondition = status;
 
-  m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
+  m_tft->TFT_CS_MASK = (1 << GPIO_ALARM_INDICATOR_CS);
 
   if (status == true) {
     buttonColor = TFT_ALARM_YELLOW_ACTIVE;
@@ -373,7 +373,7 @@ void AlarmIndicator::setRestartCondition(bool status)
   }
   m_restartCondition = status;
 
-  m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
+  m_tft->TFT_CS_MASK = (1 << GPIO_ALARM_INDICATOR_CS);
 
   if (status == true) {
     buttonColor = TFT_ALARM_YELLOW_ACTIVE;
@@ -398,7 +398,7 @@ void AlarmIndicator::setTrackerCondition(bool status)
   }
   m_trackerCondition = status;
 
-  m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
+  m_tft->TFT_CS_MASK = (1 << GPIO_ALARM_INDICATOR_CS);
 
   if (status == true) {
     buttonColor = TFT_ALARM_YELLOW_ACTIVE;
@@ -423,7 +423,7 @@ void AlarmIndicator::setAltitudeDataCaution(bool status)
   }
   m_altitudeDataCaution = status;
 
-  m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
+  m_tft->TFT_CS_MASK = (1 << GPIO_ALARM_INDICATOR_CS);
 
   if (status == true) {
     buttonColor = TFT_ALARM_YELLOW_ACTIVE;
@@ -448,7 +448,7 @@ void AlarmIndicator::setVelocityDataCaution(bool status)
   }
   m_velocityDataCaution = status;
 
-  m_tft->TFT_CS_MASK = (1 << ALARM_INDICATOR_CS);
+  m_tft->TFT_CS_MASK = (1 << GPIO_ALARM_INDICATOR_CS);
 
   if (status == true) {
     buttonColor = TFT_ALARM_YELLOW_ACTIVE;

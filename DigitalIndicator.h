@@ -3,8 +3,6 @@
 
 #include <TFT_eSPI.h>
 
-#define DIGITAL_INDICATOR_CS 26
-
 #define DIGITAL_INDICATOR_VALUE_NAN "NAN"
 
 class DigitalIndicator

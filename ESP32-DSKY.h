@@ -23,6 +23,11 @@
 #define NOUN_CODE_INVALID        (-1)
 #define PROGRAM_NUMBER_INVALID   (-1)
 
+#define GPIO_TFT_RST              (0)
+#define GPIO_ALARM_INDICATOR_CS   (5)
+#define GPIO_BACKLIGHT            (13)
+#define GPIO_DIGITAL_INDICATOR_CS (26)
+
 typedef uint8_t (*startFn_t)(AlarmIndicator*, DigitalIndicator*, Weather*);
 typedef uint8_t (*cycleFn_t)(char key, bool stopRequested, uint8_t state);
 
