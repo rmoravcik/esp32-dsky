@@ -1,4 +1,3 @@
-#ifdef ESP32
 #include <Update.h>
 
 #include "OTA.h"
@@ -113,4 +112,3 @@ OTA::OTA(AsyncWebServer *server, AlarmIndicator *ai)
 OTA::~OTA()
 {
 }
-#endif

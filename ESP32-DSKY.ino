@@ -1,10 +1,5 @@
 #include <ESPAsyncWebServer.h>
-#ifdef ESP32
-  #include <ESPmDNS.h>
-#else
-  #include <ESP8266WiFi.h>
-  #include <ESP8266mDNS.h>
-#endif
+#include <ESPmDNS.h>
 #include <AsyncWebConfig.h>
 
 #include <SPI.h>
@@ -28,9 +23,7 @@
 AlarmIndicator *alarmInd;
 DigitalIndicator *digitalInd;
 Kbd *kbd;
-#ifdef ESP32
 OTA *ota;
-#endif
 RTC *rtc;
 Weather *weather;
 
@@ -243,9 +236,7 @@ void setup() {
     Serial.println("MDNS responder started");
   }
 
-#ifdef ESP32
   ota = new OTA(&server, alarmInd);
-#endif
 
   server.on("/", handleRoot);
   server.begin();

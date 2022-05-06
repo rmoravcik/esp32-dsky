@@ -1,8 +1,4 @@
-#ifdef ESP32
 #include <HTTPClient.h>
-#else
-#include <ESP8266HTTPClient.h>
-#endif
 #include <ArduinoJson.h>
 
 #include "ESP32-DSKY.h"

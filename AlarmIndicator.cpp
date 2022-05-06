@@ -276,11 +276,13 @@ void AlarmIndicator::setOperatorErrorStatus(bool status)
 
 void AlarmIndicator::setKeyReleaseStatusBlinking(void)
 {
+  setKeyReleaseStatus(true);
   m_keyReleaseStatusBlinking = true;
 }
 
 void AlarmIndicator::setOperatorErrorStatusBlinking(void)
 {
+  setOperatorErrorStatus(true);
   m_operatorErrorStatusBlinking = true;
 }
 
