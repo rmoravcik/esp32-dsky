@@ -34,6 +34,7 @@ AsyncWebServer server(80);
 AsyncWebConfig conf;
 
 struct noun verb06nouns[] = {
+  {  9, verb06noun09_start, verb06noun09_cycle },
   { 43, verb06noun43_start, verb06noun43_cycle },
   { 95, verb06noun95_start, verb06noun95_cycle },
   { -1,                  0,                  0 }
@@ -135,6 +136,7 @@ boolean initWiFi() {
     if (!connected) {
       WiFi.mode(WIFI_AP);
       WiFi.softAP(conf.getApName(), "", 1);
+      alarmInd->setProgramCondition(true);
     }
 
     return connected;
@@ -195,6 +197,7 @@ void startUp(void)
 void setup() {
   char dns[30];
 
+  pinMode(GPIO_BACKLIGHT, INPUT);
   Serial.begin(115200);
 
   pinMode(GPIO_ALARM_INDICATOR_CS, OUTPUT);
@@ -217,8 +220,9 @@ void setup() {
   tft.fillScreen(TFT_BLACK);
 
   // Backlight
-  pinMode(GPIO_BACKLIGHT, OUTPUT);
-  digitalWrite(GPIO_BACKLIGHT, HIGH);
+  ledcSetup(0, 5000, 8);
+  ledcAttachPin(GPIO_BACKLIGHT, 0);
+  ledcWrite(0, 200);
 
   digitalInd = new DigitalIndicator(&tft, &spr);
   alarmInd = new AlarmIndicator(&tft);
@@ -312,6 +316,8 @@ void loop() {
         startFn = 0;
         cycleFn = 0;
         verb37noun00_start(alarmInd, digitalInd, weather);
+        digitalInd->setVerbCode("37");
+        digitalInd->setVerbCodeBlinking(true);
         alarmInd->setRestartCondition(true);
         next_state = DSKY_STATE_IDLE;
         break;

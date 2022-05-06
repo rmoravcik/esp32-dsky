@@ -48,8 +48,10 @@ uint8_t program06_cycle(char key, bool stopRequested, uint8_t state)
     if (!inst->m_standbyMode) {
       inst->m_di->powerDownIndicator();
       inst->m_ai->powerDownIndicator();
+      ledcWrite(0, 10);
       inst->m_standbyMode = true;
     } else {
+      ledcWrite(0, 200);
       inst->m_ai->resetIndicator();
       inst->m_di->resetIndicator();
       inst->m_standbyMode = false;
