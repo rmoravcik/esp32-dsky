@@ -27,6 +27,7 @@ void keypadEvent(KeypadEvent key)
             {
               inst->m_di->setVerbCodeBlinking(false);
               inst->m_di->setNounCodeBlinking(false);
+              inst->m_di->setVerbCode(DIGITAL_INDICATOR_VALUE_NAN);
               inst->m_verbKeyPressed = true;
               inst->m_nounKeyPressed = false;
             }
@@ -35,6 +36,7 @@ void keypadEvent(KeypadEvent key)
             {
               inst->m_verbKeyPressed = false;
               inst->m_nounKeyPressed = true;
+              inst->m_di->setNounCode(DIGITAL_INDICATOR_VALUE_NAN);
             }
             break;
           case KEY_ENTR:
