@@ -16,9 +16,6 @@ public:
   Weather *m_weather;
 };
 
-uint8_t verb06noun09_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather);
-uint8_t verb06noun09_cycle(char key, bool stopRequested, uint8_t state);
-
 uint8_t verb06noun43_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather);
 uint8_t verb06noun43_cycle(char key, bool stopRequested, uint8_t state);
 

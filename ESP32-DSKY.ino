@@ -8,6 +8,7 @@
 #include "AlarmIndicator.h"
 #include "DigitalIndicator.h"
 #include "Kbd.h"
+#include "Verb05.h"
 #include "Verb06.h"
 #include "Verb16.h"
 #include "Verb35.h"
@@ -33,8 +34,12 @@ TFT_eSprite spr = TFT_eSprite(&tft);
 AsyncWebServer server(80);
 AsyncWebConfig conf;
 
+struct noun verb05nouns[] = {
+  {  9, verb05noun09_start, verb05noun09_cycle },
+  { -1,                  0,                  0 }
+};
+
 struct noun verb06nouns[] = {
-  {  9, verb06noun09_start, verb06noun09_cycle },
   { 43, verb06noun43_start, verb06noun43_cycle },
   { 95, verb06noun95_start, verb06noun95_cycle },
   { -1,                  0,                  0 }
@@ -52,6 +57,7 @@ struct noun verb37nouns[] = {
 };
 
 struct verb verbs[] = {
+  { 05,  true,            0,            0, verb05nouns },
   { 06,  true,            0,            0, verb06nouns },
   { 16,  true,            0,            0, verb16nouns },
   { 35, false, verb35_start, verb35_cycle,           0 },

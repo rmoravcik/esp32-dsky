@@ -1,4 +1,3 @@
-#include <WiFi.h>
 #include <TimeLib.h>
 
 #include "ESP32-DSKY.h"
@@ -15,45 +14,6 @@ Verb06::Verb06(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather)
 
 Verb06::~Verb06()
 {
-}
-
-uint8_t verb06noun09_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather)
-{
-  if (inst == NULL) {
-    inst = new Verb06(ai, di, weather);
-  }
-
-  inst->m_di->setRegister1("+00000");
-  inst->m_di->setRegister2("+00000");
-  inst->m_di->setRegister3("+00000");
-
-  Serial.print("VERB06NOUN09 started at ");
-  Serial.println(millis());
-
-  return DSKY_STATE_BUSY;
-}
-
-static void _setErrorEmptyRegister(String value)
-{
-  if (inst->m_di->getRegister1() == "+00000") {
-    inst->m_di->setRegister1(value);
-  } else if (inst->m_di->getRegister2() == "+00000") {
-    inst->m_di->setRegister2(value);
-  } else if (inst->m_di->getRegister3() == "+00000") {
-    inst->m_di->setRegister3(value);
-  }
-}
-
-uint8_t verb06noun09_cycle(char key, bool stopRequested, uint8_t state)
-{
-  if (WiFi.status() != WL_CONNECTED) {
-    _setErrorEmptyRegister("+01106");
-  }
-
-  Serial.print("VERB06NOUN09 finished at ");
-  Serial.println(millis());
-
-  return DSKY_STATE_IDLE;
 }
 
 uint8_t verb06noun43_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather)
