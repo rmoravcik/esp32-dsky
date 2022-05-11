@@ -1,14 +1,12 @@
 #include <TimeLib.h>
 
-#include "ESP32-DSKY.h"
 #include "Verb16.h"
 
 static Verb16 *inst = NULL;
 
-Verb16::Verb16(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather)
+Verb16::Verb16(DSKY *dsky)
 {
-  m_ai = ai;
-  m_di = di;
+  m_dsky = dsky;
   randomSeed(now());
 }
 
@@ -16,15 +14,15 @@ Verb16::~Verb16()
 {
 }
 
-uint8_t verb16noun36_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather)
+uint8_t verb16noun36_start(DSKY *dsky)
 {
   if (inst == NULL) {
-    inst = new Verb16(ai, di, weather);
+    inst = new Verb16(dsky);
   }
 
-  inst->m_di->setRegister1("+00000");
-  inst->m_di->setRegister2("+00000");
-  inst->m_di->setRegister3("+00000");
+  inst->m_dsky->di->setRegister1("+00000");
+  inst->m_dsky->di->setRegister2("+00000");
+  inst->m_dsky->di->setRegister3("+00000");
 
   inst->m_prevSecond = 0;
 
@@ -48,14 +46,14 @@ uint8_t verb16noun36_cycle(char key, bool stopRequested, uint8_t state)
     char value[7];
 
     snprintf(value, sizeof(value), "+%05d", hour(currTime));
-    inst->m_di->setRegister1(value);
+    inst->m_dsky->di->setRegister1(value);
     snprintf(value, sizeof(value), "+%05d", minute(currTime));
-    inst->m_di->setRegister2(value);
+    inst->m_dsky->di->setRegister2(value);
     snprintf(value, sizeof(value), "+%05d", (int32_t)((second(currTime) * 100) + random(10)));
-    inst->m_di->setRegister3(value);
+    inst->m_dsky->di->setRegister3(value);
 
     if (((second(currTime) % 3) == 0) && (inst->m_actyCounter == 0)) {
-      inst->m_di->setComputerActivityStatus(true);
+      inst->m_dsky->di->setComputerActivityStatus(true);
       inst->m_actyCounter = ACTY_ON_DELAY_MS;
     }
 
@@ -63,7 +61,7 @@ uint8_t verb16noun36_cycle(char key, bool stopRequested, uint8_t state)
   }
 
   if (inst->m_actyCounter == 0) {
-    inst->m_di->setComputerActivityStatus(false);
+    inst->m_dsky->di->setComputerActivityStatus(false);
   } else {
     inst->m_actyCounter--;
   }

@@ -21,12 +21,7 @@
 
 #include "ESP32-DSKY.h"
 
-AlarmIndicator *alarmInd;
-DigitalIndicator *digitalInd;
-Kbd *kbd;
-OTA *ota;
-RTC *rtc;
-Weather *weather;
+DSKY dsky;
 
 TFT_eSPI tft = TFT_eSPI(320, 240);
 TFT_eSprite spr = TFT_eSprite(&tft);
@@ -122,9 +117,9 @@ boolean initWiFi() {
       uint8_t cnt = 0;
 
       while ((WiFi.status() != WL_CONNECTED) && (cnt < 20)) {
-        digitalInd->setComputerActivityStatus(true);
+        dsky.di->setComputerActivityStatus(true);
         delay(250);
-        digitalInd->setComputerActivityStatus(false);
+        dsky.di->setComputerActivityStatus(false);
         delay(250);
         Serial.print(".");
         cnt++;
@@ -142,7 +137,7 @@ boolean initWiFi() {
     if (!connected) {
       WiFi.mode(WIFI_AP);
       WiFi.softAP(conf.getApName(), "", 1);
-      alarmInd->setProgramCondition(true);
+      dsky.ai->setProgramCondition(true);
     }
 
     return connected;
@@ -171,33 +166,33 @@ void startUp(void)
     for (int i = 0; i < 6; i++) {
       value = value + "8";
       if (reg == 0) {
-        digitalInd->setRegister1(value);
+        dsky.di->setRegister1(value);
       } else if (reg == 1) {
-        digitalInd->setRegister2(value);
+        dsky.di->setRegister2(value);
       } else {
-        digitalInd->setRegister3(value);        
+        dsky.di->setRegister3(value);
       }
       delay(25);
     }  
   }
   delay(1000);
-  digitalInd->setComputerActivityStatus(false);
-  alarmInd->setTemperatureCaution(false);
-  alarmInd->setGimbalLockStatus(false);
-  alarmInd->setProgramCondition(false);
-  alarmInd->setTrackerCondition(false);
-  alarmInd->setAltitudeDataCaution(false);
-  alarmInd->setVelocityDataCaution(false);
-  alarmInd->setOperatorErrorStatus(false);
-  alarmInd->setKeyReleaseStatus(false);
-  alarmInd->setStandbyStatus(false);
-  alarmInd->setUplinkActivityStatus(false);
-  digitalInd->setProgramNumber(DIGITAL_INDICATOR_VALUE_NAN);
-  digitalInd->setVerbCode(DIGITAL_INDICATOR_VALUE_NAN);
-  digitalInd->setNounCode(DIGITAL_INDICATOR_VALUE_NAN);
-  digitalInd->setRegister1(DIGITAL_INDICATOR_VALUE_NAN);
-  digitalInd->setRegister2(DIGITAL_INDICATOR_VALUE_NAN);
-  digitalInd->setRegister3(DIGITAL_INDICATOR_VALUE_NAN);        
+  dsky.di->setComputerActivityStatus(false);
+  dsky.ai->setTemperatureCaution(false);
+  dsky.ai->setGimbalLockStatus(false);
+  dsky.ai->setProgramCondition(false);
+  dsky.ai->setTrackerCondition(false);
+  dsky.ai->setAltitudeDataCaution(false);
+  dsky.ai->setVelocityDataCaution(false);
+  dsky.ai->setOperatorErrorStatus(false);
+  dsky.ai->setKeyReleaseStatus(false);
+  dsky.ai->setStandbyStatus(false);
+  dsky.ai->setUplinkActivityStatus(false);
+  dsky.di->setProgramNumber(DIGITAL_INDICATOR_VALUE_NAN);
+  dsky.di->setVerbCode(DIGITAL_INDICATOR_VALUE_NAN);
+  dsky.di->setNounCode(DIGITAL_INDICATOR_VALUE_NAN);
+  dsky.di->setRegister1(DIGITAL_INDICATOR_VALUE_NAN);
+  dsky.di->setRegister2(DIGITAL_INDICATOR_VALUE_NAN);
+  dsky.di->setRegister3(DIGITAL_INDICATOR_VALUE_NAN);
 }
 
 void setup() {
@@ -230,9 +225,9 @@ void setup() {
   ledcAttachPin(GPIO_BACKLIGHT, 0);
   ledcWrite(0, 200);
 
-  digitalInd = new DigitalIndicator(&tft, &spr);
-  alarmInd = new AlarmIndicator(&tft);
-  kbd = new Kbd(alarmInd, digitalInd);
+  dsky.di = new DigitalIndicator(&tft, &spr);
+  dsky.ai = new AlarmIndicator(&tft);
+  dsky.kbd = new Kbd(dsky.ai, dsky.di);
 
   startUp();
 
@@ -246,18 +241,19 @@ void setup() {
     Serial.println("MDNS responder started");
   }
 
-  ota = new OTA(&server, alarmInd);
+  dsky.ota = new OTA(&server, dsky.ai);
 
   server.on("/", handleRoot);
   server.begin();
 
-  rtc = new RTC(conf.getString("ntp_server"),
-                conf.getInt("time_zone"));
+  dsky.rtc = new RTC(conf.getString("ntp_server"),
+                conf.getInt("time_zone"),
+                dsky.ai);
 
-  weather = new Weather(conf.getString("weather_city"),
+  dsky.weather = new Weather(conf.getString("weather_city"),
                         conf.getString("weather_country"),
                         conf.getString("weather_api_key"),
-                        alarmInd);
+                        dsky.ai);
 }
 
 uint8_t state = DSKY_STATE_INIT;
@@ -271,8 +267,8 @@ void findStartCycleFunctions(int8_t verbCode, int8_t nounCode, startFn_t *startF
   bool nounCodeMissing = false;
 
   if ((verbCode == VERB_CODE_INVALID) && (nounCode != NOUN_CODE_INVALID)) {
-    if (digitalInd->getVerbCode() != DIGITAL_INDICATOR_VALUE_NAN) {
-      verbCode = digitalInd->getVerbCode().toInt();
+    if (dsky.di->getVerbCode() != DIGITAL_INDICATOR_VALUE_NAN) {
+      verbCode = dsky.di->getVerbCode().toInt();
     }
   }
 
@@ -289,7 +285,7 @@ void findStartCycleFunctions(int8_t verbCode, int8_t nounCode, startFn_t *startF
               }
             }                  
           } else {
-            digitalInd->setVerbCodeBlinking(true);
+            dsky.di->setVerbCodeBlinking(true);
             nounCodeMissing = true;
           }
         } else {
@@ -306,7 +302,7 @@ void findStartCycleFunctions(int8_t verbCode, int8_t nounCode, startFn_t *startF
       Serial.print(verbCode);
       Serial.print(" noun:");
       Serial.println(nounCode);
-      alarmInd->setOperatorErrorStatusBlinking();
+      dsky.ai->setOperatorErrorStatusBlinking();
     }
   }
 }
@@ -314,26 +310,26 @@ void findStartCycleFunctions(int8_t verbCode, int8_t nounCode, startFn_t *startF
 void loop() {
   uint8_t next_state = state;
 
-  char key = kbd->update();
+  char key = dsky.kbd->update();
 
   switch (state) {
     case DSKY_STATE_INIT:
       {
         startFn = 0;
         cycleFn = 0;
-        verb37noun00_start(alarmInd, digitalInd, weather);
-        digitalInd->setVerbCode("37");
-        digitalInd->setVerbCodeBlinking(true);
-        alarmInd->setRestartCondition(true);
+        verb37noun00_start(&dsky);
+        dsky.di->setVerbCode("37");
+        dsky.di->setVerbCodeBlinking(true);
+        dsky.ai->setRestartCondition(true);
         next_state = DSKY_STATE_IDLE;
         break;
       }
     case DSKY_STATE_IDLE:
       {
-        findStartCycleFunctions(kbd->getVerbCode(), kbd->getNounCode(), &startFn, &cycleFn);
+        findStartCycleFunctions(dsky.kbd->getVerbCode(), dsky.kbd->getNounCode(), &startFn, &cycleFn);
 
         if (startFn) {
-          next_state = startFn(alarmInd, digitalInd, weather);
+          next_state = startFn(&dsky);
           startFn = 0;
         }
         break;
@@ -343,7 +339,7 @@ void loop() {
         startFn_t newStartFn = 0;
         cycleFn_t newCycleFn = 0;
 
-        findStartCycleFunctions(kbd->getVerbCode(), kbd->getNounCode(), &newStartFn, &newCycleFn);
+        findStartCycleFunctions(dsky.kbd->getVerbCode(), dsky.kbd->getNounCode(), &newStartFn, &newCycleFn);
 
         if (cycleFn) {
           next_state = cycleFn(key, newStartFn ? true : false, next_state);
@@ -377,9 +373,9 @@ void loop() {
       state = next_state;
   }
 
-  alarmInd->update();
-  digitalInd->update();
-  weather->update();
+  dsky.ai->update();
+  dsky.di->update();
+  dsky.weather->update();
 
   delay(MAIN_LOOP_DELAY_MS);
 }

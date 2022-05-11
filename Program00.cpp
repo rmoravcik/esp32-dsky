@@ -1,22 +1,20 @@
-#include "ESP32-DSKY.h"
 #include "Program00.h"
 
 static Program00 *inst = NULL;
 
-Program00::Program00(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather)
+Program00::Program00(DSKY *dsky)
 {
-  m_ai = ai;
-  m_di = di;
+  m_dsky = dsky;
 }
 
 Program00::~Program00()
 {
 }
 
-uint8_t program00_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather)
+uint8_t program00_start(DSKY *dsky)
 {
   if (inst == NULL) {
-    inst = new Program00(ai, di, weather);
+    inst = new Program00(dsky);
   }
 
   Serial.print("PROGRAM00 started at ");
@@ -34,16 +32,16 @@ uint8_t program00_cycle(char key, bool stopRequested, uint8_t state)
     return state;
   }
 
-  bool acty = inst->m_di->getComputerActivityStatus();
+  bool acty = inst->m_dsky->di->getComputerActivityStatus();
   if (!acty) {
     if (inst->m_actyCounter > ACTY_OFF_DELAY_MS) {
       inst->m_actyCounter = 0;
-      inst->m_di->setComputerActivityStatus(true);
+      inst->m_dsky->di->setComputerActivityStatus(true);
     }
   } else {
     if (inst->m_actyCounter > ACTY_ON_DELAY_MS) {
       inst->m_actyCounter = 0;
-      inst->m_di->setComputerActivityStatus(false);
+      inst->m_dsky->di->setComputerActivityStatus(false);
     }
   }
 

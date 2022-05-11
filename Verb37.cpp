@@ -1,4 +1,3 @@
-#include "ESP32-DSKY.h"
 #include "Program00.h"
 #include "Program06.h"
 #include "Verb37.h"
@@ -29,25 +28,24 @@ void findProgramStartCycleFunctions(int8_t programNumber, startFn_t *startFn, cy
     {
       Serial.print("PROGRAM: program not found:");
       Serial.println(programNumber);
-      inst->m_ai->setOperatorErrorStatusBlinking();
+      inst->m_dsky->ai->setOperatorErrorStatusBlinking();
     }
   }
 }
 
-Verb37::Verb37(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather)
+Verb37::Verb37(DSKY *dsky)
 {
-  m_ai = ai;
-  m_di = di;
+  m_dsky = dsky;
 }
 
 Verb37::~Verb37()
 {
 }
 
-uint8_t verb37noun00_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather)
+uint8_t verb37noun00_start(DSKY *dsky)
 {
   if (inst == NULL) {
-    inst = new Verb37(ai, di, weather);
+    inst = new Verb37(dsky);
   }
 
   Serial.print("VERB37NOUN00 started at ");
@@ -56,8 +54,8 @@ uint8_t verb37noun00_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *we
   findProgramStartCycleFunctions(0, &programStartFn, &programCycleFn);
 
   if (programStartFn) {
-    di->setProgramNumber("00");
-    programStartFn(ai, di, weather);
+    inst->m_dsky->di->setProgramNumber("00");
+    programStartFn(dsky);
     programStartFn = 0;
   }
 
@@ -69,10 +67,10 @@ uint8_t verb37noun00_cycle(char key, bool stopRequested, uint8_t state)
   return DSKY_STATE_IDLE;
 }
 
-uint8_t verb37noun06_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather)
+uint8_t verb37noun06_start(DSKY *dsky)
 {
   if (inst == NULL) {
-    inst = new Verb37(ai, di, weather);
+    inst = new Verb37(dsky);
   }
 
   Serial.print("VERB37NOUN06 started at ");
@@ -81,8 +79,8 @@ uint8_t verb37noun06_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *we
   findProgramStartCycleFunctions(6, &programStartFn, &programCycleFn);
 
   if (programStartFn) {
-    di->setProgramNumber("06");
-    programStartFn(ai, di, weather);
+    inst->m_dsky->di->setProgramNumber("06");
+    programStartFn(dsky);
     programStartFn = 0;
   }
 

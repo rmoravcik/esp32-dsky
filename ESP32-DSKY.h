@@ -3,6 +3,9 @@
 
 #include "AlarmIndicator.h"
 #include "DigitalIndicator.h"
+#include "Kbd.h"
+#include "OTA.h"
+#include "RTC.h"
 #include "Weather.h"
 
 #define MAIN_LOOP_DELAY_MS     (10)
@@ -28,7 +31,16 @@
 #define GPIO_BACKLIGHT            (13)
 #define GPIO_DIGITAL_INDICATOR_CS (26)
 
-typedef uint8_t (*startFn_t)(AlarmIndicator*, DigitalIndicator*, Weather*);
+struct DSKY {
+  AlarmIndicator *ai;
+  DigitalIndicator *di;
+  Kbd *kbd;
+  OTA *ota;
+  RTC *rtc;
+  Weather *weather;
+};
+
+typedef uint8_t (*startFn_t)(DSKY *);
 typedef uint8_t (*cycleFn_t)(char key, bool stopRequested, uint8_t state);
 
 struct noun {

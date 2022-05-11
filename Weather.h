@@ -19,12 +19,14 @@ public:
   uint16_t getTemperature(void) { return m_temperature; };
   uint16_t getPressure(void) { return m_pressure; };
   uint16_t getHumidity(void) { return m_humidity; };
+  bool updateFailed(void) { return m_updateFailed; };
 
 private:
   WiFiClient m_client;
   AlarmIndicator *m_ai;
 
   time_t m_lastUpdate;
+  bool m_updateFailed;
 
   const String m_server = "api.openweathermap.org";
   String m_city;

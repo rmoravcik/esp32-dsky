@@ -17,7 +17,7 @@ time_t getDstCorrectedTime(void)
   return t;
 }
 
-RTC::RTC(const String ntpServer, int timeZone)
+RTC::RTC(const String ntpServer, int timeZone, AlarmIndicator *ai)
 {
   inst = this;
 
@@ -25,6 +25,8 @@ RTC::RTC(const String ntpServer, int timeZone)
 
   m_ntpServer = ntpServer;
   m_timeZone = timeZone;
+  m_ai = ai;
+  m_updateFailed = false;
 
   setSyncProvider(getDstCorrectedTime);
   setSyncInterval(300);
@@ -74,10 +76,13 @@ time_t RTC::getNtpTime(void)
       secsSince1900 |= (unsigned long)m_packetBuffer[41] << 16;
       secsSince1900 |= (unsigned long)m_packetBuffer[42] << 8;
       secsSince1900 |= (unsigned long)m_packetBuffer[43];
+      m_updateFailed = false;
       return secsSince1900 - 2208988800UL;
     }
   }
   Serial.println("No NTP Response :-(");
+  m_updateFailed = true;
+  m_ai->setProgramCondition(true);
   return 0; // return 0 if unable to get the time
 }
 

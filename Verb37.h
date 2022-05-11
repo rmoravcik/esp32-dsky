@@ -2,26 +2,22 @@
 #define VERB37_H
 
 #include "ESP32-DSKY.h"
-#include "AlarmIndicator.h"
-#include "DigitalIndicator.h"
-#include "Weather.h"
 
 extern cycleFn_t programCycleFn;
 
 class Verb37
 {
 public:
-  Verb37(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather);
+  Verb37(DSKY *dsky);
   virtual ~Verb37();
 
-  AlarmIndicator *m_ai;
-  DigitalIndicator *m_di;
+  DSKY *m_dsky;
 };
 
-uint8_t verb37noun00_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather);
+uint8_t verb37noun00_start(DSKY *dsky);
 uint8_t verb37noun00_cycle(char key, bool stopRequested, uint8_t state);
 
-uint8_t verb37noun06_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather);
+uint8_t verb37noun06_start(DSKY *dsky);
 uint8_t verb37noun06_cycle(char key, bool stopRequested, uint8_t state);
 
 #endif /* VERB37_H */

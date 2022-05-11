@@ -1,30 +1,27 @@
 #include <TimeLib.h>
 
-#include "ESP32-DSKY.h"
 #include "Verb06.h"
 
 static Verb06 *inst = NULL;
 
-Verb06::Verb06(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather)
+Verb06::Verb06(DSKY *dsky)
 {
-  m_ai = ai;
-  m_di = di;
-  m_weather = weather;
+  m_dsky = dsky;
 }
 
 Verb06::~Verb06()
 {
 }
 
-uint8_t verb06noun43_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather)
+uint8_t verb06noun43_start(DSKY *dsky)
 {
   if (inst == NULL) {
-    inst = new Verb06(ai, di, weather);
+    inst = new Verb06(dsky);
   }
 
-  inst->m_di->setRegister1("+00000");
-  inst->m_di->setRegister2("+00000");
-  inst->m_di->setRegister3(DIGITAL_INDICATOR_VALUE_NAN);
+  inst->m_dsky->di->setRegister1("+00000");
+  inst->m_dsky->di->setRegister2("+00000");
+  inst->m_dsky->di->setRegister3(DIGITAL_INDICATOR_VALUE_NAN);
 
   Serial.print("VERB06NOUN43 started at ");
   Serial.println(millis());
@@ -36,11 +33,11 @@ uint8_t verb06noun43_cycle(char key, bool stopRequested, uint8_t state)
 {
   char value[7];
 
-  if (inst->m_weather) {
-    snprintf(value, sizeof(value), "+%05d", inst->m_weather->getLatitude());
-    inst->m_di->setRegister1(value);
-    snprintf(value, sizeof(value), "+%05d", inst->m_weather->getLongitude());
-    inst->m_di->setRegister2(value);
+  if (inst->m_dsky->weather) {
+    snprintf(value, sizeof(value), "+%05d", inst->m_dsky->weather->getLatitude());
+    inst->m_dsky->di->setRegister1(value);
+    snprintf(value, sizeof(value), "+%05d", inst->m_dsky->weather->getLongitude());
+    inst->m_dsky->di->setRegister2(value);
   }
 
   Serial.print("VERB06NOUN43 finished at ");
@@ -49,15 +46,15 @@ uint8_t verb06noun43_cycle(char key, bool stopRequested, uint8_t state)
   return DSKY_STATE_IDLE;
 }
 
-uint8_t verb06noun95_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather)
+uint8_t verb06noun95_start(DSKY *dsky)
 {
   if (inst == NULL) {
-    inst = new Verb06(ai, di, weather);
+    inst = new Verb06(dsky);
   }
 
-  inst->m_di->setRegister1("+00000");
-  inst->m_di->setRegister2("+00000");
-  inst->m_di->setRegister3("+00000");
+  inst->m_dsky->di->setRegister1("+00000");
+  inst->m_dsky->di->setRegister2("+00000");
+  inst->m_dsky->di->setRegister3("+00000");
 
   Serial.print("VERB06NOUN95 started at ");
   Serial.println(millis());
@@ -69,18 +66,18 @@ uint8_t verb06noun95_cycle(char key, bool stopRequested, uint8_t state)
 {
   char value[7];
 
-  if (inst->m_weather) {
-    uint32_t absTemperatureValue = abs(inst->m_weather->getTemperature());
-    if (inst->m_weather->getTemperature() >= 0) {
+  if (inst->m_dsky->weather) {
+    uint32_t absTemperatureValue = abs(inst->m_dsky->weather->getTemperature());
+    if (inst->m_dsky->weather->getTemperature() >= 0) {
       snprintf(value, sizeof(value), "+%05d", absTemperatureValue);
     } else {
       snprintf(value, sizeof(value), "-%05d", absTemperatureValue);
     }
-    inst->m_di->setRegister1(value);
-    snprintf(value, sizeof(value), "+%05d", inst->m_weather->getPressure());
-    inst->m_di->setRegister2(value);
-    snprintf(value, sizeof(value), "+%05d", inst->m_weather->getHumidity());
-    inst->m_di->setRegister3(value);
+    inst->m_dsky->di->setRegister1(value);
+    snprintf(value, sizeof(value), "+%05d", inst->m_dsky->weather->getPressure());
+    inst->m_dsky->di->setRegister2(value);
+    snprintf(value, sizeof(value), "+%05d", inst->m_dsky->weather->getHumidity());
+    inst->m_dsky->di->setRegister3(value);
   }
 
   Serial.print("VERB06NOUN95 finished at ");

@@ -19,6 +19,7 @@ Weather::Weather(const String city, const String country, const String apiKey, A
   m_ai = ai;
 
   m_lastUpdate = 0;
+  m_updateFailed = false;
 }
 
 Weather::~Weather()
@@ -34,6 +35,8 @@ bool Weather::decodeWeather(WiFiClient& json)
   if (error) {
     Serial.print(F("DeserializeJson() failed: "));
     Serial.println(error.c_str());
+    m_updateFailed = true;
+    m_ai->setProgramCondition(true);
     return false;
   }
 
@@ -61,6 +64,8 @@ bool Weather::decodeWeather(WiFiClient& json)
   Serial.println("Humidity: "+ String(value));
   m_humidity = (uint16_t)value;
 
+  m_updateFailed = true;
+
   return true;
 }
 
@@ -82,6 +87,8 @@ bool Weather::update()
 
       if(httpCode == HTTP_CODE_OK) {
         if (!decodeWeather(http.getStream())) {
+          m_updateFailed = true;
+          m_ai->setProgramCondition(true);
           return false;
         }
 
@@ -100,6 +107,8 @@ bool Weather::update()
         Serial.printf("Connection failed, error: %s", http.errorToString(httpCode).c_str());
         m_client.stop();
         http.end();
+        m_updateFailed = true;
+        m_ai->setProgramCondition(true);
         return false;
       }
 

@@ -1,21 +1,18 @@
 #ifndef VERB36_H
 #define VERB36_H
 
-#include "AlarmIndicator.h"
-#include "DigitalIndicator.h"
-#include "Weather.h"
+#include "ESP32-DSKY.h"
 
 class Verb36
 {
 public:
-  Verb36(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather);
+  Verb36(DSKY *dsky);
   virtual ~Verb36();
 
-  AlarmIndicator *m_ai;
-  DigitalIndicator *m_di;
+  DSKY *m_dsky;
 };
 
-uint8_t verb36_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather);
+uint8_t verb36_start(DSKY *dsky);
 uint8_t verb36_cycle(char key, bool stopRequested, uint8_t state);
 
 #endif /* VERB36_H */

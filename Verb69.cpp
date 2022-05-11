@@ -1,7 +1,6 @@
-#include "ESP32-DSKY.h"
 #include "Verb69.h"
 
-uint8_t verb69_start(AlarmIndicator *ai, DigitalIndicator *di, Weather *weather)
+uint8_t verb69_start(DSKY *dsky)
 {
   Serial.print("VERB69 started at ");
   Serial.println(millis());
