@@ -1,6 +1,8 @@
 #ifndef ESP32_DSKY_H
 #define ESP32_DSKY_H
 
+#include <AsyncWebConfig.h>
+
 #include "AlarmIndicator.h"
 #include "DigitalIndicator.h"
 #include "Kbd.h"
@@ -34,6 +36,7 @@
 struct DSKY {
   AlarmIndicator *ai;
   DigitalIndicator *di;
+  AsyncWebConfig *conf;
   Kbd *kbd;
   OTA *ota;
   RTC *rtc;

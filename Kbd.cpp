@@ -116,6 +116,7 @@ Kbd::Kbd(AlarmIndicator *ai, DigitalIndicator *di)
   m_nounKeyPressed = false;
 
   m_keypad = new Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
+  m_keypad->setDebounceTime(50);
   m_keypad->addEventListener(keypadEvent);
 }
 

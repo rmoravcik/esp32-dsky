@@ -12,6 +12,9 @@ public:
   DSKY *m_dsky;
 };
 
+uint8_t verb06noun34_start(DSKY *dsky);
+uint8_t verb06noun34_cycle(char key, bool stopRequested, uint8_t state);
+
 uint8_t verb06noun43_start(DSKY *dsky);
 uint8_t verb06noun43_cycle(char key, bool stopRequested, uint8_t state);
 

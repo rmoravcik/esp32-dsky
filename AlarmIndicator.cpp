@@ -282,6 +282,7 @@ void AlarmIndicator::setKeyReleaseStatusBlinking(void)
 
 void AlarmIndicator::setOperatorErrorStatusBlinking(void)
 {
+  Serial.println("aaa");
   setOperatorErrorStatus(true);
   m_operatorErrorStatusBlinking = true;
 }

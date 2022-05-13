@@ -1,6 +1,5 @@
 #include <ESPAsyncWebServer.h>
 #include <ESPmDNS.h>
-#include <AsyncWebConfig.h>
 
 #include <SPI.h>
 #include <TFT_eSPI.h>
@@ -8,9 +7,11 @@
 #include "AlarmIndicator.h"
 #include "DigitalIndicator.h"
 #include "Kbd.h"
+#include "Program06.h"
 #include "Verb05.h"
 #include "Verb06.h"
 #include "Verb16.h"
+#include "Verb24.h"
 #include "Verb35.h"
 #include "Verb36.h"
 #include "Verb37.h"
@@ -27,7 +28,6 @@ TFT_eSPI tft = TFT_eSPI(320, 240);
 TFT_eSprite spr = TFT_eSprite(&tft);
 
 AsyncWebServer server(80);
-AsyncWebConfig conf;
 
 struct noun verb05nouns[] = {
   {  9, verb05noun09_start, verb05noun09_cycle },
@@ -35,6 +35,7 @@ struct noun verb05nouns[] = {
 };
 
 struct noun verb06nouns[] = {
+  { 34, verb06noun34_start, verb06noun34_cycle },
   { 43, verb06noun43_start, verb06noun43_cycle },
   { 95, verb06noun95_start, verb06noun95_cycle },
   { -1,                  0,                  0 }
@@ -42,6 +43,11 @@ struct noun verb06nouns[] = {
 
 struct noun verb16nouns[] = {
   { 36, verb16noun36_start, verb16noun36_cycle },
+  { -1,                  0,                  0 }
+};
+
+struct noun verb24nouns[] = {
+  { 34, verb24noun34_start, verb24noun34_cycle },
   { -1,                  0,                  0 }
 };
 
@@ -55,6 +61,7 @@ struct verb verbs[] = {
   { 05,  true,            0,            0, verb05nouns },
   { 06,  true,            0,            0, verb06nouns },
   { 16,  true,            0,            0, verb16nouns },
+  { 24,  true,            0,            0, verb24nouns },
   { 35, false, verb35_start, verb35_cycle,           0 },
   { 36, false, verb36_start, verb36_cycle,           0 },
   { 37,  true,            0,            0, verb37nouns },
@@ -104,16 +111,22 @@ String params = "["
   "'label':'OpenWeatherMap API Key',"
   "'type':"+String(INPUTTEXT)+","
   "'default':''"
+  "},"
+  "{"
+  "'name':'standby_start_time',"
+  "'label':'Standy mode start time',"
+  "'type':"+String(INPUTTIME)+","
+  "'default':'22:00'"
   "}"
 "]";
 
-boolean initWiFi() {
+static boolean initWiFi() {
     boolean connected = false;
     WiFi.mode(WIFI_STA);
     Serial.print("Connecting to ");
-    Serial.println(conf.values[0]);
-    if (conf.values[0] != "") {
-      WiFi.begin(conf.values[0].c_str(), conf.values[1].c_str());
+    Serial.println(dsky.conf->values[0]);
+    if (dsky.conf->values[0] != "") {
+      WiFi.begin(dsky.conf->values[0].c_str(), dsky.conf->values[1].c_str());
       uint8_t cnt = 0;
 
       while ((WiFi.status() != WL_CONNECTED) && (cnt < 20)) {
@@ -136,30 +149,30 @@ boolean initWiFi() {
 
     if (!connected) {
       WiFi.mode(WIFI_AP);
-      WiFi.softAP(conf.getApName(), "", 1);
+      WiFi.softAP(dsky.conf->getApName(), "", 1);
       dsky.ai->setProgramCondition(true);
     }
 
     return connected;
 }
 
-void handleRoot(AsyncWebServerRequest *request) {
-  conf.handleFormRequest(request);
+static void handleRoot(AsyncWebServerRequest *request) {
+  dsky.conf->handleFormRequest(request);
 
   if (request->hasParam("SAVE")) {
-    uint8_t cnt = conf.getCount();
+    uint8_t cnt = dsky.conf->getCount();
 
     Serial.println("*********** Configuration ************");
 
     for (uint8_t i = 0; i < cnt; i++) {
-      Serial.print(conf.getName(i));
+      Serial.print(dsky.conf->getName(i));
       Serial.print(" = ");
-      Serial.println(conf.values[i]);
+      Serial.println(dsky.conf->values[i]);
     }
   }
 }
 
-void startUp(void)
+static void startUp(void)
 {
   for (int reg = 0; reg < 3; reg++) {
     String value = "+";
@@ -231,12 +244,13 @@ void setup() {
 
   startUp();
 
-  conf.setDescription(params);
-  conf.readConfig();
+  dsky.conf = new AsyncWebConfig();
+  dsky.conf->setDescription(params);
+  dsky.conf->readConfig();
 
   initWiFi();
 
-  sprintf(dns,"%s",conf.getApName());
+  sprintf(dns,"%s",dsky.conf->getApName());
   if (MDNS.begin(dns)) {
     Serial.println("MDNS responder started");
   }
@@ -246,14 +260,14 @@ void setup() {
   server.on("/", handleRoot);
   server.begin();
 
-  dsky.rtc = new RTC(conf.getString("ntp_server"),
-                conf.getInt("time_zone"),
-                dsky.ai);
+  dsky.rtc = new RTC(dsky.conf->getString("ntp_server"),
+                     dsky.conf->getInt("time_zone"),
+                     dsky.ai);
 
-  dsky.weather = new Weather(conf.getString("weather_city"),
-                        conf.getString("weather_country"),
-                        conf.getString("weather_api_key"),
-                        dsky.ai);
+  dsky.weather = new Weather(dsky.conf->getString("weather_city"),
+                             dsky.conf->getString("weather_country"),
+                             dsky.conf->getString("weather_api_key"),
+                             dsky.ai);
 }
 
 uint8_t state = DSKY_STATE_INIT;
@@ -262,7 +276,7 @@ startFn_t startFn = 0;
 cycleFn_t cycleFn = 0;
 extern cycleFn_t programCycleFn;
 
-void findStartCycleFunctions(int8_t verbCode, int8_t nounCode, startFn_t *startFn, cycleFn_t *cycleFn)
+static void findStartCycleFunctions(int8_t verbCode, int8_t nounCode, startFn_t *startFn, cycleFn_t *cycleFn)
 {
   bool nounCodeMissing = false;
 
@@ -305,6 +319,27 @@ void findStartCycleFunctions(int8_t verbCode, int8_t nounCode, startFn_t *startF
       dsky.ai->setOperatorErrorStatusBlinking();
     }
   }
+}
+
+static uint8_t checkStandyMode(cycleFn_t *cycleFn, cycleFn_t *programCycleFn, uint8_t state)
+{
+  static int8_t prevMinute = -1;
+  uint8_t currMinute = minute();
+  uint8_t stbHour, stbMinute;
+
+  if (prevMinute != currMinute) {
+    dsky.rtc->convertTime(dsky.conf->getString("standby_start_time"), &stbHour, &stbMinute);
+
+    if ((stbHour == hour()) && (stbMinute == currMinute)) {
+      program06_start(&dsky);
+      state = program06_cycle(KEY_PRO, false, state);
+      *cycleFn = NULL;
+      *programCycleFn = program06_cycle;
+    }
+
+    prevMinute = currMinute;
+  }
+  return state;
 }
 
 void loop() {
@@ -364,6 +399,8 @@ void loop() {
   if (programCycleFn) {
     next_state = programCycleFn(key, false, next_state);
   }
+
+  next_state = checkStandyMode(&cycleFn, &programCycleFn, next_state);
 
   if (next_state != state) {
       Serial.print("Next state:");

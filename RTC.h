@@ -22,6 +22,8 @@ public:
 
   bool updateFailed(void) { return m_updateFailed; }
 
+  void convertTime(const String time, uint8_t *h, uint8_t *m);
+
 private:
   uint8_t m_packetBuffer[NTP_PACKET_SIZE]; //buffer to hold incoming & outgoing packets
 

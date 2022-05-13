@@ -107,3 +107,33 @@ void RTC::sendNTPpacket(IPAddress &address)
   m_udp.write(m_packetBuffer, NTP_PACKET_SIZE);
   m_udp.endPacket();
 }
+
+void RTC::convertTime(const String timeValue, uint8_t *h, uint8_t *m)
+{
+  bool separatorFound = false;
+  String strHour = "";
+  String strMinute = "";
+
+  for (uint8_t index = 0; index < timeValue.length(); index++) {
+    if (timeValue[index] == ':') {
+      separatorFound = true;
+      continue;
+    }
+
+    if (!separatorFound) {
+      strHour = strHour + timeValue[index];
+    } else {
+      strMinute = strMinute + timeValue[index];
+    }
+  }
+
+  *h = strHour.toInt();
+  *m = strMinute.toInt();
+
+  Serial.print("RTC::convertTime(): timeValue=");
+  Serial.print(timeValue);
+  Serial.print(" hour=");
+  Serial.print(*h);
+  Serial.print(" minute=");
+  Serial.println(*m);
+}
