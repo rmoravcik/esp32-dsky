@@ -12,7 +12,6 @@ public:
   DSKY *m_dsky;
 
   uint8_t m_actyCounter;
-  bool m_standbyMode;
 };
 
 uint8_t program06_start(DSKY *dsky);

@@ -10,18 +10,30 @@ char keys[ROWS][COLS] = {
   { KEY_NOUN, '0', '1', '2', '3', KEY_REL, KEY_RSET },
 };
 
-byte rowPins[ROWS] = { 4, 39, 34 };
-byte colPins[COLS] = { 15, 33, 21, 22, 32, 25, 27 };
+byte rowPins[ROWS] = { GPIO_KBD_ROW0, GPIO_KBD_ROW1, GPIO_KBD_ROW2 };
+byte colPins[COLS] = { GPIO_KBD_COL0, GPIO_KBD_COL1, GPIO_KBD_COL2, GPIO_KBD_COL3, GPIO_KBD_COL4, GPIO_KBD_COL5, GPIO_KBD_COL6 };
 
 static Kbd *inst = NULL;
 
 void keypadEvent(KeypadEvent key)
 {
   switch (inst->m_keypad->getState()) {
+    case HOLD:
+      {
+        inst->m_holdKey = key;
+        break;
+      }
     case RELEASED:
       {
+        if (key != inst->m_holdKey) {
+          break;
+        }
+
         Serial.print("key=");
         Serial.println(key);
+
+        inst->m_holdKey = NO_KEY;
+
         switch (key) {
           case KEY_VERB:
             {
@@ -116,7 +128,7 @@ Kbd::Kbd(AlarmIndicator *ai, DigitalIndicator *di)
   m_nounKeyPressed = false;
 
   m_keypad = new Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
-  m_keypad->setDebounceTime(50);
+  m_keypad->setHoldTime(100);
   m_keypad->addEventListener(keypadEvent);
 }
 

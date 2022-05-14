@@ -27,6 +27,7 @@ public:
   char update(void);
 
   Keypad *m_keypad;
+  char m_holdKey;
 
   AlarmIndicator *m_ai;
   DigitalIndicator *m_di;

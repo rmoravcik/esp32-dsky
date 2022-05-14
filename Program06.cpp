@@ -5,8 +5,6 @@ static Program06 *inst = NULL;
 Program06::Program06(DSKY *dsky)
 {
   m_dsky = dsky;
-  
-  m_standbyMode = false;
 }
 
 Program06::~Program06()
@@ -42,21 +40,21 @@ uint8_t program06_cycle(char key, bool stopRequested, uint8_t state)
   }
 
   if (key == KEY_PRO) {
-    if (!inst->m_standbyMode) {
+    if (!inst->m_dsky->standbyMode) {
       inst->m_dsky->di->powerDownIndicator();
       inst->m_dsky->ai->powerDownIndicator();
       ledcWrite(0, 10);
-      inst->m_standbyMode = true;
+      inst->m_dsky->standbyMode = true;
     } else {
       ledcWrite(0, 200);
       inst->m_dsky->ai->resetIndicator();
       inst->m_dsky->di->resetIndicator();
-      inst->m_standbyMode = false;
+      inst->m_dsky->standbyMode = false;
       return DSKY_STATE_INIT;
     }
   }
 
-  if (!inst->m_standbyMode) {
+  if (!inst->m_dsky->standbyMode) {
     bool acty = inst->m_dsky->di->getComputerActivityStatus();
     if (!acty) {
       if (inst->m_actyCounter > ACTY_OFF_DELAY_MS) {

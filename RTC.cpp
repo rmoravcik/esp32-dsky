@@ -57,7 +57,7 @@ time_t RTC::getNtpTime(void)
   IPAddress ntpServerIP; // NTP server's ip address
 
   while (m_udp.parsePacket() > 0) ; // discard any previously received packets
-  Serial.println("Transmit NTP Request");
+  Serial.println("RTC::getNtpTime(): Transmiting NTP request");
   // get a random server from the pool
   WiFi.hostByName(m_ntpServer.c_str(), ntpServerIP);
   Serial.print(m_ntpServer);
@@ -68,7 +68,7 @@ time_t RTC::getNtpTime(void)
   while (millis() - beginWait < 1500) {
     int size = m_udp.parsePacket();
     if (size >= NTP_PACKET_SIZE) {
-      Serial.println("Receive NTP Response");
+      Serial.println("RTC::getNtpTime(): Received NTP response");
       m_udp.read(m_packetBuffer, NTP_PACKET_SIZE);  // read packet into the buffer
       unsigned long secsSince1900;
       // convert four bytes starting at location 40 to a long integer
@@ -80,7 +80,7 @@ time_t RTC::getNtpTime(void)
       return secsSince1900 - 2208988800UL;
     }
   }
-  Serial.println("No NTP Response :-(");
+  Serial.println("RTC::getNtpTime(): No NTP response!");
   m_updateFailed = true;
   m_ai->setProgramCondition(true);
   return 0; // return 0 if unable to get the time
@@ -130,10 +130,12 @@ void RTC::convertTime(const String timeValue, uint8_t *h, uint8_t *m)
   *h = strHour.toInt();
   *m = strMinute.toInt();
 
+#if 0
   Serial.print("RTC::convertTime(): timeValue=");
   Serial.print(timeValue);
   Serial.print(" hour=");
   Serial.print(*h);
   Serial.print(" minute=");
   Serial.println(*m);
+#endif
 }

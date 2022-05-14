@@ -33,7 +33,7 @@ bool Weather::decodeWeather(WiFiClient& json)
 
   DeserializationError error = deserializeJson(doc, json);
   if (error) {
-    Serial.print(F("DeserializeJson() failed: "));
+    Serial.print("Weather::decodeWeather(): DeserializeJson() failed: ");
     Serial.println(error.c_str());
     m_updateFailed = true;
     m_ai->setProgramCondition(true);
@@ -53,15 +53,15 @@ bool Weather::decodeWeather(WiFiClient& json)
   m_latitude = (uint16_t)(value * 100);
 
   value = root["main"]["temp"].as<float>();
-  Serial.println("Temperature: "+ String(value));
+  Serial.println(" Temperature: "+ String(value));
   m_temperature = (uint16_t)(value * 100);
 
   value = root["main"]["pressure"].as<float>();
-  Serial.println("Pressure: "+ String(value));
+  Serial.println(" Pressure: "+ String(value));
   m_pressure = (uint16_t)value;
 
   value = root["main"]["humidity"].as<float>();
-  Serial.println("Humidity: "+ String(value));
+  Serial.println(" Humidity: "+ String(value));
   m_humidity = (uint16_t)value;
 
   m_updateFailed = true;
@@ -78,7 +78,7 @@ bool Weather::update()
       m_lastUpdate = now();
       m_client.stop(); // close connection before sending a new request
 
-      Serial.print("Updating weather ");
+      Serial.print("Weather::update(): Updating weather ");
       Serial.print(m_server);
       Serial.println(uri);
 
@@ -104,7 +104,7 @@ bool Weather::update()
         m_ai->setAltitudeDataCaution(true);
         return true;
       } else {
-        Serial.printf("Connection failed, error: %s", http.errorToString(httpCode).c_str());
+        Serial.printf("Weather::update(): Connection failed, error: %s", http.errorToString(httpCode).c_str());
         m_client.stop();
         http.end();
         m_updateFailed = true;

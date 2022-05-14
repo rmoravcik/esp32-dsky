@@ -211,6 +211,8 @@ static void startUp(void)
 void setup() {
   char dns[30];
 
+  dsky.standbyMode = false;
+
   pinMode(GPIO_BACKLIGHT, INPUT);
   Serial.begin(115200);
 
@@ -323,21 +325,23 @@ static void findStartCycleFunctions(int8_t verbCode, int8_t nounCode, startFn_t 
 
 static uint8_t checkStandyMode(cycleFn_t *cycleFn, cycleFn_t *programCycleFn, uint8_t state)
 {
-  static int8_t prevMinute = -1;
-  uint8_t currMinute = minute();
-  uint8_t stbHour, stbMinute;
+  if (!dsky.standbyMode) {
+    static int8_t prevMinute = -1;
+    uint8_t currMinute = minute();
+    uint8_t stbHour, stbMinute;
 
-  if (prevMinute != currMinute) {
-    dsky.rtc->convertTime(dsky.conf->getString("standby_start_time"), &stbHour, &stbMinute);
+    if (prevMinute != currMinute) {
+      dsky.rtc->convertTime(dsky.conf->getString("standby_start_time"), &stbHour, &stbMinute);
 
-    if ((stbHour == hour()) && (stbMinute == currMinute)) {
-      program06_start(&dsky);
-      state = program06_cycle(KEY_PRO, false, state);
-      *cycleFn = NULL;
-      *programCycleFn = program06_cycle;
+      if ((stbHour == hour()) && (stbMinute == currMinute)) {
+        program06_start(&dsky);
+        state = program06_cycle(KEY_PRO, false, state);
+        *cycleFn = NULL;
+        *programCycleFn = program06_cycle;
+      }
+
+      prevMinute = currMinute;
     }
-
-    prevMinute = currMinute;
   }
   return state;
 }

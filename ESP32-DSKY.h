@@ -28,10 +28,22 @@
 #define NOUN_CODE_INVALID        (-1)
 #define PROGRAM_NUMBER_INVALID   (-1)
 
-#define GPIO_TFT_RST              (0)
-#define GPIO_ALARM_INDICATOR_CS   (5)
+#define GPIO_TFT_RST               (0)
+#define GPIO_ALARM_INDICATOR_CS    (5)
 #define GPIO_BACKLIGHT            (13)
 #define GPIO_DIGITAL_INDICATOR_CS (26)
+
+#define GPIO_KBD_ROW0              (4)
+#define GPIO_KBD_ROW1             (39)
+#define GPIO_KBD_ROW2             (34)
+
+#define GPIO_KBD_COL0             (15)
+#define GPIO_KBD_COL1             (33)
+#define GPIO_KBD_COL2             (21)
+#define GPIO_KBD_COL3             (22)
+#define GPIO_KBD_COL4             (32)
+#define GPIO_KBD_COL5             (25)
+#define GPIO_KBD_COL6             (27)
 
 struct DSKY {
   AlarmIndicator *ai;
@@ -41,6 +53,7 @@ struct DSKY {
   OTA *ota;
   RTC *rtc;
   Weather *weather;
+  bool standbyMode;
 };
 
 typedef uint8_t (*startFn_t)(DSKY *);
