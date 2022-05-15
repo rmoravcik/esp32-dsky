@@ -235,7 +235,7 @@ void setup() {
   tft.setRotation(3);
   tft.fillScreen(TFT_BLACK);
 
-  // Backlight
+  // TFT Backlight
   ledcSetup(0, 5000, 8);
   ledcAttachPin(GPIO_BACKLIGHT, 0);
   ledcWrite(0, 200);

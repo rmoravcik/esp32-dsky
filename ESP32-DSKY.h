@@ -31,6 +31,7 @@
 #define GPIO_TFT_RST               (0)
 #define GPIO_ALARM_INDICATOR_CS    (5)
 #define GPIO_BACKLIGHT            (13)
+#define GPIO_KBD_BACKLIGHT        (12)
 #define GPIO_DIGITAL_INDICATOR_CS (26)
 
 #define GPIO_KBD_ROW0              (4)

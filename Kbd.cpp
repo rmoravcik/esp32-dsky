@@ -127,6 +127,10 @@ Kbd::Kbd(AlarmIndicator *ai, DigitalIndicator *di)
   m_verbKeyPressed = false;
   m_nounKeyPressed = false;
 
+  ledcSetup(1, 5000, 8);
+  ledcAttachPin(GPIO_KBD_BACKLIGHT, 1);
+  ledcWrite(1, 200);
+
   m_keypad = new Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
   m_keypad->setHoldTime(100);
   m_keypad->addEventListener(keypadEvent);
