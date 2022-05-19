@@ -129,7 +129,7 @@ Kbd::Kbd(AlarmIndicator *ai, DigitalIndicator *di)
 
   ledcSetup(1, 5000, 8);
   ledcAttachPin(GPIO_KBD_BACKLIGHT, 1);
-  ledcWrite(1, 200);
+  ledcWrite(1, 255);
 
   m_keypad = new Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
   m_keypad->setHoldTime(100);

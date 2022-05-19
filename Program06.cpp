@@ -44,9 +44,11 @@ uint8_t program06_cycle(char key, bool stopRequested, uint8_t state)
       inst->m_dsky->di->powerDownIndicator();
       inst->m_dsky->ai->powerDownIndicator();
       ledcWrite(0, 10);
+      ledcWrite(1, 0);
       inst->m_dsky->standbyMode = true;
     } else {
       ledcWrite(0, 200);
+      ledcWrite(1, 255);
       inst->m_dsky->ai->resetIndicator();
       inst->m_dsky->di->resetIndicator();
       inst->m_dsky->standbyMode = false;
