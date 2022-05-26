@@ -335,7 +335,7 @@ static uint8_t checkStandyMode(cycleFn_t *cycleFn, cycleFn_t *programCycleFn, ui
 
       if ((stbHour == hour()) && (stbMinute == currMinute)) {
         program06_start(&dsky);
-        state = program06_cycle(KEY_PRO, false, state);
+        state = program06_cycle(KEY_PRO_FORCE, false, state);
         *cycleFn = NULL;
         *programCycleFn = program06_cycle;
       }

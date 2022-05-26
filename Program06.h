@@ -12,6 +12,9 @@ public:
   DSKY *m_dsky;
 
   uint8_t m_actyCounter;
+
+  char m_key;
+  KeyState m_keyState;
 };
 
 uint8_t program06_start(DSKY *dsky);

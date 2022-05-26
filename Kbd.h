@@ -6,14 +6,16 @@
 #include "AlarmIndicator.h"
 #include "DigitalIndicator.h"
 
-#define KEY_NONE ' '
-#define KEY_VERB 'v'
-#define KEY_NOUN 'n'
-#define KEY_CLR  'c'
-#define KEY_PRO  'p'
-#define KEY_ENTR 'e'
-#define KEY_REL  'k'
-#define KEY_RSET 'r'
+#define KEY_NONE      ' '
+#define KEY_VERB      'v'
+#define KEY_NOUN      'n'
+#define KEY_CLR       'c'
+#define KEY_PRO       'p'
+#define KEY_ENTR      'e'
+#define KEY_REL       'k'
+#define KEY_RSET      'r'
+
+#define KEY_PRO_FORCE 'P'
 
 class Kbd
 {
@@ -25,6 +27,7 @@ public:
   int8_t getNounCode(void);
 
   char update(void);
+  KeyState getState(void) { return m_keypad->getState(); }
 
   Keypad *m_keypad;
   char m_holdKey;
