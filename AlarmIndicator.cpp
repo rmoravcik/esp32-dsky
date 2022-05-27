@@ -10,9 +10,10 @@
 #define ALARM_TEXT_COLOR_INACTIVE   TFT_BLACK
 #define ALARM_BUTTON_COLOR_INACTIVE 0x0841
 
-AlarmIndicator::AlarmIndicator(TFT_eSPI *tft)
+AlarmIndicator::AlarmIndicator(TFT_eSPI *tft, bool *standbyActive)
 {
   m_tft = tft;
+  m_standbyActive = standbyActive;
 
   m_toggleCounter = 0;
 
@@ -140,7 +141,7 @@ void AlarmIndicator::setUplinkActivityStatus(bool status)
   uint32_t buttonColor = ALARM_BUTTON_COLOR_INACTIVE;
   uint32_t textColor = ALARM_TEXT_COLOR_INACTIVE;
 
-  if (m_uplinkActivityStatus == status) {
+  if ((m_uplinkActivityStatus == status) || (*m_standbyActive == true)) {
     return;
   }
   m_uplinkActivityStatus = status;

@@ -6,7 +6,7 @@
 class AlarmIndicator
 {
 public:
-  AlarmIndicator(TFT_eSPI *tft);
+  AlarmIndicator(TFT_eSPI *tft, bool *standbyActive);
   virtual ~AlarmIndicator();
 
   void resetIndicator(void);
@@ -33,6 +33,7 @@ public:
 
 private:
   TFT_eSPI *m_tft;
+  bool *m_standbyActive;
 
   bool m_uplinkActivityStatus;
   bool m_noAttitudeStatus;

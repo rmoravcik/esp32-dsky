@@ -241,7 +241,7 @@ void setup() {
   ledcWrite(0, 200);
 
   dsky.di = new DigitalIndicator(&tft, &spr);
-  dsky.ai = new AlarmIndicator(&tft);
+  dsky.ai = new AlarmIndicator(&tft, &dsky.standbyMode);
   dsky.kbd = new Kbd(dsky.ai, dsky.di);
 
   startUp();
