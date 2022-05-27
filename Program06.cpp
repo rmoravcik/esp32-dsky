@@ -47,6 +47,7 @@ uint8_t program06_cycle(char key, bool stopRequested, uint8_t state)
       if (inst->m_keyState == IDLE) {
         inst->m_key = key;
         inst->m_keyState = PRESSED;
+        inst->m_holdCounter = 0;
         Serial.print("IDLE->PRESSED key=");
         Serial.println(inst->m_key);
       }
@@ -56,8 +57,9 @@ uint8_t program06_cycle(char key, bool stopRequested, uint8_t state)
         Serial.print("PRESSED->HOLD key=");
         Serial.println(inst->m_key);
       }
+      inst->m_holdCounter++;
   } else if (inst->m_dsky->kbd->getState() == RELEASED) {
-      if (inst->m_keyState == HOLD) {
+      if ((inst->m_keyState == HOLD) && (inst->m_holdCounter > PRO_KEY_HOLD_COUNTER_MS)) {
         inst->m_keyState = RELEASED;
         Serial.print("HOLD->RELEASED key=");
         Serial.println(inst->m_key);

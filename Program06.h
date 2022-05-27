@@ -3,6 +3,8 @@
 
 #include "ESP32-DSKY.h"
 
+#define PRO_KEY_HOLD_COUNTER_MS       (2000 / MAIN_LOOP_DELAY_MS)
+
 class Program06
 {
 public:
@@ -15,6 +17,7 @@ public:
 
   char m_key;
   KeyState m_keyState;
+  uint16_t m_holdCounter;
 };
 
 uint8_t program06_start(DSKY *dsky);
