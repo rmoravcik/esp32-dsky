@@ -4,6 +4,8 @@
 #include <SPI.h>
 #include <TFT_eSPI.h>
 
+#include <soc/rtc_cntl_reg.h>
+
 #include "AlarmIndicator.h"
 #include "DigitalIndicator.h"
 #include "Kbd.h"
@@ -210,6 +212,9 @@ static void startUp(void)
 
 void setup() {
   char dns[30];
+
+  // Disable brownout detector
+  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);
 
   dsky.standbyMode = false;
 

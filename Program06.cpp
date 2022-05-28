@@ -75,17 +75,17 @@ uint8_t program06_cycle(char key, bool stopRequested, uint8_t state)
     inst->m_keyState = IDLE;
 
     if (!inst->m_dsky->standbyMode) {
+      inst->m_dsky->standbyMode = true;
       inst->m_dsky->di->powerDownIndicator();
       inst->m_dsky->ai->powerDownIndicator();
       ledcWrite(0, 2);
       ledcWrite(1, 0);
-      inst->m_dsky->standbyMode = true;
     } else {
+      inst->m_dsky->standbyMode = false;
       ledcWrite(0, 200);
       ledcWrite(1, 255);
       inst->m_dsky->ai->resetIndicator();
       inst->m_dsky->di->resetIndicator();
-      inst->m_dsky->standbyMode = false;
       return DSKY_STATE_INIT;
     }
   }
