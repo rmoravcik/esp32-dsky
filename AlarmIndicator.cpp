@@ -141,7 +141,7 @@ void AlarmIndicator::setUplinkActivityStatus(bool status)
   uint32_t buttonColor = ALARM_BUTTON_COLOR_INACTIVE;
   uint32_t textColor = ALARM_TEXT_COLOR_INACTIVE;
 
-  if ((m_uplinkActivityStatus == status) && (*m_standbyActive == true)) {
+  if (m_uplinkActivityStatus == status) {
     return;
   }
   m_uplinkActivityStatus = status;
@@ -168,7 +168,7 @@ void AlarmIndicator::setNoAttitudeStatus(bool status)
   uint32_t buttonColor = ALARM_BUTTON_COLOR_INACTIVE;
   uint32_t textColor = ALARM_TEXT_COLOR_INACTIVE;
 
-  if ((m_noAttitudeStatus == status) && (*m_standbyActive == true)) {
+  if ((m_noAttitudeStatus == status) || (*m_standbyActive == true)) {
     return;
   }
   m_noAttitudeStatus = status;
@@ -193,7 +193,7 @@ void AlarmIndicator::setStandbyStatus(bool status)
   uint32_t buttonColor = ALARM_BUTTON_COLOR_INACTIVE;
   uint32_t textColor = ALARM_TEXT_COLOR_INACTIVE;
 
-  if ((m_standbyStatus == status) && (*m_standbyActive == true)) {
+  if ((m_standbyStatus == status) || (*m_standbyActive == true)) {
     return;
   }
   m_standbyStatus = status;
@@ -283,7 +283,6 @@ void AlarmIndicator::setKeyReleaseStatusBlinking(void)
 
 void AlarmIndicator::setOperatorErrorStatusBlinking(void)
 {
-  Serial.println("aaa");
   setOperatorErrorStatus(true);
   m_operatorErrorStatusBlinking = true;
 }
@@ -293,7 +292,7 @@ void AlarmIndicator::setTemperatureCaution(bool status)
   uint32_t buttonColor = ALARM_BUTTON_COLOR_INACTIVE;
   uint32_t textColor = ALARM_TEXT_COLOR_INACTIVE;
 
-  if ((m_temperatureCaution == status) && (*m_standbyActive == true)) {
+  if (m_temperatureCaution == status) {
     return;
   }
   m_temperatureCaution = status;
@@ -318,7 +317,7 @@ void AlarmIndicator::setGimbalLockStatus(bool status)
   uint32_t buttonColor = ALARM_BUTTON_COLOR_INACTIVE;
   uint32_t textColor = ALARM_TEXT_COLOR_INACTIVE;
 
-  if ((m_gimbalLockStatus == status) && (*m_standbyActive == true)) {
+  if ((m_gimbalLockStatus == status) || (*m_standbyActive == true)) {
     return;
   }
   m_gimbalLockStatus = status;
@@ -345,7 +344,7 @@ void AlarmIndicator::setProgramCondition(bool status)
   uint32_t buttonColor = ALARM_BUTTON_COLOR_INACTIVE;
   uint32_t textColor = ALARM_TEXT_COLOR_INACTIVE;
 
-  if ((m_programCondition == status) && (*m_standbyActive == true)) {
+  if ((m_programCondition == status) || (*m_standbyActive == true)) {
     return;
   }
   m_programCondition = status;
@@ -370,7 +369,7 @@ void AlarmIndicator::setRestartCondition(bool status)
   uint32_t buttonColor = ALARM_BUTTON_COLOR_INACTIVE;
   uint32_t textColor = ALARM_TEXT_COLOR_INACTIVE;
 
-  if ((m_restartCondition == status) && (*m_standbyActive == true)) {
+  if ((m_restartCondition == status) || (*m_standbyActive == true)) {
     return;
   }
   m_restartCondition = status;
@@ -395,7 +394,7 @@ void AlarmIndicator::setTrackerCondition(bool status)
   uint32_t buttonColor = ALARM_BUTTON_COLOR_INACTIVE;
   uint32_t textColor = ALARM_TEXT_COLOR_INACTIVE;
 
-  if ((m_trackerCondition == status) && (*m_standbyActive == true)) {
+  if ((m_trackerCondition == status) || (*m_standbyActive == true)) {
     return;
   }
   m_trackerCondition = status;
@@ -420,7 +419,7 @@ void AlarmIndicator::setAltitudeDataCaution(bool status)
   uint32_t buttonColor = ALARM_BUTTON_COLOR_INACTIVE;
   uint32_t textColor = ALARM_TEXT_COLOR_INACTIVE;
 
-  if ((m_altitudeDataCaution == status) && (*m_standbyActive == true)) {
+  if ((m_altitudeDataCaution == status) || (*m_standbyActive == true)) {
     return;
   }
   m_altitudeDataCaution = status;
@@ -445,7 +444,7 @@ void AlarmIndicator::setVelocityDataCaution(bool status)
   uint32_t buttonColor = ALARM_BUTTON_COLOR_INACTIVE;
   uint32_t textColor = ALARM_TEXT_COLOR_INACTIVE;
 
-  if ((m_velocityDataCaution == status) && (*m_standbyActive == true)) {
+  if ((m_velocityDataCaution == status) || (*m_standbyActive == true)) {
     return;
   }
   m_velocityDataCaution = status;

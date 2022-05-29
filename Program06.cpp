@@ -48,42 +48,36 @@ uint8_t program06_cycle(char key, bool stopRequested, uint8_t state)
         inst->m_key = key;
         inst->m_keyState = PRESSED;
         inst->m_holdCounter = 0;
-        Serial.print("IDLE->PRESSED key=");
+        Serial.print("program06_cycle(): PRESSED key=");
         Serial.println(inst->m_key);
       }
   } else if (inst->m_dsky->kbd->getState() == HOLD) {
-      if (inst->m_keyState == PRESSED) {
+      if (inst->m_holdCounter > PRO_KEY_HOLD_COUNTER_MS) {
         inst->m_keyState = HOLD;
-        Serial.print("PRESSED->HOLD key=");
+        Serial.print("program06_cycle(): PRESSED->HOLD key=");
         Serial.println(inst->m_key);
       }
+
       inst->m_holdCounter++;
-  } else if (inst->m_dsky->kbd->getState() == RELEASED) {
-      if ((inst->m_keyState == HOLD) && (inst->m_holdCounter > PRO_KEY_HOLD_COUNTER_MS)) {
-        inst->m_keyState = RELEASED;
-        Serial.print("HOLD->RELEASED key=");
-        Serial.println(inst->m_key);
-      } else {
-        inst->m_keyState = IDLE;
-        inst->m_key = NO_KEY;
-        Serial.println("RELEASED->IDLE");
-      }
+  } else {
+      inst->m_keyState = IDLE;
+      inst->m_key = NO_KEY;
   }
 
-  if (((inst->m_key == KEY_PRO) && (inst->m_keyState == RELEASED)) || (key == (KEY_PRO_FORCE))) {
+  if (((inst->m_key == KEY_PRO) && (inst->m_keyState == HOLD)) || (key == (KEY_PRO_FORCE))) {
     inst->m_key = NO_KEY;
     inst->m_keyState = IDLE;
 
     if (!inst->m_dsky->standbyMode) {
-      inst->m_dsky->standbyMode = true;
       inst->m_dsky->di->powerDownIndicator();
       inst->m_dsky->ai->powerDownIndicator();
+      inst->m_dsky->standbyMode = true;
       ledcWrite(0, 2);
       ledcWrite(1, 0);
     } else {
-      inst->m_dsky->standbyMode = false;
       ledcWrite(0, 200);
       ledcWrite(1, 255);
+      inst->m_dsky->standbyMode = false;
       inst->m_dsky->ai->resetIndicator();
       inst->m_dsky->di->resetIndicator();
       return DSKY_STATE_INIT;

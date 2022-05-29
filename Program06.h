@@ -3,7 +3,7 @@
 
 #include "ESP32-DSKY.h"
 
-#define PRO_KEY_HOLD_COUNTER_MS       (2000 / MAIN_LOOP_DELAY_MS)
+#define PRO_KEY_HOLD_COUNTER_MS       (3000 / MAIN_LOOP_DELAY_MS)
 
 class Program06
 {
