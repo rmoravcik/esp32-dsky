@@ -241,9 +241,9 @@ void setup() {
   tft.fillScreen(TFT_BLACK);
 
   // TFT Backlight
-  ledcSetup(0, 5000, 8);
+  ledcSetup(0, 5000, 16);
   ledcAttachPin(GPIO_BACKLIGHT, 0);
-  ledcWrite(0, 200);
+  ledcWrite(0, 800);
 
   dsky.di = new DigitalIndicator(&tft, &spr);
   dsky.ai = new AlarmIndicator(&tft, &dsky.standbyMode);
@@ -359,6 +359,10 @@ void loop() {
   switch (state) {
     case DSKY_STATE_INIT:
       {
+        if (WiFi.getMode() == WIFI_OFF) {
+          initWiFi();
+        }
+
         startFn = 0;
         cycleFn = 0;
         verb37noun00_start(&dsky);

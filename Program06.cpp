@@ -72,10 +72,12 @@ uint8_t program06_cycle(char key, bool stopRequested, uint8_t state)
       inst->m_dsky->di->powerDownIndicator();
       inst->m_dsky->ai->powerDownIndicator();
       inst->m_dsky->standbyMode = true;
-      ledcWrite(0, 2);
+      ledcWrite(0, 1);
       ledcWrite(1, 0);
+      WiFi.disconnect(true);
+      WiFi.mode(WIFI_OFF);
     } else {
-      ledcWrite(0, 200);
+      ledcWrite(0, 800);
       ledcWrite(1, 255);
       inst->m_dsky->standbyMode = false;
       inst->m_dsky->ai->resetIndicator();
