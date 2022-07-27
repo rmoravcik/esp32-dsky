@@ -94,6 +94,7 @@ void DigitalIndicator::drawProgramLabel(void)
 {
   m_tft->fillRoundRect(145, 5, 70, 20, 3, TFT_GREEN);
   m_tft->setCursor(161, 10);
+  m_tft->loadFont(Gorton_Normal_180_11);
   m_tft->setTextColor(TFT_BLACK, TFT_GREEN);
   m_tft->print("PROG");
 }
@@ -102,6 +103,7 @@ void DigitalIndicator::drawVerbLabel(void)
 {
   m_tft->fillRoundRect(25, 81, 70, 20, 3, TFT_GREEN);
   m_tft->setCursor(40, 86);
+  m_tft->loadFont(Gorton_Normal_180_11);
   m_tft->setTextColor(TFT_BLACK, TFT_GREEN);
   m_tft->print("VERB");
   m_tft->unloadFont();
@@ -111,6 +113,7 @@ void DigitalIndicator::drawNounLabel(void)
 {
   m_tft->fillRoundRect(145, 81, 70, 20, 3, TFT_GREEN);
   m_tft->setCursor(160, 86);
+  m_tft->loadFont(Gorton_Normal_180_11);
   m_tft->setTextColor(TFT_BLACK, TFT_GREEN);
   m_tft->print("NOUN");
 }
