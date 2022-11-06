@@ -119,3 +119,60 @@ uint8_t verb06noun95_cycle(char key, bool stopRequested, uint8_t state)
 
   return DSKY_STATE_IDLE;
 }
+
+uint8_t verb06noun96_start(DSKY *dsky)
+{
+  if (inst == NULL) {
+    inst = new Verb06(dsky);
+  }
+
+  inst->m_dsky->di->setRegister1("+00000");
+  inst->m_dsky->di->setRegister2("+00000");
+  inst->m_dsky->di->setRegister3(DIGITAL_INDICATOR_VALUE_NAN);
+
+  Serial.print("VERB06NOUN96 started at ");
+  Serial.println(millis());
+
+  return DSKY_STATE_BUSY;
+}
+
+uint8_t verb06noun96_cycle(char key, bool stopRequested, uint8_t state)
+{
+  char value[7];
+
+  if (inst->m_dsky->sensor) {
+    snprintf(value, sizeof(value), "+%05d", inst->m_dsky->sensor->getTVOC());
+    inst->m_dsky->di->setRegister1(value);
+    snprintf(value, sizeof(value), "+%05d", inst->m_dsky->sensor->getCO2());
+    inst->m_dsky->di->setRegister2(value);
+  }
+
+  Serial.print("VERB06NOUN96 finished at ");
+  Serial.println(millis());
+
+  return DSKY_STATE_IDLE;
+}
+
+uint8_t verb06noun99_start(DSKY *dsky)
+{
+  if (inst == NULL) {
+    inst = new Verb06(dsky);
+  }
+
+  inst->m_dsky->di->setRegister1(VERSION_STRING);
+  inst->m_dsky->di->setRegister2(DIGITAL_INDICATOR_VALUE_NAN);
+  inst->m_dsky->di->setRegister3(DIGITAL_INDICATOR_VALUE_NAN);
+
+  Serial.print("VERB06NOUN99 started at ");
+  Serial.println(millis());
+
+  return DSKY_STATE_BUSY;
+}
+
+uint8_t verb06noun99_cycle(char key, bool stopRequested, uint8_t state)
+{
+  Serial.print("VERB06NOUN99 finished at ");
+  Serial.println(millis());
+
+  return DSKY_STATE_IDLE;
+}

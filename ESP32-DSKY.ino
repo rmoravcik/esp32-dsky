@@ -8,6 +8,7 @@
 
 #include "AlarmIndicator.h"
 #include "DigitalIndicator.h"
+#include "EnvSensor.h"
 #include "Kbd.h"
 #include "Program06.h"
 #include "Verb05.h"
@@ -40,6 +41,8 @@ struct noun verb06nouns[] = {
   { 34, verb06noun34_start, verb06noun34_cycle },
   { 43, verb06noun43_start, verb06noun43_cycle },
   { 95, verb06noun95_start, verb06noun95_cycle },
+  { 96, verb06noun96_start, verb06noun96_cycle },
+  { 99, verb06noun99_start, verb06noun99_cycle },
   { -1,                  0,                  0 }
 };
 
@@ -275,6 +278,8 @@ void setup() {
                              dsky.conf->getString("weather_country"),
                              dsky.conf->getString("weather_api_key"),
                              dsky.ai);
+
+  dsky.sensor = new EnvSensor(dsky.ai);
 }
 
 uint8_t state = DSKY_STATE_INIT;
@@ -426,6 +431,7 @@ void loop() {
   dsky.ai->update();
   dsky.di->update();
   dsky.weather->update();
+  dsky.sensor->update();
 
   delay(MAIN_LOOP_DELAY_MS);
 }
