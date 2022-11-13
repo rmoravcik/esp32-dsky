@@ -11,7 +11,7 @@
 #include "RTC.h"
 #include "Weather.h"
 
-#define VERSION_STRING         "+10001"
+#define VERSION_STRING         "+10002"
 
 #define MAIN_LOOP_DELAY_MS     (10)
 
@@ -49,6 +49,8 @@
 #define GPIO_KBD_COL4             (32)
 #define GPIO_KBD_COL5             (25)
 #define GPIO_KBD_COL6             (27)
+
+#define GPIO_BME680_CS            (14)
 
 #define TVOC_LEVEL_POOR           (660)
 #define CO2_LEVEL_POOR           (1000)

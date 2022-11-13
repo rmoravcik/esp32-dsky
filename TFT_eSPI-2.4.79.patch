@@ -1,7 +1,7 @@
-diff -Naur TFT_eSPI-2.4.51/Processors/TFT_eSPI_ESP32.h TFT_eSPI/Processors/TFT_eSPI_ESP32.h
---- TFT_eSPI-2.4.51/Processors/TFT_eSPI_ESP32.h	2022-04-22 23:07:55.000000000 +0200
-+++ TFT_eSPI/Processors/TFT_eSPI_ESP32.h	2022-04-28 06:52:58.544603665 +0200
-@@ -196,8 +196,10 @@
+diff -Naur TFT_eSPI/Processors/TFT_eSPI_ESP32.h TFT_eSPI/Processors/TFT_eSPI_ESP32.h
+--- TFT_eSPI/Processors/TFT_eSPI_ESP32.h	2022-11-11 14:08:30.000000000 +0100
++++ TFT_eSPI/Processors/TFT_eSPI_ESP32.h	2022-11-13 20:44:22.000000000 +0100
+@@ -206,8 +206,10 @@
  ////////////////////////////////////////////////////////////////////////////////////////
  #ifndef TFT_CS
    #define TFT_CS -1  // Keep DMA code happy
@@ -14,10 +14,10 @@ diff -Naur TFT_eSPI-2.4.51/Processors/TFT_eSPI_ESP32.h TFT_eSPI/Processors/TFT_e
  #else
    #if defined (TFT_PARALLEL_8_BIT)
      #if TFT_CS >= 32
-diff -Naur TFT_eSPI-2.4.51/TFT_eSPI.h TFT_eSPI/TFT_eSPI.h
---- TFT_eSPI-2.4.51/TFT_eSPI.h	2022-04-22 23:07:55.000000000 +0200
-+++ TFT_eSPI/TFT_eSPI.h	2022-04-28 06:56:58.756296695 +0200
-@@ -385,6 +385,8 @@
+diff -Naur TFT_eSPI/TFT_eSPI.h TFT_eSPI/TFT_eSPI.h
+--- TFT_eSPI/TFT_eSPI.h	2022-11-11 14:08:30.000000000 +0100
++++ TFT_eSPI/TFT_eSPI.h	2022-11-13 20:44:33.000000000 +0100
+@@ -415,6 +415,8 @@
   //--------------------------------------- public ------------------------------------//
   public:
  
@@ -26,25 +26,28 @@ diff -Naur TFT_eSPI-2.4.51/TFT_eSPI.h TFT_eSPI/TFT_eSPI.h
    TFT_eSPI(int16_t _W = TFT_WIDTH, int16_t _H = TFT_HEIGHT);
  
    // init() and begin() are equivalent, begin() included for backwards compatibility
-diff -Naur TFT_eSPI-2.4.51/User_Setups/Setup70_ESP32_S2_ILI9341.h TFT_eSPI/User_Setups/Setup70_ESP32_S2_ILI9341.h
---- TFT_eSPI-2.4.51/User_Setups/Setup70_ESP32_S2_ILI9341.h	2022-04-22 23:07:55.000000000 +0200
-+++ TFT_eSPI/User_Setups/Setup70_ESP32_S2_ILI9341.h	2022-04-28 08:45:00.959751818 +0200
-@@ -4,33 +4,41 @@
+diff -Naur TFT_eSPI/User_Setups/Setup70_ESP32_S2_ILI9341.h TFT_eSPI/User_Setups/Setup70_ESP32_S2_ILI9341.h
+--- TFT_eSPI/User_Setups/Setup70_ESP32_S2_ILI9341.h	2022-11-11 14:08:27.000000000 +0100
++++ TFT_eSPI/User_Setups/Setup70_ESP32_S2_ILI9341.h	2022-11-13 20:45:07.000000000 +0100
+@@ -4,30 +4,40 @@
  // See SetupX_Template.h for all options available
  #define ILI9341_DRIVER
  
 -                    // Typical board default pins
 -#define TFT_CS   10 //     10 or 34
-+#define TFT_WIDTH  240
-+#define TFT_HEIGHT 320
++// Define to disable all #warnings in library (can be put in User_Setup_Select.h)
++#define DISABLE_ALL_LIBRARY_WARNINGS
  
 -#define TFT_MOSI 11 //     11 or 35
 -#define TFT_SCLK 12 //     12 or 36
 -#define TFT_MISO 13 //     13 or 37
-+#define MULTI_TFT_SUPPORT
++#define TFT_WIDTH  240
++#define TFT_HEIGHT 320
  
 -#define TFT_DC   14
 -#define TFT_RST  15
++#define MULTI_TFT_SUPPORT
++
 +// Typical board default pins
 +//#define TFT_CS  26 //     10 or 34
 +//#define TFT_CS   5 //     10 or 34
@@ -79,31 +82,26 @@ diff -Naur TFT_eSPI-2.4.51/User_Setups/Setup70_ESP32_S2_ILI9341.h TFT_eSPI/User_
 -#define USE_HSPI_PORT
 +//#define USE_HSPI_PORT
  
-+#define SPI_FREQUENCY  20000000
  //#define SPI_FREQUENCY  27000000
--#define SPI_FREQUENCY  40000000   // Maximum for ILI9341
-+//#define SPI_FREQUENCY  40000000   // Maximum for ILI9341
+ #define SPI_FREQUENCY  40000000   // Maximum for ILI9341
+diff -Naur TFT_eSPI/User_Setup_Select.h TFT_eSPI/User_Setup_Select.h
+--- TFT_eSPI/User_Setup_Select.h	2022-11-11 14:08:30.000000000 +0100
++++ TFT_eSPI/User_Setup_Select.h	2022-11-13 20:45:42.000000000 +0100
+@@ -27,7 +27,7 @@
  
- #define SPI_READ_FREQUENCY  6000000 // 6 MHz is the maximum SPI read speed for the ST7789V
- 
-diff -Naur TFT_eSPI-2.4.51/User_Setup_Select.h TFT_eSPI/User_Setup_Select.h
---- TFT_eSPI-2.4.51/User_Setup_Select.h	2022-04-22 23:07:55.000000000 +0200
-+++ TFT_eSPI/User_Setup_Select.h	2022-04-27 18:46:42.861538781 +0200
-@@ -19,7 +19,7 @@
- 
- // Only ONE line below should be uncommented.  Add extra lines and files as needed.
+ // Only ONE line below should be uncommented to define your setup.  Add extra lines and files as needed.
  
 -#include <User_Setup.h>           // Default setup is root library folder
 +//#include <User_Setup.h>           // Default setup is root library folder
  
- //#include <User_Setups/Setup1_ILI9341.h>  // Setup file configured for my ILI9341
- //#include <User_Setups/Setup2_ST7735.h>   // Setup file configured for my ST7735
-@@ -83,7 +83,7 @@
+ //#include <User_Setups/Setup1_ILI9341.h>  // Setup file for ESP8266 configured for my ILI9341
+ //#include <User_Setups/Setup2_ST7735.h>   // Setup file for ESP8266 configured for my ST7735
+@@ -93,7 +93,7 @@
  //#include <User_Setups/Setup61_RP2040_ILI9341_PIO_SPI.h>    // Setup file for RP2040 with PIO SPI ILI9341
  //#include <User_Setups/Setup62_RP2040_Nano_Connect_ILI9341.h>    // Setup file for RP2040 with SPI ILI9341
  
--//#include <User_Setups/Setup70_ESP32_S2_ILI9341.h>  // Setup file for ESP32 S2 with SPI ILI9341
-+#include <User_Setups/Setup70_ESP32_S2_ILI9341.h>  // Setup file for ESP32 S2 with SPI ILI9341
- 
- //#include <User_Setups/Setup71_ESP32_S2_ST7789.h>       // Setup file for ESP32 S2 with ST7789
- //#include <User_Setups/Setup72_ESP32_ST7789_172x320.h>  // Setup file for ESP32 with ST7789 1.47" 172x320
+-//#include <User_Setups/Setup70_ESP32_S2_ILI9341.h>     // Setup file for ESP32 S2 with SPI ILI9341
++#include <User_Setups/Setup70_ESP32_S2_ILI9341.h>     // Setup file for ESP32 S2 with SPI ILI9341
+ //#include <User_Setups/Setup70b_ESP32_S3_ILI9341.h>    // Setup file for ESP32 S3 with SPI ILI9341
+ //#include <User_Setups/Setup70c_ESP32_C3_ILI9341.h>    // Setup file for ESP32 C3 with SPI ILI9341
+ //#include <User_Setups/Setup70d_ILI9488_S3_Parallel.h> // Setup file for ESP32 S3 with SPI ILI9488
