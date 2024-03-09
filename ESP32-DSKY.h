@@ -11,7 +11,7 @@
 #include "RTC.h"
 #include "Weather.h"
 
-#define VERSION_STRING         "+10002"
+#define VERSION_STRING         "+10003"
 
 #define MAIN_LOOP_DELAY_MS     (10)
 
@@ -22,7 +22,8 @@
 #define VERB_NOUN_ON_DELAY_MS  (1000 / MAIN_LOOP_DELAY_MS)
 
 #define WEATHER_UPDATE_S       (15 * 60)
-#define ENV_SENSOR_UPDATE_S    (1 * 60)
+#define ENV_SENSOR_UPDATE_S    (1)
+#define ENV_SENSOR_SAVE_S      (360 * 60)
 
 #define DSKY_STATE_INIT           (0)
 #define DSKY_STATE_IDLE           (1)
@@ -52,8 +53,7 @@
 
 #define GPIO_BME680_CS            (14)
 
-#define TVOC_LEVEL_POOR           (660)
-#define CO2_LEVEL_POOR           (1000)
+#define IAQ_LEVEL_POLUTED        (150)
 
 struct DSKY {
   AlarmIndicator *ai;
